@@ -1,4 +1,3 @@
-"use client";
 import { Product, Tag } from "@/assets";
 import Header from "@/components/header";
 import Image from "next/image";
