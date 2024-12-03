@@ -2,7 +2,7 @@ import { Product, Tag } from "@/assets";
 import Header from "@/components/header";
 import Image from "next/image";
 import { FaStar, FaRegStar } from "react-icons/fa";
-import { IoFunnel, IoHeartOutline, IoHeart } from "react-icons/io5";
+import { IoHeartOutline, IoHeart } from "react-icons/io5";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -19,6 +19,22 @@ export async function generateStaticParams() {
     } catch (error) {
         console.error("Error fetching categories:", error);
         return [];
+    }
+}
+
+// Fetch initial product data (can be optional if you want dynamic client-side fetch only)
+export async function getStaticProps({ params }) {
+    try {
+        const response = await axios.get(`https://api.vplaza.com.ng/products?category=${params.category}`);
+        return {
+            props: {
+                initialProducts: response.data.products || [],
+                category: params.category,
+            },
+        };
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        return { props: { initialProducts: [], category: params.category } };
     }
 }
 
@@ -41,41 +57,41 @@ const StarRating = ({ rating }) => {
     );
 };
 
-const CategoryPage = ({ params: { category } }) => {
-    const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [wishlistAction, setWishlistAction] = useState("");
+const CategoryPage = ({ initialProducts, category }) => {
+    const [products, setProducts] = useState(initialProducts);
+    const [loading, setLoading] = useState(!initialProducts.length);
     const [wishlistStates, setWishlistStates] = useState({});
     const [token, setToken] = useState(null);
     const requestID = "rid_1983";
 
     useEffect(() => {
-        const categoryData = JSON.parse(localStorage.getItem("categoryData"));
+        const fetchProducts = async () => {
+            if (!initialProducts.length) {
+                setLoading(true);
+                try {
+                    const response = await axios.get(`https://api.vplaza.com.ng/products?category=${category}`);
+                    setProducts(response.data.products || []);
+                } catch (error) {
+                    console.error("Error fetching products:", error);
+                } finally {
+                    setLoading(false);
+                }
+            }
+        };
+
+        fetchProducts();
+
         const storedToken = localStorage.getItem("token");
         setToken(storedToken);
+    }, [category, initialProducts]);
 
-        if (categoryData && categoryData.products) {
-            setProducts(categoryData.products);
-            // Initialize wishlist states
-            const initialWishlistStates = {};
-            categoryData.products.forEach((product) => {
-                initialWishlistStates[product.details.product_id] = product.inWishList === 1;
-            });
-            setWishlistStates(initialWishlistStates);
-        }
-
-        setLoading(false);
-    }, []);
-
-    const handleProductClick = (product) => {
-        if (!token) {
-            router.push("/signin");
-        } else {
-            // Store the product data before navigation
-            localStorage.setItem("selectedProduct", JSON.stringify(product));
-            router.push(`/product/${product.details.product_id}`);
-        }
-    };
+    useEffect(() => {
+        const initialWishlistStates = {};
+        products.forEach((product) => {
+            initialWishlistStates[product.details.product_id] = product.inWishList === 1;
+        });
+        setWishlistStates(initialWishlistStates);
+    }, [products]);
 
     const toggleWishlist = async (product, event) => {
         event.stopPropagation();
@@ -89,8 +105,6 @@ const CategoryPage = ({ params: { category } }) => {
 
             const productId = product.details.product_id;
             const inWishlist = wishlistStates[productId];
-
-            setWishlistAction(inWishlist ? "Removing from wishlist..." : "Adding to wishlist...");
 
             const endpoint = inWishlist
                 ? "https://api.vplaza.com.ng/products/removeFromWishList"
@@ -114,26 +128,10 @@ const CategoryPage = ({ params: { category } }) => {
                     ...prev,
                     [productId]: !inWishlist,
                 }));
-
-                const categoryData = JSON.parse(localStorage.getItem("categoryData"));
-                const updatedProducts = categoryData.products.map((p) => {
-                    if (p.details.product_id === productId) {
-                        return { ...p, inWishList: inWishlist ? 0 : 1 };
-                    }
-                    return p;
-                });
-                localStorage.setItem("categoryData", JSON.stringify({
-                    ...categoryData,
-                    products: updatedProducts,
-                }));
-
                 alert(response.data.message);
             }
         } catch (error) {
             console.error("Error updating wishlist:", error);
-            if (error.response?.data?.message === "signature verification failed") {
-                router.push("/signin");
-            }
         } finally {
             setLoading(false);
         }
@@ -151,7 +149,7 @@ const CategoryPage = ({ params: { category } }) => {
             <main className="pt-8 px-2">
                 <Header title="Loading..." />
                 <div className="w-full text-center p-4">
-                    <p>{wishlistAction || "Processing..."}</p>
+                    <p>Loading products...</p>
                 </div>
             </main>
         );
@@ -166,7 +164,6 @@ const CategoryPage = ({ params: { category } }) => {
                         <div
                             key={index}
                             className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer"
-                            onClick={() => handleProductClick(product)}
                         >
                             <div className="p-3 relative">
                                 <div className="relative">
@@ -186,19 +183,16 @@ const CategoryPage = ({ params: { category } }) => {
                                         )}
                                     </button>
                                 </div>
-
                                 <div className="mt-3 space-y-2">
                                     <h1 className="font-bold text-sm line-clamp-2">
                                         {product.details.product_name}
                                     </h1>
-
                                     <div className="flex items-center justify-between">
                                         <StarRating rating={getRating(product)} />
                                         <span className="text-xs bg-[#D9D9D9] px-2 py-1 rounded">
                                             {product.shopDetails.shop_name}
                                         </span>
                                     </div>
-
                                     <p className="font-semibold text-lg">
                                         ₦{parseInt(product.details.amount).toLocaleString()}
                                     </p>
