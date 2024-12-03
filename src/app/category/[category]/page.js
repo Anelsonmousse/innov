@@ -1,4 +1,4 @@
-import CategoryDisplay from "@/components/categoryDisplay";
+import CategoryDisplay from "@/components/";
 
 const CategoryPage = ({ category, products }) => {
     return <CategoryDisplay category={category} products={products} />;
