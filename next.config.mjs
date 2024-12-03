@@ -6,7 +6,6 @@ const nextConfig = {
   images: {
     unoptimized: true, // Disable Next.js image optimization for static export
   },
-  output: 'export', // Static export mode
   webpack(config, { isServer }) {
     if (!isServer) {
       config.plugins.push(
