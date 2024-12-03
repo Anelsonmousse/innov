@@ -387,10 +387,10 @@ const handleCategoryClick = async (category) => {
             </div>
             {/* Next row */}
             <div className="flex w-full items-center justify-center gap-5">
-              <div onClick={() => handleCategoryClick("health & beauty")}>
-                <Image src={Nine} alt="Health & Beauty" />
+              <div onClick={() => handleCategoryClick("trousers")}>
+                <Image src={Nine} alt="Trousers" />
                 <div className="text-sm text-center text-white font-medium">
-                  Health & Beauty
+                  Trousers
                 </div>
               </div>
               <div onClick={() => handleCategoryClick("women")}>
@@ -399,16 +399,16 @@ const handleCategoryClick = async (category) => {
                   Women
                 </div>
               </div>
-              <div onClick={() => handleCategoryClick("grocery")}>
-                <Image src={Twelve} alt="Grocery" />
+              <div onClick={() => handleCategoryClick("accessories")}>
+                <Image src={Twelve} alt="Accessories" />
                 <div className="text-sm text-center text-white font-medium">
-                  Grocery
+                  Accessories
                 </div>
               </div>
-              <div onClick={() => handleCategoryClick("miscellaneous")}>
-                <Image src={Thirteen} alt="Miscellaneous" />
+              <div onClick={() => handleCategoryClick("food")}>
+                <Image src={Thirteen} alt="Food" />
                 <div className="text-sm text-center text-white font-medium">
-                  Miscellaneous
+                  Food
                 </div>
               </div>
             </div>

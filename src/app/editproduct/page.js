@@ -259,7 +259,7 @@ const page = () => {
             <option value="phones">Phones</option>
             <option value="electronics">Electronics</option>
             <option value="tops">Tops</option>
-            <option value="pants">Pants</option>
+            <option value="trousers">Trousers</option>
             <option value="women">Women</option>
             <option value="services">Services</option>
           </select>

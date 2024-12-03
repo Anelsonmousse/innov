@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { IoArrowBack } from "react-icons/io5";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { Edit, Prof } from "../../assets";
 import { FaSchool } from "react-icons/fa";
 import { CiLock } from "react-icons/ci";

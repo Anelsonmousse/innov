@@ -39,12 +39,11 @@ const Page = () => {
       setPhone(userData.phone || "");
       setEmail(uEmail || ""); 
       setUserLocation(userData.user_location || "");
-      // Set email from localStorage
       setImageUrl(userData.imageUrl || "");
       setImagePreview(userData.imageUrl || "");
     } else if (uEmail) {
       setEmail(uEmail || ""); // Set email from localStorage
-    };
+    }
 
     const fetchLocations = async () => {
       try {
@@ -77,130 +76,42 @@ const Page = () => {
     }
   };
 
- const handleSave = async () => {
-  setLoading(true); // Start the loader
+  const handleSave = async () => {
+    setLoading(true); // Start the loader
 
-  try {
-    const token = localStorage.getItem("token");
-    let uploadedImageUrl = imageUrl; // Use existing image URL by default
+    try {
+      const token = localStorage.getItem("token");
+      const email = localStorage.getItem("emailn");
+      let uploadedImageUrl = imageUrl; // Use existing image URL by default
 
-    if (imageFile) {
-      try {
-        // Log the image file being uploaded to Sanity
+      if (imageFile) {
         console.log("Uploading to Sanity:", { imageFile });
 
-        // Upload to Sanity first
-        const imageAsset = await client.assets.upload("image", imageFile);
-        uploadedImageUrl = imageAsset.url;
-
-        // Log the data being sent to the backend after Sanity upload
-        console.log("Sending data to backend (editUser):", {
-          imageUrl: uploadedImageUrl,
-          username,
-          gender: gender === "Male" ? 1 : 0,
-          phone,
-          servicesOffered,
-          user_location,
-          email, // Include email in the request body
-          requestID,
-        });
-
-        // Send the data to the backend
-        const response = await axios.post(
-          "https://api.vplaza.com.ng/users/editUser",
-          {
-            imageUrl: uploadedImageUrl,
-            username,
-            gender: gender === "Male" ? 1 : 0,
-            phone,
-            servicesOffered,
-            user_location,
-            email, // Include email in the request body
-            requestID,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (response.status === 200) {
-          console.log(response);
-          alert("Profile updated successfully");
-          router.push("/");
-        } else if(response.message === "signature verification failed") {
-          router.push("/signin");
-        } else {
-          console.log(response);
-          alert("Failed to update profile");
-        }
-      } catch (sanityError) {
-        console.error("Sanity upload failed:", sanityError);
-
-        // Log the data being sent to the backend when uploading the image directly
-        const formData = new FormData();
-        formData.append("imageUrl", imageFile);
-        formData.append("username", username);
-        formData.append("gender", gender === "Male" ? 1 : 0);
-        formData.append("phone", phone);
-        formData.append("servicesOffered", servicesOffered);
-        formData.append("email", email); 
-        formData.append("requestID", requestID);
-        formData.append("user_location", user_location);
-
-        console.log("Sending data to backend (editUser2):", formData);
-
-        const response = await axios.post(
-          "https://api.vplaza.com.ng/users/editUser2",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (response.status === 200) {
-          uploadedImageUrl = response.data.imageUrl; // Update image URL with the backend's response
-          console.log(response);
-          alert("Profile updated successfully");
-          router.push("/");
-          return;
-        } else if(response.message === "signature verification failed") {
-          router.push("/signin");
-        } else {
-          console.log(response);
-          alert("Failed to update profile");
+        try {
+          // Upload the image to Sanity
+          const imageAsset = await client.assets.upload("image", imageFile);
+          uploadedImageUrl = imageAsset.url;
+        } catch (sanityError) {
+          console.error("Sanity upload failed:", sanityError);
         }
       }
-    } else {
-      // Log the data being sent to the backend if no new image is selected
-      console.log("Sending data to backend (editUser) with existing image:", {
+
+      const payload = {
         imageUrl: uploadedImageUrl,
         username,
         gender: gender === "Male" ? 1 : 0,
         phone,
-        user_location,
         servicesOffered,
-        email, // Include email in the request body
+        user_location,
+        email, // Include email from localStorage
         requestID,
-      });
+      };
 
-      // If no new image is selected, send the existing imageUrl to the backend
+      console.log("Sending data to backend (editUser):", payload);
+
       const response = await axios.post(
         "https://api.vplaza.com.ng/users/editUser",
-        {
-          imageUrl: uploadedImageUrl,
-          username,
-          gender: gender === "Male" ? 1 : 0,
-          phone,
-          user_location,
-          servicesOffered,
-          email, // Include email in the request body
-          requestID,
-        },
+        payload,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -210,24 +121,21 @@ const Page = () => {
 
       if (response.status === 200) {
         console.log(response);
-        console.log(response.data.data);
         alert("Profile updated successfully");
         router.push("/");
-      } else if(response.message === "signature verification failed") {
+      } else if (response.message === "signature verification failed") {
         router.push("/signin");
       } else {
         console.log(response);
         alert("Failed to update profile");
       }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Failed to update profile");
+    } finally {
+      setLoading(false); // Stop the loader
     }
-  } catch (error) {
-    console.error("Error:", error);
-    alert("Failed to update profile");
-  } finally {
-    setLoading(false); // Stop the loader
-  }
-};
-
+  };
 
   const triggerFileInput = () => {
     document.getElementById("file-input").click();
@@ -336,7 +244,7 @@ const Page = () => {
                 className="pl-10 opacity-40 border-2 rounded-lg h-[45px] border-black peer focus:border-[#004AAD] focus:ring-0 w-full"
               >
                 <option value="" disabled>
-                  Select your store location
+                  Select your location
                 </option>
                 {Array.isArray(locations) &&
                   locations.map((location) => (
@@ -347,12 +255,12 @@ const Page = () => {
               </select>
             </div>
 
-            <div
+            <button
               onClick={handleSave}
-              className="bg-[#004AAD] w-[90%] mt-16 text-center font-bold text-lg h-[45px] rounded-lg text-white py-2"
+              className="bg-[#004AAD] hover:bg-blue-700 text-white mt-5 py-2 px-4 rounded-lg"
             >
-              Save
-            </div>
+              Save Profile
+            </button>
           </form>
         </div>
       </div>

@@ -316,8 +316,8 @@ const page = () => {
         <div className="w-full  h-[100px] sticky bottom-0 bg-white ">
           <div className="bg-[#004AAD] justify-between flex rounded-2xl w-[90%] ml-[5%] h-[70%]">
             <div className=" flex justify-between ml-[5%] mt-3 w-[90%]">
-              <div className="h-[50px] w-[50px] rounded-full bg-white text-center items-center justify-center">
-              <MdStore
+              <div className="h-[50px]  w-[50px] rounded-full bg-white -mt-1 text-center items-center justify-center">
+              <MdStore className="ml-1 mt-1"
               onClick={() => {
             
                 if (!token) {
@@ -354,7 +354,7 @@ const page = () => {
               size={40}
             />
               </div>
-              <MdHomeFilled color="#686868" className="" size={40} />
+              <MdHomeFilled onClick={() => router.push("/")} color="#686868" className="" size={40} />
               <IoPersonCircleSharp
                 onClick={() => router.push("/profile")}
                 color="#686868"
