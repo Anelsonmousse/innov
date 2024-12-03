@@ -1,5 +1,5 @@
 import { Product, Tag } from "@/assets";
-import Header from "@src/components/header";
+import Header from "@/components/header";
 import { FaStar, FaRegStar } from "react-icons/fa";
 import { IoHeartOutline, IoHeart } from "react-icons/io5";
 

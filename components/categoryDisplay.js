@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { IoHeartOutline, IoHeart } from "react-icons/io5";
 import { FaStar, FaRegStar } from "react-icons/fa";
-import Header from "@/src/components/header";
+import Header from "@/components/header";
 
 const StarRating = ({ rating }) => {
     const totalStars = 5;
