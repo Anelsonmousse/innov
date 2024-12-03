@@ -1,0 +1,29 @@
+/* styles.css */
+.loader {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.loader::before {
+  content: "";
+  position: absolute;
+  width: 3rem;
+  height: 3rem;
+  border: 0.4rem solid rgba(255, 255, 255, 0.3);
+  border-top: 0.4rem solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
