@@ -1,48 +1,18 @@
-import WorkboxWebpackPlugin from 'workbox-webpack-plugin';
+import withPWA from 'next-pwa';
+
+const nextPWAConfig = {
+  dest: 'public',
+};
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  images: {
-    unoptimized: true, // Disable Next.js image optimization for static export
-  },
-  webpack(config, { isServer }) {
-    if (!isServer) {
-      config.plugins.push(
-        new WorkboxWebpackPlugin.GenerateSW({
-          swDest: 'public/sw.js',
-          clientsClaim: true,
-          skipWaiting: true,
-          runtimeCaching: [
-            {
-              urlPattern: /\.(?:png|jpg|jpeg|svg|gif)$/i,
-              handler: 'CacheFirst',
-              options: {
-                cacheName: 'images-cache',
-                expiration: {
-                  maxEntries: 50,
-                  maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
-                },
-              },
-            },
-            {
-              urlPattern: /\/$/i,
-              handler: 'NetworkFirst',
-              options: {
-                cacheName: 'home-cache',
-                expiration: {
-                  maxEntries: 5,   
-                  maxAgeSeconds: 60 * 60 * 24, // 1 day
-                },
-              },
-            },
-          ],
-        })
-      );
-    }
-
-    return config;
-  },
+  // Add your Next.js configuration here
+  // images: {
+  //   domains: ['cdn.sanity.io'], // Add Sanity's image domain
+  // },
 };
 
-export default nextConfig;
+export default withPWA({
+  ...nextConfig,
+  ...nextPWAConfig, // Merge PWA config with Next.js config
+});
