@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { IoArrowBack } from "react-icons/io5";
 import { AiOutlinePlus } from "react-icons/ai";
@@ -21,7 +21,7 @@ const Page = () => {
   if (!userData) {
     return <div>Loading...</div>; // or handle unauthenticated state
   }
-  
+
   const router = useRouter();
   const [selectedState, setSelectedState] = useState("new");
   const [imagePreviews, setImagePreviews] = useState([]);
