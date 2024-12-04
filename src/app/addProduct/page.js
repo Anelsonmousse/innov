@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react"; // Add useEffect here
+import React, { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { IoArrowBack } from "react-icons/io5";
 import { AiOutlinePlus } from "react-icons/ai";
@@ -19,18 +19,7 @@ const Page = () => {
   const [product_cat, setCategory] = useState("");
   const fileInputRef = useRef(null);
   let requestID = "rid_1983";
-  const [userData, setUserData] = useState(null); // State for userData
-
-  useEffect(() => {
-    // This ensures localStorage is accessed only on the client-side
-    if (typeof window !== "undefined") {
-      const data = localStorage.getItem("userData");
-      if (data) {
-        setUserData(JSON.parse(data));
-      }
-    }
-  }, []); // Run once on mount
-
+  const userData = JSON.parse(localStorage.getItem("userData"));
   // Handle image upload with file size limit
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
@@ -263,101 +252,111 @@ const Page = () => {
                 alt="Product Main"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform"
               />
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleRemoveImage(0);
+                }}
+                className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition z-10"
+              >
+                <FaTrash size={16} />
+              </button>
             </div>
           ) : (
-            <div className="w-full h-full bg-blue-100 flex items-center justify-center group-hover:bg-blue-200 transition">
-              <AiOutlinePlus className="text-3xl text-blue-600" />
+            <div className="w-full h-full bg-blue-100 flex items-center justify-center">
+              <AiOutlinePlus className="text-blue-500" size={48} />
+              <span className="ml-2 text-blue-600">Add Product Image</span>
             </div>
           )}
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="absolute inset-0 opacity-0"
-            multiple
-          />
         </div>
 
-        {imagePreviews.length > 0 && (
-          <div className="grid grid-cols-3 gap-2 mb-4">
-            {imagePreviews.map((preview, index) => (
-              <div key={index} className="relative">
-                <img
-                  src={preview}
-                  alt={`Image preview ${index}`}
-                  className="w-full h-full object-cover rounded-xl"
-                />
+        <div className="flex space-x-2 mb-4">
+          {[1, 2, 3, 4].map((_, index) => (
+            <div key={index} className="relative w-20 h-20 group">
+              {imagePreviews[index + 1] ? (
+                <>
+                  <img
+                    src={imagePreviews[index + 1]}
+                    alt={`Preview ${index + 1}`}
+                    className="w-full h-full object-cover rounded-md"
+                  />
+                  <button
+                    onClick={() => handleRemoveImage(index + 1)}
+                    className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <FaTrash size={12} />
+                  </button>
+                </>
+              ) : (
                 <button
-                  onClick={() => {
-                    const updatedPreviews = imagePreviews.filter(
-                      (_, idx) => idx !== index
-                    );
-                    const updatedFiles = imageFiles.filter((_, idx) => idx !== index);
-                    setImagePreviews(updatedPreviews);
-                    setImageFiles(updatedFiles);
-                  }}
-                  className="absolute top-0 right-0 bg-white p-1 rounded-full text-red-600"
+                  onClick={handleAddImageClick}
+                  className="w-full h-full flex items-center justify-center bg-blue-100 text-blue-500 rounded-md hover:bg-blue-200 transition"
                 >
-                  X
+                  <AiOutlinePlus size={24} />
                 </button>
-              </div>
-            ))}
-          </div>
-        )}
+              )}
+            </div>
+          ))}
+          <span className="self-end text-sm text-gray-500 ml-2">
+            Max 5 pics
+          </span>
+        </div>
 
-        <div className="mb-4">
-          <label className="block text-sm text-blue-600">Product Name</label>
+        <input
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          className="hidden"
+          multiple
+        />
+        <div className="space-y-4">
           <input
             type="text"
+            placeholder="Product Name"
             value={product_name}
             onChange={(e) => setProductName(e.target.value)}
-            placeholder="Enter product name"
-            className="w-full p-2 border border-gray-300 rounded-lg"
+            className="w-full p-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
           />
-        </div>
 
-        <div className="mb-4">
-          <label className="block text-sm text-blue-600">Price</label>
-          <input
-            type="text"
-            value={amount}
-            onChange={(e) => setPrice(e.target.value)}
-            placeholder="Enter product price"
-            className="w-full p-2 border border-gray-300 rounded-lg"
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-sm text-blue-600">Description</label>
-          <textarea
-            value={product_desc}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Enter product description"
-            className="w-full p-2 border border-gray-300 rounded-lg"
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-sm text-blue-600">Category</label>
           <select
             value={product_cat}
             onChange={(e) => setCategory(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-lg"
+            className="w-full p-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
           >
-            <option value="electronics">Electronics</option>
-            <option value="fashion">Fashion</option>
-            <option value="books">Books</option>
+            <option value="">Select Category</option>
             <option value="furniture">Furniture</option>
+            <option value="accessories">Accessories</option>
+            <option value="phones">Phones</option>
+            <option value="electronics">Electronics</option>
+            <option value="tops">Tops</option>
+            <option value="pants">Pants</option>
+            <option value="women">Women</option>
+            <option value="services">Services</option>
           </select>
-        </div>
 
-        <button
-          onClick={handleSave}
-          className="w-full p-3 bg-blue-600 text-white rounded-lg"
-        >
-          Save Product
-        </button>
+          <input
+            type="text"
+            placeholder="Price"
+            value={amount}
+            onChange={(e) => setPrice(e.target.value)}
+            className="w-full p-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
+          />
+
+          <textarea
+            placeholder="Product Description"
+            value={product_desc}
+            onChange={(e) => setDescription(e.target.value)}
+            className="w-full p-3 border border-blue-200 rounded-lg min-h-[120px] focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
+          ></textarea>
+
+          <button
+            onClick={handleSave}
+            className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition font-semibold"
+          >
+            Update Product
+          </button>
+        </div>
       </div>
     </div>
   );
