@@ -21,7 +21,6 @@ const Page = () => {
   const [gender, setGender] = useState("");
   const [phone, setPhone] = useState("");
   const [servicesOffered, setServicesOffered] = useState("");
-  const [email, setEmail] = useState(""); // State for email
   const [loading, setLoading] = useState(false);
   const [user_location, setUserLocation] = useState("");
   const [locations, setLocations] = useState([]);
@@ -31,18 +30,14 @@ const Page = () => {
   // Load data from localStorage on component mount
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("userData"));
-    const uEmail = localStorage.getItem("emailn");
     if (userData) {
       console.log(userData);
       setUsername(userData.username || "");
       setGender(userData.gender === 1 ? "Male" : "Female");
       setPhone(userData.phone || "");
-      setEmail(uEmail || ""); 
       setUserLocation(userData.user_location || "");
       setImageUrl(userData.imageUrl || "");
       setImagePreview(userData.imageUrl || "");
-    } else if (uEmail) {
-      setEmail(uEmail || ""); // Set email from localStorage
     }
 
     const fetchLocations = async () => {
@@ -81,7 +76,6 @@ const Page = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const email = localStorage.getItem("emailn");
       let uploadedImageUrl = imageUrl; // Use existing image URL by default
 
       if (imageFile) {
@@ -103,7 +97,6 @@ const Page = () => {
         phone,
         servicesOffered,
         user_location,
-        email, // Include email from localStorage
         requestID,
       };
 
@@ -188,7 +181,6 @@ const Page = () => {
                 </div>
               )}
             </div>
-            <input type="hidden" value={email} />
             <div className="w-[100%]">
               <div className="ml-[10%] mt-4">Full Name:</div>
             </div>
@@ -257,7 +249,7 @@ const Page = () => {
 
             <button
               onClick={handleSave}
-              className="bg-[#004AAD] hover:bg-blue-700 text-white mt-5 py-2 px-4 rounded-lg"
+              className="bg-[#004AAD] cursor-pointer hover:bg-blue-700 text-white mt-5 py-2 px-4 rounded-lg"
             >
               Save Profile
             </button>

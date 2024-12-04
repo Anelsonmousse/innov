@@ -38,7 +38,7 @@ const Page = () => {
       setChatLink(userData.shop_whatsapp_link || "");
       setDescription(userData.shop_desc);
       setStoreLocation(userData.shop_location || "");
-      setServicesOffered(userData.service_offered || "");
+      setServicesOffered(userData.service_offered || "NULL");
       // Set email from localStorage
       setImageUrl(userData.shop_image_url || "");
       setImagePreview(userData.shop_image_url || "");
@@ -346,7 +346,7 @@ const Page = () => {
 
             <div
               onClick={handleSave}
-              className="bg-[#004AAD] w-[90%] mt-16 text-center font-bold text-lg h-[45px] rounded-lg text-white py-2"
+              className="bg-[#004AAD] w-[90%] mt-16 text-center cursor-pointer font-bold text-lg h-[45px] rounded-lg text-white py-2"
             >
               Save
             </div>

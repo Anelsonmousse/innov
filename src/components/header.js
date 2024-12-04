@@ -11,9 +11,10 @@ const Header = ({ title }) => {
         <IoArrowBack
         onClick={() => router.back()} 
           size={30}
+          color="white"
           className="absolute top-1/2 -translate-y-1/2 left-0 p-1"
         />
-        <h1 className="font-black text-2xl">{title}</h1>
+        <h1 className="font-black text-white text-2xl">{title}</h1>
       </div>
     </header>
   );
