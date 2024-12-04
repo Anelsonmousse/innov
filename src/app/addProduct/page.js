@@ -8,6 +8,20 @@ import client from "../sanity/sanityClient";
 import "../../../dev/styles.css";
 
 const Page = () => {
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    // Only run on the client side
+    const storedData = localStorage.getItem("userData");
+    if (storedData) {
+      setUserData(JSON.parse(storedData));
+    }
+  }, []);
+
+  if (!userData) {
+    return <div>Loading...</div>; // or handle unauthenticated state
+  }
+  
   const router = useRouter();
   const [selectedState, setSelectedState] = useState("new");
   const [imagePreviews, setImagePreviews] = useState([]);
@@ -19,7 +33,7 @@ const Page = () => {
   const [product_cat, setCategory] = useState("");
   const fileInputRef = useRef(null);
   let requestID = "rid_1983";
-  const userData = JSON.parse(localStorage.getItem("userData"));
+
   // Handle image upload with file size limit
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
