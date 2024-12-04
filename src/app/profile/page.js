@@ -104,7 +104,7 @@ const Page = () => {
           <div className="text-black pl-4 text-[16px] font-semibold">
             School
           </div>
-          <div className="text-black pl-4 text-[10px] w-full text-right font-semibold">
+          <div className="text-black pl-4 text-[10px] w-full text-right font-semibold mt-2">
             {user?.user_location}
           </div>
         </div>
