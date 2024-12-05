@@ -114,15 +114,6 @@ const Page = () => {
 
       if (response.status === 200) {
         console.log(response);
-        // Update localStorage with new values
-        const updatedUserData = {
-          username,
-          phone,
-          user_location,
-          imageUrl: uploadedImageUrl,
-          gender: gender === "Male" ? 1 : 0,
-        };
-        localStorage.setItem("userData", JSON.stringify(updatedUserData));
         alert("Profile updated successfully");
         router.push("/");
       } else if (response.message === "signature verification failed") {
