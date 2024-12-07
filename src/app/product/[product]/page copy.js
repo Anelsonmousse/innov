@@ -1,9 +1,9 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { IoArrowBack, IoHeart, IoHeartOutline, IoLogoWhatsapp } from "react-icons/io5";
 import { FaStar } from "react-icons/fa";
-// import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import Button from "@/components/button";
 import axios from "axios";
 
@@ -14,20 +14,23 @@ const page = () => {
   const [selectedRating, setSelectedRating] = useState(0);
   const [reviewText, setReviewText] = useState('');
   const [loading, setLoading] = useState(false);
-  const [uname, setUname] = useState(false);
+  const [uname, setUname] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState("");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [wishlistAction, setWishlistAction] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
-  const [touchStart, setTouchStart] = useState(null);
-  const [touchEnd, setTouchEnd] = useState(null);
   const reviewsPerPage = 5;
   const requestID = "rid_1983";
+
+  // Touch handling for swipe gestures
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+  const minSwipeDistance = 50;
 
   useEffect(() => {
     const productData = JSON.parse(localStorage.getItem('selectedProduct'));
     const userData = JSON.parse(localStorage.getItem("userData"));
+    
     if (productData) {
       setProduct(productData);
       setIsInWishlist(productData.inWishList === 1);
@@ -37,39 +40,28 @@ const page = () => {
     }
   }, []);
 
-  const images = product ? [
-    product.details.product_img1,
-    product.details.product_img2,
-    product.details.product_img3,
-    product.details.product_img4,
-    product.details.product_img5,
-  ].filter(img => img !== "0") : [];
-
-  const minSwipeDistance = 50;
-
-  const handleTouchStart = (e) => {
-    setTouchEnd(null);
-    setTouchStart(e.touches[0].clientX);
+  const getValidImages = () => {
+    if (!product) return [];
+    return [
+      product.details.product_img1,
+      product.details.product_img2,
+      product.details.product_img3,
+      product.details.product_img4,
+      product.details.product_img5,
+    ].filter(img => img && img !== "0");
   };
 
-  const handleTouchMove = (e) => {
-    setTouchEnd(e.touches[0].clientX);
-  };
-
-  const handleTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-    
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-    
-    if (isLeftSwipe) {
-      handleNextImage();
-    } else if (isRightSwipe) {
-      handlePrevImage();
+  const handleImageNavigation = (direction) => {
+    const images = getValidImages();
+    if (direction === 'next') {
+      setCurrentImageIndex((prev) => (prev + 1) % images.length);
+      setModalImage(images[(currentImageIndex + 1) % images.length]);
+    } else {
+      setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+      setModalImage(images[(currentImageIndex - 1 + images.length) % images.length]);
     }
   };
-
+  
   const handleImageClick = (imageUrl, index) => {
     setModalImage(imageUrl);
     setCurrentImageIndex(index);
@@ -90,11 +82,13 @@ const page = () => {
   };
 
   const handleNextImage = () => {
+    const images = getValidImages();
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
     setModalImage(images[(currentImageIndex + 1) % images.length]);
   };
 
   const handlePrevImage = () => {
+    const images = getValidImages();
     setCurrentImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
     setModalImage(images[(currentImageIndex - 1 + images.length) % images.length]);
   };
@@ -114,6 +108,45 @@ const page = () => {
       if (e.key === 'Escape') handleCloseModal();
     }
   };
+  const getCallLink = (whatsappLink) => {
+    // Define country codes for Nigeria (234) and Cyprus (357)
+    const nigeriaCountryCode = '234';
+    const cyprusCountryCode = '357';
+  
+    // Check if the string is a URL or a simple phone number
+    if (whatsappLink.startsWith('https://wa.me/') || whatsappLink.startsWith('wa.me/')) {
+      // Extract the phone number from the URL (skip the 'https://wa.me/' or 'wa.me/')
+      const phoneNumber = whatsappLink.replace(/^https?:\/\/?wa\.me\//, '');
+      
+      // Return the correct URL for calling the number, using 'https:' prefix
+      return `https://api.whatsapp.com/send/?phone=${phoneNumber}&text&type=phone_number&app_absent=0`;
+    } else {
+      // Check if it's a raw number, potentially with no country code
+      const rawPhoneNumber = whatsappLink.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+  
+      // If it's a Nigerian or Cypriot number, prepend the country code
+      if (rawPhoneNumber.length === 10 && rawPhoneNumber.startsWith('0')) {
+        // Assume Nigerian number if it starts with '0' (excluding country code)
+        return `https://api.whatsapp.com/send/?phone=${nigeriaCountryCode}${rawPhoneNumber.slice(1)}&text&type=phone_number&app_absent=0`;
+      } else if (rawPhoneNumber.length === 8 && rawPhoneNumber.startsWith('0')) {
+        // Assume Cypriot number if it's a valid length and starts with '0'
+        return `https://api.whatsapp.com/send/?phone=${cyprusCountryCode}${rawPhoneNumber.slice(1)}&text&type=phone_number&app_absent=0`;
+      } else {
+        // Default fallback, return the number with the 'wa.me' format without adding any country code
+        return `https://api.whatsapp.com/send/?phone=${rawPhoneNumber}&text&type=phone_number&app_absent=0`;
+      }
+    }
+  };
+  
+  const getMessageLink = (whatsappLink) => {
+    // If the link is already in the 'wa.me' format, use it directly
+    if (whatsappLink.startsWith('wa.me/')) {
+      return `https://api.whatsapp.com/send/?phone=${whatsappLink.replace('wa.me/', '')}&text&type=phone_number&app_absent=0`;
+    }
+  
+    // Otherwise, process the phone number to create the correct URL
+    return getCallLink(whatsappLink);
+  }
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
@@ -128,52 +161,62 @@ const page = () => {
     setCurrentPage(prev => Math.max(prev - 1, 0));
   };
 
+  const handleTouchStart = (e) => setTouchStart(e.touches[0].clientX);
+  const handleTouchMove = (e) => setTouchEnd(e.touches[0].clientX);
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    if (Math.abs(distance) < minSwipeDistance) return;
+    
+    if (distance > 0) {
+      handleImageNavigation('next');
+    } else {
+      handleImageNavigation('prev');
+    }
+  };
+
   const toggleWishlist = async () => {
+    if (!product) return;
+    
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const storedProduct = JSON.parse(localStorage.getItem("selectedProduct"));
-      const isInWishlist = storedProduct?.inWishList === 1;
-      setWishlistAction(isInWishlist ? "Removing from wishlist..." : "Adding to wishlist...");
-
       const endpoint = isInWishlist
         ? "https://api.vplaza.com.ng/products/removeFromWishList"
         : "https://api.vplaza.com.ng/products/addToWishList";
 
       const response = await axios.post(
         endpoint,
-        {
-          product_id: product.details.product_id,
-          requestID,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { product_id: product.details.product_id, requestID },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       if (response.status === 200) {
-        const updatedStatus = isInWishlist ? 0 : 1;
-        const updatedProduct = { ...storedProduct, inWishList: updatedStatus };
+        const updatedProduct = {
+          ...product,
+          inWishList: isInWishlist ? 0 : 1
+        };
         localStorage.setItem("selectedProduct", JSON.stringify(updatedProduct));
+        setProduct(updatedProduct);
+        setIsInWishlist(!isInWishlist);
         alert(response.data.message);
-        setIsInWishlist(updatedStatus === 1);
-      } else if (response.data.message === "signature verification failed") {
-        await router.push("/signin");
       }
     } catch (error) {
-      console.error("Error updating wishlist:", error);
+      if (error.response?.data?.message === "signature verification failed") {
+        router.push("/signin");
+      }
+      console.error("Wishlist error:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleRatingSelect = (rating) => {
-    setSelectedRating(rating);
-  };
-
   const handleSubmitReview = async () => {
+    if (!selectedRating || !reviewText.trim()) {
+      alert("Please provide both rating and review text");
+      return;
+    }
+
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
@@ -185,39 +228,33 @@ const page = () => {
           review: reviewText,
           requestID,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       if (response.status === 200) {
-        alert("Review posted..");
+        const newReview = {
+          id: Date.now(),
+          product_id: product.details.product_id,
+          desc: reviewText,
+          rating: selectedRating.toString(),
+          username: uname,
+          img: 'https://images.squarespace-cdn.com/content/v1/50eca855e4b0939ae8bb12d9/1414865529007-1CEXSGLSU78MIYH77PUX/image-asset.png',
+        };
+
         const updatedProduct = {
           ...product,
-          reviews: [
-            ...(product.reviews && Array.isArray(product.reviews) ? product.reviews : []),
-            {
-              id: (product.reviews && Array.isArray(product.reviews) ? product.reviews.length : 0) + 1,
-              product_id: product.details.product_id,
-              desc: reviewText,
-              rating: selectedRating.toString(),
-              user_id: 'user829e662ff4b223aa4bb382bb8d0e9bd8',
-              username: uname,
-              img: 'https://images.squarespace-cdn.com/content/v1/50eca855e4b0939ae8bb12d9/1414865529007-1CEXSGLSU78MIYH77PUX/image-asset.png',
-            }
-          ]
+          reviews: [...(product.reviews || []), newReview]
         };
+
         localStorage.setItem('selectedProduct', JSON.stringify(updatedProduct));
         setProduct(updatedProduct);
         setReviewText('');
         setSelectedRating(0);
-      } else if (response.data.message === "signature verification failed") {
-        await router.push("/signin");
+        alert("Review posted successfully!");
       }
     } catch (error) {
-      console.error('Error submitting review:', error);
+      console.error('Review submission error:', error);
+      alert("Failed to post review. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -225,164 +262,162 @@ const page = () => {
 
   if (!product) {
     return (
-      <div className="min-h-screen p-4">
-        <div className="flex justify-center items-center h-[60vh]">
-          <p>Loading...</p>
-        </div>
+      <div className="min-h-screen p-4 flex justify-center items-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-main"></div>
       </div>
     );
   }
 
   const sortedReviews = [...(product.reviews || [])]
-    .sort((a, b) => b.id - a.id);
-  
-  const currentReviews = sortedReviews.slice(
-    currentPage * reviewsPerPage,
-    (currentPage + 1) * reviewsPerPage
-  );
+    .sort((a, b) => b.id - a.id)
+    .slice(currentPage * reviewsPerPage, (currentPage + 1) * reviewsPerPage);
 
   const totalPages = Math.ceil((product.reviews?.length || 0) / reviewsPerPage);
 
   return (
     <main className="grid min-h-screen grid-cols-12 items-start lg:pt-8">
       {loading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
-          <div className="loader">{wishlistAction || "Posting Review..."}</div>
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+          <div className="bg-white p-4 rounded-lg">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-main"></div>
+          </div>
         </div>
       )}
 
-      <section className="col-span-12 lg:col-start-1 lg:col-end-8 lg:p-4 flex flex-col lg:flex-row gap-2">
-        <div className="px-2 order-2 lg:order-1">
-          <div className="flex lg:flex-col overflow-x-scroll lg:overflow-hidden gap-2">
-            {Array.from({ length: 4}).map((_, index) => {
-              const imageKey = `product_img${index + 2}`;
-              const imageUrl = product.details[imageKey];
-
-              return (
-                imageUrl && imageUrl !== "0" && (
-                  <div
-                    key={imageKey}
-                    className="aspect-square shrink-0 w-12 h-12 lg:w-16 lg:h-16 relative rounded-xl overflow-hidden cursor-pointer"
-                    onClick={() => handleImageClick(imageUrl, index + 1)}
-                  >
-                    <img
-                      className="object-cover w-full h-full"
-                      alt={`Product Image ${index + 2}`}
-                      src={imageUrl}
-                    />
-                  </div>
-                )
-              );
-            })}
+      {/* Product Images Section */}
+      <section className="col-span-12 lg:col-span-7 p-4">
+        <div className="flex flex-col-reverse lg:flex-row gap-4">
+          {/* Thumbnail Images */}
+          <div className="flex lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto">
+            {getValidImages().slice(1).map((img, index) => (
+              <div
+                key={index}
+                onClick={() => {
+                  setModalImage(img);
+                  setCurrentImageIndex(index);
+                  setIsModalOpen(true);
+                }}
+                className="shrink-0 w-16 h-16 rounded-lg overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
+              >
+                <img
+                  src={img}
+                  alt={`Product view ${index + 1}`}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ))}
           </div>
-        </div>
 
-        <div className="order-1 lg:order-2 lg:max-w-[90%] lg:w-full px-4 lg:pr-8 relative lg:rounded-md aspect-square lg:aspect-square overflow-hidden">
-          <img
-            className="object-cover w-full h-full cursor-pointer"
-            alt="Product Image"
-            src={product.details.product_img1}
-            onClick={() => handleImageClick(product.details.product_img1, 0)}
-          />
-          <div className="absolute top-0 p-2 left-0 z-20 flex w-full lg:justify-end justify-between">
-            <div className="p-2 cursor-pointer flex items-center justify-center rounded-full lg:hidden">
-              <IoArrowBack
-                onClick={() => router.back()}
-                color="white"
-                size={24}
-              />
+          {/* Main Image */}
+          <div className="relative aspect-square w-full">
+            <img
+              src={product.details.product_img1}
+              alt={product.details.product_name}
+              className="w-full h-full object-cover rounded-lg"
+              onClick={() => {
+                setModalImage(product.details.product_img1);
+                setCurrentImageIndex(0);
+                setIsModalOpen(true);
+              }}
+            />
+            <div onClick={() => router.back()} className="absolute top-4 left-4 lg:hidden">
+              <button
+                
+                className="p-2 rounded-full bg-white/80 hover:bg-white transition-colors"
+              >
+                <IoArrowBack size={24} />
+              </button>
             </div>
-            <div
+            <button
               onClick={toggleWishlist}
-              className="p-2 cursor-pointer justify-center items-center rounded-full"
+              className="absolute top-4 right-4 p-2 rounded-full bg-white/80 hover:bg-white transition-colors"
             >
               {isInWishlist ? (
-                <IoHeart size={20} className="fill-white" />
+                <IoHeart size={24} className="text-red-500" />
               ) : (
-                <IoHeartOutline size={20} className="stroke-white" />
+                <IoHeartOutline size={24} />
               )}
-            </div>
+            </button>
           </div>
         </div>
       </section>
 
-      <section className="col-span-12 lg:sticky lg:top-0 lg:overflow-y-scroll max-h-screen lg:col-start-8 px-2 pt-3 lg:p-6 lg:pt-8 lg:col-end-12">
-        <h1 className="font-bold mb-2 md:text-3xl">{product.details.product_name}</h1>
-        <div className="relative">
-          <p className="flex items-center text-xs gap-1">
-            {Math.floor(product.average_r.average)}
-            <span className="inline-block">
-              <FaStar size={10} className="fill-[#FFF500]" />
-            </span>
-            <span className="text-xs bg-[#D9D9D9] px-1 rounded-sm py-[0.1rem]">
+      {/* Product Details Section */}
+      <section className="col-span-12 lg:col-span-5 p-4 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
+        <h1 className="text-2xl lg:text-3xl font-bold mb-4">
+          {product.details.product_name}
+        </h1>
+
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-2">
+            <div className="flex items-center">
+              <FaStar className="text-yellow-400" />
+              <span className="ml-1">{Math.floor(product.average_r.average)}</span>
+            </div>
+            <span className="px-2 py-1 bg-gray-100 rounded-full text-sm">
               {product.shopDetails.shop_name}
             </span>
-          </p>
-          <p className="absolute font-sans right-0 text-main font-semibold text-3xl top-0">
+          </div>
+          <span className="text-2xl font-bold text-main">
             ₦{parseInt(product.details.amount).toLocaleString()}
-          </p>
+          </span>
         </div>
 
-        <div className="mt-3">
-          <h2 className="font-bold text-sm">Description</h2>
-          <p className="text-sm">{product.details.product_desc}</p>
+        {/* Description */}
+        <div className="mb-8">
+          <h2 className="font-bold mb-2">Description</h2>
+          <p className="text-gray-600">{product.details.product_desc}</p>
         </div>
 
-        <div className="mt-3">
-          <h2 className="font-bold text-sm mb-3">
-            Reviews on seller <span className="opacity-60">({(product.reviews || []).length})</span>
+        {/* Reviews Section */}
+        <div className="mb-8">
+          <h2 className="font-bold mb-4">
+            Reviews ({product.reviews?.length || 0})
           </h2>
-
-          {product.reviews && product.reviews.length > 0 ? (
+          
+          {sortedReviews.length > 0 ? (
             <>
-              {currentReviews.map(({ username, desc, rating, img }, index) => (
-                <div
-                  key={index}
-                  className="my-4 border-b border-black py-2 border-opacity-10 flex gap-2"
-                >
-                  <div className="w-8 h-8 shrink-0 relative">
-                    <img
-                      className="rounded-full"
-                      src={img}
-                      alt="fan image"
-                    />
+              {sortedReviews.map((review, index) => (
+               <div
+               key={index}
+               className="my-4 border-b border-black py-2 border-opacity-10 flex gap-2"
+             >
+               <div className="w-8 h-8 shrink-0 relative">
+                 <img
+                   className="rounded-full"
+                   src={review.img}
+                      alt={review.username}
+                 />
+               </div>
+               <div>
+               <span className="font-medium">{review.username}</span>
+                 
+                  <div className="flex gap-1 mb-2">
+                    {Array.from({ length: parseInt(review.rating) }).map((_, i) => (
+                      <FaStar key={i} className="text-yellow-400" size={12} />
+                    ))}
                   </div>
-                  <div>
-                    <p className="font-bold text-sm">{username}</p>
-                    <p className="text-xs">{desc}</p>
-                    <div className="flex gap-1 mt-1">
-                      {Array.from({ length: parseInt(rating) }).map((_, i) => (
-                        <FaStar key={i} size={10} className="fill-[#FFF500]" />
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                  <p className="text-gray-600">{review.desc}</p>
+               </div>
+             </div>
               ))}
 
               {totalPages > 1 && (
-                <div className="flex justify-between items-center mt-4 mb-6">
+                <div className="flex justify-between items-center mt-4">
                   <button
-                    onClick={handlePrevReviews}
+                    onClick={() => setCurrentPage(p => Math.max(0, p - 1))}
                     disabled={currentPage === 0}
-                    className={`px-4 py-2 text-sm rounded-md ${
-                      currentPage === 0
-                        ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                        : 'bg-main text-white hover:bg-blue-700'
-                    }`}
+                    className="px-4 py-2 bg-main text-white rounded-lg disabled:opacity-50"
                   >
                     Previous
                   </button>
-                  <span className="text-sm">
+                  <span>
                     Page {currentPage + 1} of {totalPages}
                   </span>
                   <button
-                    onClick={handleNextReviews}
+                    onClick={() => setCurrentPage(p => Math.min(totalPages - 1, p + 1))}
                     disabled={currentPage === totalPages - 1}
-                    className={`px-4 py-2 text-sm rounded-md ${
-                      currentPage === totalPages - 1
-                        ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                        : 'bg-main text-white hover:bg-blue-700'
-                    }`}
+                    className="px-4 py-2 bg-main text-white rounded-lg disabled:opacity-50"
                   >
                     Next
                   </button>
@@ -390,29 +425,33 @@ const page = () => {
               )}
             </>
           ) : (
-            <p>No reviews available</p>
+            <p className="text-gray-500">No reviews yet</p>
           )}
         </div>
 
+        {/* Review Form */}
         <div className="flex flex-col">
-          <p className="font-bold text-lg">Rate Product</p>
-          <div className="flex gap-1 my-4">
+          <h2 className="font-bold mb-4">Write a Review</h2>
+          <div className="flex gap-1 mb-4">
             {Array.from({ length: 5 }).map((_, index) => (
               <FaStar
                 key={index}
-                size={20}
-                className={`${selectedRating > index ? 'fill-[#FFF500]' : 'fill-[#D9D9D9]'}`}
-                onClick={() => handleRatingSelect(index + 1)}
-                />
-              ))}
-            </div>
-            <textarea
-              className="border-black resize-none h-[97px] w-full border-opacity-60 border-[0.5px] rounded-xl p-2"
-              value={reviewText}
-              onChange={(e) => setReviewText(e.target.value)}
-              placeholder="Write your review here..."
-            ></textarea>
-            <Button
+                size={24}
+                className={`cursor-pointer ${
+                  selectedRating > index ? 'text-yellow-400' : 'text-gray-300'
+                }`}
+                onClick={() => setSelectedRating(index + 1)}
+              />
+            ))}
+          </div>
+          <textarea
+            className="w-full p-3 border rounded-lg mb-4 resize-none"
+            rows={4}
+            value={reviewText}
+            onChange={(e) => setReviewText(e.target.value)}
+            placeholder="Share your thoughts about this product..."
+          />
+          <Button
               className="font-black text-main flex self-end items-center gap-2 mt-2"
               variant="plain"
               onClick={handleSubmitReview}
@@ -431,35 +470,35 @@ const page = () => {
                 />
               </svg>
             </Button>
-          </div>
-  
-          <div className="w-full font-bold flex gap-1 mt-8 py-2">
-            <Button
-              className="px-4 shrink-0 text-xs"
-              onClick={() => {
-                window.location.href = `tel:${product.shopDetails.shop_whatsapp_link}`;
-              }}
-            >
-              Call Seller
-            </Button>
-            <Button
-              variant="outline"
-              className="border-main px-4 py-2 flex items-center text-main text-xs shrink-0"
-              onClick={() => {
-                window.location.href = `https://wa.me/${product.shopDetails.shop_whatsapp_link}`;
-              }}
-            >
-              <IoLogoWhatsapp
-                size={22}
-                className="fill-main mr-[0.1rem] inline-block align-middle"
-              />
-              Message on Whatsapp
-            </Button>
-          </div>
-        </section>
-  
-        {/* Image Modal */}
-        {isModalOpen && (
+        </div>
+
+        {/* Contact Buttons */}
+        <div className="flex gap-4">
+  <Button
+    className="flex-1 py-3"
+    onClick={() => {
+      const callLink = getCallLink(product.shopDetails.shop_whatsapp_link);
+      window.location.href = `tel:${callLink}`;
+    }}
+  >
+    Call Seller
+  </Button>
+  <Button
+    variant="outline"
+    className="flex-1 py-3 flex items-center justify-center gap-2"
+    onClick={() => {
+      const messageLink = getMessageLink(product.shopDetails.shop_whatsapp_link);
+      window.location.href = messageLink;
+    }}
+  >
+    <IoLogoWhatsapp size={24} />
+    Message on WhatsApp
+  </Button>
+</div>
+      </section>
+
+      {/* Image Modal */}
+      {isModalOpen && (
         <div
         className="fixed inset-0 bg-gray-900 bg-opacity-75 flex justify-center items-center z-50"
         onClick={handleBackgroundClick}
@@ -469,14 +508,14 @@ const page = () => {
         onTouchEnd={handleTouchEnd}
       >
             <div className="relative">
-              <button
-                onClick={handleCloseModal}
-                className="absolute top-4 right-4 text-white text-3xl p-2 z-10 hover:bg-gray-800 rounded-full"
-              >
-                &times;
-              </button>
+            <button
+        className="absolute top-4 right-4 text-white bg-black/50 rounded-full p-2 hover:bg-black"
+        onClick={handleCloseModal}
+      >
+        <IoArrowBack size={24} />
+      </button>
               <img
-                className="max-w-3xl max-h-3xl object-contain"
+                className="h-full w-full object-contain"
                 src={modalImage}
                 alt="Enlarged Product"
               />

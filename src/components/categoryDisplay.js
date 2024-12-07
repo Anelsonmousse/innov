@@ -1,13 +1,14 @@
-"use client"
+"use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation"
 import { IoHeartOutline, IoHeart } from "react-icons/io5";
 import { FaStar, FaRegStar } from "react-icons/fa";
 import Header from "@/components/header";
 
 const StarRating = ({ rating }) => {
     const totalStars = 5;
-    const ratingNumber = parseInt(rating) || 0;
+    const ratingNumber = parseInt(rating, 10) || 0;
 
     return (
         <div className="flex">
@@ -26,14 +27,17 @@ const StarRating = ({ rating }) => {
 
 const CategoryDisplay = ({ category, products }) => {
     const [wishlistStates, setWishlistStates] = useState({});
+    const router = useRouter();
 
-    // Initialize wishlist states
-    useState(() => {
-        const initialWishlistStates = {};
-        products.forEach((product) => {
-            initialWishlistStates[product.details.product_id] = product.inWishList === 1;
-        });
-        setWishlistStates(initialWishlistStates);
+    // Initialize wishlist states when the component mounts or when `products` changes
+    useEffect(() => {
+        if (products && products.data.length > 0) {
+            const initialWishlistStates = products.data.reduce((states, product) => {
+                states[product.product_id] = product.wishlist === 1;
+                return states;
+            }, {});
+            setWishlistStates(initialWishlistStates);
+        }
     }, [products]);
 
     const toggleWishlist = (productId) => {
@@ -45,12 +49,19 @@ const CategoryDisplay = ({ category, products }) => {
 
     return (
         <main className="pt-8 px-2">
-            <Header title={category[0].toUpperCase() + category.slice(1).toLowerCase()} />
-            <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-                {products.length > 0 ? (
-                    products.map((product, index) => (
+            <Header
+                title={
+                    category
+                        ? category[0].toUpperCase() + category.slice(1).toLowerCase()
+                        : "Category"
+                }
+            />
+            <section key={products.data?.product_id} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+                {products.data?.length > 0 ? (
+                    products.data.map((product) => (
                         <div
-                            key={index}
+                        onClick={() => router.push(`/product/${product.details.product_id}`)}
+                            key={product.details.product_id}
                             className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer"
                         >
                             <div className="p-3 relative">
@@ -58,7 +69,7 @@ const CategoryDisplay = ({ category, products }) => {
                                     <img
                                         src={product.details.product_img1}
                                         className="w-full aspect-square object-cover rounded-lg"
-                                        alt={product.details.product_name}
+                                        alt={product.product_name}
                                     />
                                     <button
                                         onClick={() => toggleWishlist(product.details.product_id)}
@@ -76,13 +87,13 @@ const CategoryDisplay = ({ category, products }) => {
                                         {product.details.product_name}
                                     </h1>
                                     <div className="flex items-center justify-between">
-                                        <StarRating rating={product.details.rating || "0"} />
+                                        <StarRating rating={product.details.ratings || "0"} />
                                         <span className="text-xs bg-[#D9D9D9] px-2 py-1 rounded">
-                                            {product.shopDetails.shop_name}
+                                            {product.shopDetails?.shop_name}
                                         </span>
                                     </div>
                                     <p className="font-semibold text-lg">
-                                        ₦{parseInt(product.details.amount).toLocaleString()}
+                                        ₦{parseInt(product.details.amount, 10).toLocaleString()}
                                     </p>
                                 </div>
                             </div>

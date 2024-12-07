@@ -156,13 +156,13 @@ const page = () => {
           </div>
         </div>
         <div className="flex mt-6 justify-between items-center">
-          <Button
+          {/* <Button
             variant="plain"
             onClick={handleCopyStoreLink}
             className="flex gap-1 px-2 py-1 text-xs items-center text-gray-600 hover:text-gray-800 transition-colors"
           >
             <FiCopy size={16} /> Copy Store Link
-          </Button>
+          </Button> */}
           <Button
             variant="plain"
             onClick={() => router.push("/addProduct")}

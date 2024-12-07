@@ -180,7 +180,6 @@ const ProductList = ({ items }) => {
       if (!token) {
           router.push("/signin");
       }else {
-          localStorage.setItem('selectedProduct', JSON.stringify(item));
           router.push(`/product/${item.details.product_id}`);
       }
   };

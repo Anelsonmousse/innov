@@ -150,13 +150,13 @@ const page = () => {
           </div>
         </div>
         <div className="flex mt-8 justify-between items-center">
-          <Button
+          {/* <Button
             variant="plain"
             onClick={handleCopyStoreLink}
             className="flex gap-1 px-2 py-1 text-xs items-center"
           >
             <FiCopy size={16} /> Copy Store Link
-          </Button>
+          </Button> */}
           <Button
             variant="plain"
             onClick={() => router.push("/addProduct")}

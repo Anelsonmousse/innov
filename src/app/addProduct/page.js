@@ -234,7 +234,7 @@ const Page = () => {
           </select>
 
           <input
-            type="text"
+            type="number"
             placeholder="Price"
             value={amount}
             onChange={(e) => setPrice(e.target.value)}
