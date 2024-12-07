@@ -426,7 +426,7 @@ const handleWishlistClick = async () => {
             <CategoryItem image={Six} label="Furnitures" onClick={() => handleCategoryClick("furnitures")} />
             <CategoryItem image={Seven} label="Electronics" onClick={() => handleCategoryClick("electronics")} />
             <CategoryItem image={Eight} label="Tops" onClick={() => handleCategoryClick("tops")} />
-            <CategoryItem image={Nine} label="Health & Beauty" onClick={() => handleCategoryClick("trousers")} />
+            <CategoryItem image={Nine} label="Trousers" onClick={() => handleCategoryClick("trousers")} />
             <CategoryItem image={Ten} label="Women" onClick={() => handleCategoryClick("women")} />
             <CategoryItem image={Twelve} label="Accessories" onClick={() => handleCategoryClick("accessories")} />
             <CategoryItem image={Thirteen} label="Food" onClick={() => handleCategoryClick("food")} />
