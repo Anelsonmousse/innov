@@ -155,10 +155,18 @@ const Page = () => {
         );
     }
 
+ const formattedName = categoryName 
+    ? `${categoryName[0].toUpperCase()}${categoryName.slice(1).toLowerCase()} Products`
+    : "Products";
+
     return (
         <main className="pt-8 px-2">
            
-                 
+                  <div className="flex justify-center items-center w-full h-20">
+      <h1 className="text-2xl font-bold text-center">
+        {formattedName}
+      </h1>
+    </div>
             <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
                 {products.length > 0 ? (
                     products.map((product, index) => (
