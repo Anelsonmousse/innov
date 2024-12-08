@@ -21,6 +21,17 @@ const page = () => {
   const fileInputRef = useRef(null);
   const requestID = "rid_1983";
 
+  // Validate if all required fields are filled
+  const isFormValid = () => {
+    return (
+      product_name.trim() !== "" &&
+      amount.trim() !== "" &&
+      product_desc.trim() !== "" &&
+      product_cat.trim() !== "" &&
+      imagePreviews.length > 0
+    );
+  };
+
   useEffect(() => {
     const storedProduct = localStorage.getItem("editProduct");
     if (storedProduct) {
@@ -281,7 +292,13 @@ const page = () => {
 
           <button
             onClick={handleUpdate}
-            className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition font-semibold"
+            disabled={!isFormValid()}
+            className={`
+              w-full p-3 rounded-lg transition font-semibold
+              ${isFormValid() 
+                ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                : 'bg-gray-400 text-gray-200 cursor-not-allowed'}
+            `}
           >
             Update Product
           </button>
