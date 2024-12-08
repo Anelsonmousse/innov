@@ -159,11 +159,12 @@ const Page = () => {
         <main className="pt-8 px-2">
             <Header
                 title={
-                    categoryName 
-                        ? categoryName[0].toUpperCase() + categoryName.slice(1).toLowerCase()
+                    category 
+                        ? category[0].toUpperCase() + category.slice(1).toLowerCase()
                         : "Products"
                 }
             />
+                 
             <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
                 {products.length > 0 ? (
                     products.map((product, index) => (
