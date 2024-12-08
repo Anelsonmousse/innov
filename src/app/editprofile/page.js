@@ -27,6 +27,17 @@ const Page = () => {
   const [imageUrl, setImageUrl] = useState("");
   const requestID = "rid_1983";
 
+  // Validate if all required fields are filled
+  const isFormValid = () => {
+    return (
+      username.trim() !== "" &&
+      gender.trim() !== "" &&
+      phone.trim() !== "" &&
+      user_location.trim() !== "" &&
+      (imagePreview !== null)
+    );
+  };
+
   // Load data from localStorage on component mount
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("userData"));
@@ -249,7 +260,13 @@ const Page = () => {
 
             <button
               onClick={handleSave}
-              className="bg-[#004AAD] cursor-pointer hover:bg-blue-700 text-white mt-5 py-2 px-4 rounded-lg"
+              disabled={!isFormValid()}
+              className={`
+                ${isFormValid() 
+                  ? 'bg-[#004AAD] cursor-pointer hover:bg-blue-700' 
+                  : 'bg-gray-400 cursor-not-allowed'}
+                text-white mt-5 py-2 px-4 rounded-lg
+              `}
             >
               Save Profile
             </button>
