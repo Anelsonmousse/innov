@@ -34,7 +34,52 @@ const Page = () => {
   });
   let requestID = "rid_1983";
 
-  // Existing useEffect and other methods...
+  // Load data from localStorage on component mount
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("shopDetails"));
+  
+    if (userData) {
+      console.log(userData);
+      setShopName(userData.shop_name || "");
+      setChatLink(userData.shop_whatsapp_link || "");
+      setDescription(userData.shop_desc);
+      setStoreLocation(userData.shop_location || "");
+      setServicesOffered(userData.service_offered || "NULL");
+      // Set email from localStorage
+      setImageUrl(userData.shop_image_url || "");
+      setImagePreview(userData.shop_image_url || "");
+    }
+
+    const fetchLocations = async () => {
+      try {
+        const response = await axios.post(
+          "https://api.vplaza.com.ng/shops/getUni",
+          {
+            requestID,
+          }
+        );
+        const data = response.data;
+        setLocations(data);
+      } catch (error) {
+        console.error("Error fetching locations:", error);
+      }
+    };
+
+    fetchLocations();
+  }, []);
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+        setValidationErrors(prev => ({...prev, shop_image: false}));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const validateForm = () => {
     const errors = {
@@ -51,6 +96,10 @@ const Page = () => {
     return !Object.values(errors).some(error => error);
   };
 
+  const triggerFileInput = () => {
+    document.getElementById("file-input").click();
+  };
+
   const handleSave = async () => {
     // Validate form before submission
     if (!validateForm()) {
@@ -58,22 +107,144 @@ const Page = () => {
       return;
     }
 
-    setLoading(true);
+    setLoading(true); // Start the loader
 
     try {
       const token = localStorage.getItem("token");
-      let uploadedImageUrl = shop_image_url;
+      let uploadedImageUrl = shop_image_url; // Use existing image URL by default
 
       if (imageFile) {
-        // Existing image upload logic...
+        try {
+          // Log the image file being uploaded to Sanity
+          console.log("Uploading to Sanity:", { imageFile });
+
+          // Upload to Sanity first
+          const imageAsset = await client.assets.upload("image", imageFile);
+          uploadedImageUrl = imageAsset.url;
+
+          // Log the data being sent to the backend after Sanity upload
+          console.log("Sending data to backend (editUser):", {
+            shop_image_url: uploadedImageUrl,
+            shop_name,
+            shop_desc,
+            shop_location,
+            shop_whatsapp_link,
+            service_offered,
+            requestID,
+          });
+
+          // Send the data to the backend
+          const response = await axios.post(
+            "https://api.vplaza.com.ng/shops/editShop",
+            {
+              shop_image_url: uploadedImageUrl,
+              shop_name,
+              shop_desc,
+              shop_location,
+              shop_whatsapp_link,
+              service_offered,
+              requestID,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (response.status === 200) {
+            console.log(response);
+            alert("Shop updated successfully");
+            router.push("/");
+          } else {
+            console.log(response);
+            alert("Failed to update Shop");
+          }
+        } catch (sanityError) {
+          console.error("Sanity upload failed:", sanityError);
+
+          // Log the data being sent to the backend when uploading the image directly
+          const formData = new FormData();
+          formData.append("shop_image_url", imageFile);
+          formData.append("shop_name", shop_name);
+          formData.append("service_offered", service_offered);
+          formData.append("shop_desc", shop_desc);
+          formData.append("shop_whatsapp_link", shop_whatsapp_link);
+          formData.append("requestID", requestID);
+          formData.append("shop_location", shop_location);
+
+          console.log("Sending data to backend (editUser2):", formData);
+
+          const response = await axios.post(
+            "https://api.vplaza.com.ng/shops/editShop",
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (response.status === 200) {
+            uploadedImageUrl = response.data.imageUrl;
+            console.log(response);
+            alert("Shop updated successfully");
+            router.push("/");
+            return;
+          } else {
+            console.log(response);
+            alert("Failed to update Shop");
+          }
+        }
       } else {
-        // Existing logic for existing image...
+        // Log the data being sent to the backend if no new image is selected
+        console.log("Sending data to backend (editUser) with existing image:", {
+          shop_image_url: uploadedImageUrl,
+          shop_name,
+          shop_desc,
+          shop_location,
+          shop_whatsapp_link,
+          service_offered,
+          requestID,
+        });
+
+        // If no new image is selected, send the existing imageUrl to the backend
+        const response = await axios.post(
+          "https://api.vplaza.com.ng/shops/editShop",
+          {
+            shop_image_url: uploadedImageUrl,
+            shop_name,
+            shop_desc,
+            shop_location,
+            shop_whatsapp_link,
+            service_offered,
+            requestID,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          console.log(response);
+          alert("Shop updated successfully");
+          router.push("/");
+        } else if(response.message === "signature verification failed") {
+          router.push("/signin");
+        }
+        else {
+          console.log(response);
+          alert("Failed to update Shop");
+        } 
       }
     } catch (error) {
       console.error("Error:", error);
       alert("Failed to update Shop");
     } finally {
-      setLoading(false);
+      setLoading(false); // Stop the loader
     }
   };
 
