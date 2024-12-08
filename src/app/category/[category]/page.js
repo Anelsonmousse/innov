@@ -27,34 +27,36 @@ const StarRating = ({ rating }) => {
     );
 };
 
-const page = () => {
+const Page = () => {
     const router = useRouter();
-    const { category } = useParams();
+    const { category: urlCategory } = useParams();
     const [products, setProducts] = useState([]);
+    const [categoryName, setCategoryName] = useState("");
     const [loading, setLoading] = useState(true);
     const [wishlistAction, setWishlistAction] = useState("");
     const [wishlistStates, setWishlistStates] = useState({});
     const [token, setToken] = useState(null);
     const requestID = "rid_1983";
 
-    // Debug log for category
-    useEffect(() => {
-        console.log('Category:', category);
-    }, [category]);
-
     useEffect(() => {
         const categoryData = JSON.parse(localStorage.getItem('categoryData'));
         const storedToken = localStorage.getItem('token');
         setToken(storedToken);
         
-        if (categoryData && categoryData.products) {
-            setProducts(categoryData.products);
-            // Initialize wishlist states
-            const initialWishlistStates = {};
-            categoryData.products.forEach(product => {
-                initialWishlistStates[product.details.product_id] = product.inWishList === 1;
-            });
-            setWishlistStates(initialWishlistStates);
+        if (categoryData) {
+            // Set category name from localStorage
+            setCategoryName(categoryData.category || "Products");
+
+            if (categoryData.products) {
+                setProducts(categoryData.products);
+                
+                // Initialize wishlist states
+                const initialWishlistStates = {};
+                categoryData.products.forEach(product => {
+                    initialWishlistStates[product.details.product_id] = product.inWishList === 1;
+                });
+                setWishlistStates(initialWishlistStates);
+            }
         }
         
         setLoading(false);
@@ -156,9 +158,10 @@ const page = () => {
     return (
         <main className="pt-8 px-2">
             <Header
-                title={category ? 
-                    category[0].toUpperCase() + category.slice(1).toLowerCase() : 
-                    "Products"
+                title={
+                    categoryName 
+                        ? categoryName[0].toUpperCase() + categoryName.slice(1).toLowerCase()
+                        : "Products"
                 }
             />
             <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
@@ -217,4 +220,4 @@ const page = () => {
     );
 };
 
-export default page;
+export default Page;
