@@ -37,6 +37,11 @@ const page = () => {
     const [token, setToken] = useState(null);
     const requestID = "rid_1983";
 
+    // Debug log for category
+    useEffect(() => {
+        console.log('Category:', category);
+    }, [category]);
+
     useEffect(() => {
         const categoryData = JSON.parse(localStorage.getItem('categoryData'));
         const storedToken = localStorage.getItem('token');
@@ -151,7 +156,10 @@ const page = () => {
     return (
         <main className="pt-8 px-2">
             <Header
-                title={category[0].toUpperCase() + category.slice(1).toLowerCase()}
+                title={category ? 
+                    category[0].toUpperCase() + category.slice(1).toLowerCase() : 
+                    "Products"
+                }
             />
             <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
                 {products.length > 0 ? (
