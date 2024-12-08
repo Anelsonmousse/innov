@@ -157,13 +157,11 @@ const Page = () => {
 
     return (
         <main className="pt-8 px-2">
-            <Header
-                title={
-                    category 
-                        ? category[0].toUpperCase() + category.slice(1).toLowerCase()
-                        : "Products"
-                }
-            />
+            <h2 className="text-2xl font-bold mb-4">
+            {categoryName 
+                ? categoryName[0].toUpperCase() + categoryName.slice(1).toLowerCase()
+                : "Products"}
+        </h2>
                  
             <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
                 {products.length > 0 ? (
