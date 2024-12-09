@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import axios from "axios"; // Import Axios
 import ProductDetail from "@/components/ProductDetail"; // Import the product detail component
-import Loader from "@/components/loader"; // Import the Loader component
+import Loader from "@/components/Loader"; // Import the Loader component
 
 // Fetch product details by ID
 const fetchProductById = async (product_id) => {
