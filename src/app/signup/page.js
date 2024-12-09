@@ -13,6 +13,7 @@ const SignUpPage = () => {
   });
 
   const [loading, setLoading] = useState(false); // New state for loading
+  const [error, setError] = useState(""); // State for error messages
   const router = useRouter();
 
   const handleChange = (event) => {
@@ -25,7 +26,20 @@ const SignUpPage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setError(""); // Reset error messages on form submit
     setLoading(true); // Set loading to true when the form is submitted
+
+    // Validate password and confirm password
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters long");
+      setLoading(false);
+      return;
+    }
+    if (formData.password !== formData.confirm_password) {
+      setError("Passwords do not match");
+      setLoading(false);
+      return;
+    }
 
     const form = new FormData();
     form.append("email", formData.email);
@@ -39,15 +53,14 @@ const SignUpPage = () => {
         form
       );
 
-      console.log(form);
-      
       console.log("Success:", response.data);
       alert("Sign up successful");
-        // Store the access_token in localStorage
-        const tokenn = response.data.data.access_token;
-        const email = response.data.data.datatoken.email;
 
-        console.log(email)
+      // Store the access_token in localStorage
+      const tokenn = response.data.data.access_token;
+      const email = response.data.data.datatoken.email;
+
+      console.log(email);
       localStorage.setItem("token", tokenn);
       localStorage.setItem("emailn", email);
       router.push("/editprofile");
@@ -105,6 +118,8 @@ const SignUpPage = () => {
               required
               disabled={loading} // Disable input fields when loading
             />
+            {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
+
             <button
               type="submit"
               className={`bg-[#004AAD] w-[90%] ml-[5%] mt-16 text-center font-bold text-lg h-[45px] rounded-lg text-white py-2 ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
