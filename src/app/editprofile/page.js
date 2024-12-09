@@ -234,7 +234,7 @@ const Page = () => {
             />
             {/* Store Location Dropdown */}
             <div className="w-[100%]">
-              <div className="ml-[10%] mt-4">Store Location:</div>
+              <div className="ml-[10%] mt-4">Your Location:</div>
             </div>
             <div className="relative w-[80%] mt-2">
               <MdLocationOn
