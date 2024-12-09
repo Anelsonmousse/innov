@@ -118,7 +118,9 @@ const Page = () => {
               {loading ? "Logging In..." : "Log In"}
             </button>
           </form>
-          <div className="w-full text-right text-[#004AAD] pr-[5%] font-bold mt-1">
+          <div 
+            onClick={() => router.push("/forgot_pass")}
+            className="w-full text-right text-[#004AAD] pr-[5%] font-bold mt-1">
             Forgotten Password?
           </div>
           <div className="font-bold text-center text-md w-full text-wrap mt-12">

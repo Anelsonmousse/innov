@@ -1,79 +1,77 @@
-"use client"
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { IoArrowBack } from 'react-icons/io5';
-import { useRouter } from 'next/navigation';
+"use client";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { IoArrowBack } from "react-icons/io5";
+import { useRouter } from "next/navigation";
 
 const page = () => {
   const router = useRouter();
-  const [email, setEmail] = useState('');
   const [formData, setFormData] = useState({
-    otp: '',
-    newPassword: '',
-    confirmPassword: ''
+    otp: "",
+    password: "",
+    confirm_password: "",
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  // Check for email in URL params when component mounts
-  useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const emailParam = searchParams.get('email');
-    if (emailParam) {
-      setEmail(decodeURIComponent(emailParam));
-    } else {
-      // Redirect back if no email is provided
-      router.replace('/forgot-password');
-    }
-  }, [router]);
+  const [error, setError] = useState("");
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData({
       ...formData,
-      [name]: value
+      [name]: value,
     });
-    setError('');
+    setError("");
   };
 
   const handlePasswordReset = async (event) => {
     event.preventDefault();
     const token = localStorage.getItem("token");
     const requestID = "rid_1983";
+
     // Validate passwords match
-    if (formData.newPassword !== formData.confirmPassword) {
-      setError('Passwords do not match');
+    if (formData.password !== formData.confirm_password) {
+      setError("Passwords do not match");
       return;
     }
 
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
+      const data = new FormData();
+      data.append("otp", formData.otp);
+      data.append("password", formData.password);
+      data.append("confirm_password", formData.confirm_password);
+      data.append("requestID", requestID);
+
+      // Log data being sent to the backend
+      console.log("Data being sent to backend:");
+      for (const pair of data.entries()) {
+        console.log(`${pair[0]}: ${pair[1]}`);
+      }
+
       const response = await axios.post(
-        'https://api.vplaza.com.ng/users/resetPassword',
-        {
-          email,
-          otp: formData.otp,
-          newPassword: formData.newPassword,
-          requestID
-        },
+        "https://api.vplaza.com.ng/users/resetPassword",
+        data,
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
           },
         }
       );
 
-      if (response.data.message === 'Password reset successful') {
-        alert('Password reset successful');
-        router.push('/login');
+      console.log(response);
+
+      if (response.data.status === true) {
+        alert("Password reset successful");
+        router.push("/signin");
       } else {
-        setError(response.data.message || 'Password reset failed');
+        setError(response.data.message || "Password reset failed");
       }
     } catch (error) {
-      console.error('Error:', error);
-      setError('Failed to reset password. Please try again.');
+      console.error("Error:", error);
+      setError("Failed to reset password. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -90,9 +88,7 @@ const page = () => {
         />
 
         <div className="bg-white w-full h-[85%] rounded-tr-[50px] rounded-tl-[50px] mt-[15%]">
-          <div className="font-bold text-3xl pt-32 px-8">
-            Reset Password
-          </div>
+          <div className="font-bold text-3xl pt-32 px-8">Reset Password</div>
 
           <form onSubmit={handlePasswordReset} className="w-full px-8">
             <div className="mt-4">
@@ -111,14 +107,14 @@ const page = () => {
             </div>
 
             <div className="mt-4">
-              <label htmlFor="newPassword" className="block ml-[10%]">
-                New Password:
+              <label htmlFor="password" className="block ml-[10%]">
+                Password:
               </label>
               <input
                 placeholder="Enter New Password"
                 type="password"
-                name="newPassword"
-                value={formData.newPassword}
+                name="password"
+                value={formData.password}
                 onChange={handleChange}
                 className="w-[80%] opacity-40 border-2 ml-[10%] rounded-lg pl-3 h-[45px] border-black"
                 required
@@ -126,24 +122,22 @@ const page = () => {
             </div>
 
             <div className="mt-4">
-              <label htmlFor="confirmPassword" className="block ml-[10%]">
+              <label htmlFor="confirm_password" className="block ml-[10%]">
                 Confirm Password:
               </label>
               <input
                 placeholder="Confirm New Password"
                 type="password"
-                name="confirmPassword"
-                value={formData.confirmPassword}
+                name="confirm_password"
+                value={formData.confirm_password}
                 onChange={handleChange}
                 className="w-[80%] opacity-40 border-2 ml-[10%] rounded-lg pl-3 h-[45px] border-black"
                 required
               />
             </div>
-            
+
             {error && (
-              <div className="text-red-500 text-center mt-2">
-                {error}
-              </div>
+              <div className="text-red-500 text-center mt-2">{error}</div>
             )}
 
             <button
@@ -151,7 +145,7 @@ const page = () => {
               className="bg-[#004AAD] w-[90%] ml-[5%] mt-16 text-center font-bold text-lg h-[45px] rounded-lg text-white py-2"
               disabled={loading}
             >
-              {loading ? 'Resetting...' : 'Reset Password'}
+              {loading ? "Resetting..." : "Reset Password"}
             </button>
           </form>
         </div>
