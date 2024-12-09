@@ -154,6 +154,14 @@ const Page = () => {
 
           if (response.status === 200) {
             console.log(response);
+            localStorage.setItem(
+              "userData",
+              JSON.stringify(response.data.userData)
+            );
+            localStorage.setItem(
+              "shopDetails",
+              JSON.stringify(response.data.shopDetails)
+            );
             alert("Shop updated successfully");
             router.push("/");
           } else {
@@ -189,6 +197,14 @@ const Page = () => {
           if (response.status === 200) {
             uploadedImageUrl = response.data.imageUrl;
             console.log(response);
+            localStorage.setItem(
+              "userData",
+              JSON.stringify(response.data.userData)
+            );
+            localStorage.setItem(
+              "shopDetails",
+              JSON.stringify(response.data.shopDetails)
+            );
             alert("Shop updated successfully");
             router.push("/");
             return;
@@ -230,6 +246,14 @@ const Page = () => {
 
         if (response.status === 200) {
           console.log(response);
+          localStorage.setItem(
+            "userData",
+            JSON.stringify(response.data.userData)
+          );
+          localStorage.setItem(
+            "shopDetails",
+            JSON.stringify(response.data.shopDetails)
+          );
           alert("Shop updated successfully");
           router.push("/");
         } else if(response.message === "signature verification failed") {
