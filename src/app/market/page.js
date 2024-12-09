@@ -299,7 +299,7 @@ const page = () => {
         <div className="flex flex-col h-screen items-center">
           <Image src={Activ8} className="px-3 mt-48 object-cover mb-2 " />
           <div className=" text-xs text-center font-medium w-full px-4">
-            Activate your store for just #500 and enjoy a month-long selling
+            Activate your store for free and enjoy a month-long selling
             spree! With Metor, post unlimited goods for sale until the same date
             next month. Don't miss out on this opportunity to showcase your
             items to your university community!
