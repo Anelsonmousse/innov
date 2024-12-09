@@ -29,7 +29,7 @@ const fetchProductById = async (product_id) => {
   }
 };
 
-const ProductPage = () => {
+const ProductPage2 = () => {
   const { productView } = useParams(); // Use 'productView' to match the dynamic route
   console.log("Product View (Product ID):", productView); // Log to verify the parameter
   
@@ -62,4 +62,4 @@ const ProductPage = () => {
   return <ProductDetail2 product={product} />;
 };
 
-export default ProductPage;
+export default ProductPage2;
