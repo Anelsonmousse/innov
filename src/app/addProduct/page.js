@@ -112,6 +112,8 @@ const Page = () => {
         }, {}),
       };
 
+      console.log("Sending data to backend (addProduct):",dataToSend)
+
       const response = await axios.post(
         "https://api.vplaza.com.ng/products/createProduct",
         dataToSend,
@@ -123,6 +125,7 @@ const Page = () => {
       );
 
       if (response.status === 200) {
+        console.log(response);
         alert("Product added successfully!");
         router.push("/store/product");
       } else {
