@@ -40,6 +40,7 @@ const Page = () => {
           },
         }
       );
+      console.log(response);
       if (response.data.message == "success") {
         localStorage.setItem("token", response.data.access_token);
         localStorage.setItem(
@@ -50,11 +51,10 @@ const Page = () => {
           "shopDetails",
           JSON.stringify(response.data.shopDetails)
         );
+        localStorage.setItem("emailn", response.data.data.userData.email);
         console.log("Success:", response.data);
-
         const token = localStorage.getItem("token");
         console.log(token);
-
         router.push("/");
       } else {
         console.log("Failed:", response.data);
