@@ -123,10 +123,11 @@ const Page = () => {
         }
       );
 
-      if (response.status === 200) {
+      if (response.data.status === true) {
+        console.log(response.data.status);
         console.log(response);
         alert("Profile updated successfully");
-        router.push("/");
+        router.push("/profile");
       } else if (response.message === "signature verification failed") {
         router.push("/signin");
       } else {
@@ -205,13 +206,19 @@ const Page = () => {
             <div className="w-[100%]">
               <div className="ml-[10%] mt-4">Gender:</div>
             </div>
-            <input
+            
+            <select
               value={gender}
               onChange={(e) => setGender(e.target.value)}
-              placeholder="Enter your Gender"
-              type="text"
               className="w-[80%] opacity-40 border-2 rounded-lg pl-3 h-[45px] border-black"
-            />
+            >
+              <option value="" disabled>
+                Select your Gender
+              </option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+
             <div className="w-[100%]">
               <div className="ml-[10%] mt-4">Phone Number:</div>
             </div>
@@ -219,7 +226,7 @@ const Page = () => {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="Enter your Phone number"
-              type="text"
+              type="number"
               className="w-[80%] opacity-40 border-2 rounded-lg pl-3 h-[45px] border-black"
             />
             <div className="w-[100%]">
