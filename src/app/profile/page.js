@@ -61,6 +61,8 @@ const Page = () => {
 
   const LogOut = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("shopDetails");
+    localStorage.removeItem("userData");
     router.push("/signin");
   };
 
@@ -71,7 +73,7 @@ const Page = () => {
           <div className="flex w-full">
             <IoArrowBack
               onClick={() => {
-                router.back();
+                router.push("/");
               }}
               color="white"
               size={24}
