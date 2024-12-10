@@ -63,6 +63,7 @@ const Page = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("shopDetails");
     localStorage.removeItem("userData");
+    localStorage.removeItem("emailn");
     router.push("/signin");
   };
 
