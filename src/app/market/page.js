@@ -81,7 +81,7 @@ const page = () => {
         console.log("Response data:", response.data);
 
         // Check if the response is successful
-        if(response){
+        if(response.data.status === true){
           console.log(response)
           alert('Shop Activated Succesfully');
           router.push("/editstore");
