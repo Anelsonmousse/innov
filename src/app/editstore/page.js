@@ -34,6 +34,17 @@ const Page = () => {
   });
   let requestID = "rid_1983";
 
+  // Validate if all required fields are filled
+  const isFormValid = () => {
+    return (
+      shop_name.trim() !== "" &&
+      shop_whatsapp_link.trim() !== "" &&
+      shop_desc.trim() !== "" &&
+      shop_location.trim() !== "" &&
+      (imagePreview !== null)
+    );
+  };
+
   // Load data from localStorage on component mount
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("shopDetails"));
@@ -152,7 +163,7 @@ const Page = () => {
             }
           );
 
-          if (response.status === 200) {
+          if (response.data.status === true) {
             console.log(response);
             localStorage.setItem(
               "userData",
@@ -163,7 +174,7 @@ const Page = () => {
               JSON.stringify(response.data.shopDetails)
             );
             alert("Shop updated successfully");
-            router.push("/");
+            router.push("/store/product");
           } else {
             console.log(response);
             alert("Failed to update Shop");
@@ -427,12 +438,18 @@ const Page = () => {
               <span className="text-red-500 text-sm w-[80%] text-left">Store location is required</span>
             )}
 
-            <div
+<button
               onClick={handleSave}
-              className="bg-[#004AAD] w-[90%] mt-16 text-center cursor-pointer font-bold text-lg h-[45px] rounded-lg text-white py-2"
+              disabled={!isFormValid()}
+              className={`
+                ${isFormValid() 
+                  ? 'bg-[#004AAD] cursor-pointer hover:bg-blue-700' 
+                  : 'bg-gray-400 cursor-not-allowed'}
+                text-white mt-5 py-2 px-4 rounded-lg
+              `}
             >
-              Save
-            </div>
+              Save Store
+            </button>
           </form>
         </div>
       </div>
