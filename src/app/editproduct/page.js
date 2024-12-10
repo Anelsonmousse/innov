@@ -22,6 +22,16 @@ const Page = () => {
   const fileInputRef = useRef(null);
   const [editProduct, setEditProduct] = useState(null);
   const requestID = "rid_1983"; // Hardcoded request ID
+  
+  const isFormValid = () => {
+    return (
+      product_name.trim() !== "" &&
+      amount.trim() !== "" &&
+      product_desc.trim() !== "" &&
+      product_cat.trim() !== "" &&
+      imagePreviews.length > 1
+    );
+  };
 
   // Access localStorage client-side
   useEffect(() => {
@@ -304,14 +314,26 @@ const Page = () => {
           className="w-full p-3 border border-blue-200 rounded-lg min-h-[120px] focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
         />
       </div>
+      <div className="text-center text-sm text-red-600 mt-4">
+          Ensure to add more than 1 image
+        </div>
 
-      <button
-        onClick={handleSave}
-        disabled={loading}
-        className="mt-6 w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 transition"
-      >
-        {loading ? "Saving..." : "Save Product"}
-      </button>
+
+
+        <div className="flex justify-center">
+          <button
+            onClick={handleSave}
+            disabled={loading || !isFormValid()}
+            className={`
+            ${isFormValid() 
+              ? 'bg-[#004AAD] cursor-pointer hover:bg-blue-700' 
+              : 'bg-gray-400 cursor-not-allowed'}
+                text-white mt-5 py-2 px-4 rounded-lg
+            `}
+         >
+            {loading ? "Saving..." : "Save Product"}
+          </button>
+        </div>
     </div>
   </div>
   );
