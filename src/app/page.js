@@ -51,7 +51,7 @@ const Page = () => {
 
   useEffect(() => {
     const fetchItems = async () => {
-      const token = localStorage.getItem("token");
+      const tkenn = localStorage.getItem("token");
       const userDataRaw = localStorage.getItem("userData");
       const requestID = "rid_1983"; // Generate request ID
     
@@ -63,7 +63,7 @@ const Page = () => {
         requestID,
       };
     
-      if (token && userData) {
+      if (tkenn && userData) {
         // Use 'getProductByUni' endpoint
         endpoint = "https://api.vplaza.com.ng/products/getProductByUniL";
     
