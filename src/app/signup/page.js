@@ -52,21 +52,29 @@ const SignUpPage = () => {
         "https://api.vplaza.com.ng/users/registerUser",
         form
       );
-
+    
       console.log("Success:", response.data);
-      alert("Sign up successful");
-
-      // Store the access_token in localStorage
-      const tokenn = response.data.data.access_token;
-      const email = response.data.data.datatoken.email;
-
-      console.log(email);
-      localStorage.setItem("token", tokenn);
-      localStorage.setItem("emailn", email);
-      router.push("/editprofile");
+    
+      // Check if the status is true
+      if (response.data.status === true) {
+        alert("Sign up successful");
+    
+        // Store the access_token in localStorage
+        const tokenn = response.data.data.access_token;
+        const email = response.data.data.datatoken.email;
+    
+        console.log(email);
+        localStorage.setItem("token", tokenn);
+        localStorage.setItem("emailn", email);
+    
+        // Navigate to the edit profile page
+        router.push("/editprofile");
+      } else {
+        alert("Sign up failed. Please check your details and try again.");
+      }
     } catch (error) {
       console.error("Error:", error);
-      alert("Sign up failed");
+      alert("Sign up failed. An error occurred.");
     } finally {
       setLoading(false); // Re-enable the button when the request is complete
     }
