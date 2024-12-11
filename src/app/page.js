@@ -51,30 +51,30 @@ const Page = () => {
 
   useEffect(() => {
     const fetchItems = async () => {
-      const tkenn = localStorage.getItem("token");
+      const token = localStorage.getItem("token");
+      const userDataRaw = localStorage.getItem("userData");
       const requestID = "rid_1983"; // Generate request ID
-
-      // Retrieve user data from localStorage
-      const userData = JSON.parse(localStorage.getItem("userData"));
-
+    
+      // Parse user data
+      const userData = userDataRaw ? JSON.parse(userDataRaw) : null;
+    
       let endpoint = "";
       let requestData = {
         requestID,
       };
-
-      if (tkenn) {
-        // If token exists, use the 'getProductByUni' endpoint
+    
+      if (token && userData) {
+        // Use 'getProductByUni' endpoint
         endpoint = "https://api.vplaza.com.ng/products/getProductByUniL";
-
-        // Dynamically set the university from localStorage (userData)
-        if (userData && userData.user_location) {
+    
+        if (userData.user_location) {
           requestData.university = userData.user_location;
         } else {
           console.error("University location not found in userData");
           return; // Exit if no university location found
         }
       } else {
-        // If no token exists, use the 'getAllProducts' endpoint
+        // Use 'getAllProducts' endpoint
         endpoint = "https://api.vplaza.com.ng/products/getAllProducts";
       }
 
