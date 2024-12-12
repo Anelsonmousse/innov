@@ -119,15 +119,6 @@ const ProductDetail = ({ product, isInWishlist }) => {
     }
   };
   
-  const getMessageLink = (whatsappLink) => {
-    // If the link is already in the 'wa.me' format, use it directly
-    if (whatsappLink.startsWith('wa.me/')) {
-      return `https://api.whatsapp.com/send/?phone=${whatsappLink.replace('wa.me/', '')}&text&type=phone_number&app_absent=0`;
-    }
-  
-    // Otherwise, process the phone number to create the correct URL
-    return getCallLink(whatsappLink);
-  }
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
@@ -454,10 +445,7 @@ const ProductDetail = ({ product, isInWishlist }) => {
 <Button
   variant="outline"
   className="flex-1 py-3 flex items-center justify-center gap-2"
-  onClick={() => {
-    const messageLink = messageLink(product.shop.shop_whatsapp_link);
-    window.location.href = messageLink;
-  }}
+  onClick={() => window.open(product.shop.shop_whatsapp_link, '_blank')}
 >
   <IoLogoWhatsapp size={24} />
   Message on WhatsApp
