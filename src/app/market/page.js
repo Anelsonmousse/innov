@@ -124,7 +124,9 @@ const page = () => {
               placeholder="Search"
             />
             <div className="w-full mt-2 h-full">
-              <Image src={BC} className="w-full h-[225px]" />
+              <Image src={BC} 
+              alt="Banner image for stores"
+              className="w-full h-[225px]" />
             </div>
           </div>
         </div>
@@ -296,7 +298,7 @@ const page = () => {
     return (
       <div>
         <div className="flex flex-col h-screen items-center">
-          <Image src={Activ8} className="px-3 mt-48 object-cover mb-2 " />
+          <Image src={Activ8} alt="Banner image for stores" className="px-3 mt-48 object-cover mb-2 " />
           <div className=" text-xs text-center font-medium w-full px-4">
             Activate your store for free and enjoy a month-long selling
             spree! With Metor, post unlimited goods for sale until the same date
@@ -313,10 +315,10 @@ const page = () => {
 
         {/* Nav FOoter */}
         <div className="w-full  h-[100px] sticky bottom-0 bg-white ">
-          <div className="bg-[#004AAD] justify-between flex rounded-2xl w-[90%] ml-[5%] h-[70%]">
-            <div className=" flex justify-between ml-[5%] mt-3 w-[90%]">
-              <div className="h-[50px]  w-[50px] rounded-full bg-white -mt-1 text-center items-center justify-center">
-              <MdStore className="ml-1 mt-1"
+          <div className="bg-[#004AAD] justify-between flex w-[100%] h-[65%]">
+            <div className=" flex justify-between ml-[5%] mt-5 w-[90%]">
+              <div className="h-[50px] w-[50px] mt-[-10px] rounded-full bg-white text-center items-center justify-center">
+              <MdStore className="ml-[10px] pt-[2px] mt-[7px]"
               onClick={() => {
             
                 if (!token) {
@@ -350,14 +352,17 @@ const page = () => {
                 }
               }}
               color="#686868"
-              size={40}
+              size={30}
             />
               </div>
-              <MdHomeFilled onClick={() => router.push("/")} color="#686868" className="" size={40} />
+              <MdHomeFilled 
+              onClick={() => router.push("/")} 
+              color="#686868" className="" 
+              size={30} />
               <IoPersonCircleSharp
                 onClick={() => router.push("/profile")}
                 color="#686868"
-                size={40}
+                size={30}
               />
             </div>
           </div>
