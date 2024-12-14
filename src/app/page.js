@@ -415,7 +415,7 @@ const handleWishlistClick = async () => {
             </div>
             
             <div className="bg-[#004AAD] px-4 py-2 rounded-lg">
-              <span className="text-white text-sm font-medium truncate max-w-[150px] block">
+              <span className="text-white text-[10px] font-medium truncate max-w-[80px] block">
                 {userDatax?.user_location || "No University selected"}
               </span>
             </div>
