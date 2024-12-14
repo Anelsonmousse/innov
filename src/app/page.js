@@ -25,6 +25,7 @@ const Page = () => {
   const router = useRouter();
   const [token, setToken] = useState(null);
   const [items, setItems] = useState([]);
+  const [filteredItems, setFilteredItems] = useState([]); // Filtered product list
   const [userDatax, setUserDatax] = useState([]);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -105,13 +106,9 @@ const Page = () => {
         } else {
           console.log(response.data.data);
           const fetchedItems = shuffleArray(response.data.data);
-
-          if (tkenn) {
-            // Show only the first 25 products when logged in
-            setItems(fetchedItems.slice(0, 25));
-          } else {
-            setItems(fetchedItems);
-          }
+          const visibleItems = tkenn ? fetchedItems.slice(0, 25) : fetchedItems;
+          setItems(visibleItems);
+          setFilteredItems(visibleItems); // Initialize filtered items
         }
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -121,6 +118,17 @@ const Page = () => {
 
     fetchItems();
   }, []);
+
+   // Function to filter items based on search query
+   const handleSearchChange = (e) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+
+    const filtered = items.filter((item) =>
+      item.details.product_name.toLowerCase().includes(query)
+    );
+    setFilteredItems(filtered);
+  };
 
   const handleViewMoreProducts = () => {
     if (!token) {
@@ -399,7 +407,7 @@ const handleWishlistClick = async () => {
               <input
                 type="text"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={handleSearchChange}
                 className="w-full bg-gray-100 rounded-lg py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#004AAD]"
                 placeholder="Search products..."
               />
@@ -444,7 +452,7 @@ const handleWishlistClick = async () => {
           {error ? (
             <div className="text-center text-red-500 mt-4">{error}</div>
           ) : (
-            <ProductList items={items} />
+            <ProductList items={filteredItems} />
           )}
         </div>
       </div>
