@@ -36,7 +36,6 @@ const page = () => {
         );
 
         // Handle the response data
-        setUser(response.data);
         console.log(response.data);
       } catch (error) {
         // Handle any errors
