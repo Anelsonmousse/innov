@@ -459,8 +459,8 @@ const handleWishlistClick = async () => {
 
       {/* Footer */}
       <div className="w-full  h-[100px] sticky bottom-0 bg-white ">
-        <div className="bg-[#004AAD] justify-between flex rounded-2xl w-[90%] ml-[5%] h-[70%]">
-          <div className=" flex justify-between ml-[5%] mt-3 w-[90%]">
+        <div className="bg-[#004AAD] justify-between flex  w-[100%] h-[65%]">
+          <div className=" flex justify-between ml-[5%] mt-5 w-[90%]">
             {token ? (
                <MdStore
                onClick={() => {
@@ -496,33 +496,33 @@ const handleWishlistClick = async () => {
                  }
                }}
                color="#686868"
-               size={40}
+               size={30}
              />
             ) : (
               <MdStore
                 onClick={() => router.push("/signin")}
                 color="#686868"
-                size={40}
+                size={30}
               />
             )}
-            <div className="h-[50px] w-[50px] rounded-full bg-white text-center items-center justify-center">
+            <div className="h-[50px] w-[50px] mt-[-10px] rounded-full bg-white text-center items-center justify-center">
               <MdHomeFilled
                 color="#004AAD"
-                className="ml-[5px] pt-[2px]"
-                size={40}
+                className="ml-[10px] pt-[2px] mt-[7px]"
+                size={30}
               />
             </div>
             {token ? (
               <IoPersonCircleSharp
                 onClick={() => router.push("/profile")}
                 color="#686868"
-                size={40}
+                size={30}
               />
             ) : (
               <IoPersonCircleSharp
                 onClick={() => router.push("/signin")}
                 color="#686868"
-                size={40}
+                size={30}
               />
             )}
           </div>
