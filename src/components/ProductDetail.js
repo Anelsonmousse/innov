@@ -89,35 +89,14 @@ const ProductDetail = ({ product, isInWishlist }) => {
       if (e.key === 'Escape') handleCloseModal();
     }
   };
-  const getCallLink = (whatsappLink) => {
-    // Define country codes for Nigeria (234) and Cyprus (357)
-    const nigeriaCountryCode = '234';
-    const cyprusCountryCode = '357';
   
-    // Check if the string is a URL or a simple phone number
-    if (whatsappLink.startsWith('https://wa.me/') || whatsappLink.startsWith('wa.me/')) {
-      // Extract the phone number from the URL (skip the 'https://wa.me/' or 'wa.me/')
-      const phoneNumber = whatsappLink.replace(/^https?:\/\/?wa\.me\//, '');
-      
-      // Return the correct URL for calling the number, using 'https:' prefix
-      return `https://api.whatsapp.com/send/?phone=${phoneNumber}&text&type=phone_number&app_absent=0`;
-    } else {
-      // Check if it's a raw number, potentially with no country code
-      const rawPhoneNumber = whatsappLink.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+  // Function to copy text to clipboard
+const copyToClipboard = (text) => {
+  navigator.clipboard.writeText(text)
+    .then(() => alert("Seller's phone number copied to clipboard!"))
+    .catch((err) => console.error("Failed to copy text: ", err));
+};
   
-      // If it's a Nigerian or Cypriot number, prepend the country code
-      if (rawPhoneNumber.length === 10 && rawPhoneNumber.startsWith('0')) {
-        // Assume Nigerian number if it starts with '0' (excluding country code)
-        return `https://api.whatsapp.com/send/?phone=${nigeriaCountryCode}${rawPhoneNumber.slice(1)}&text&type=phone_number&app_absent=0`;
-      } else if (rawPhoneNumber.length === 8 && rawPhoneNumber.startsWith('0')) {
-        // Assume Cypriot number if it's a valid length and starts with '0'
-        return `https://api.whatsapp.com/send/?phone=${cyprusCountryCode}${rawPhoneNumber.slice(1)}&text&type=phone_number&app_absent=0`;
-      } else {
-        // Default fallback, return the number with the 'wa.me' format without adding any country code
-        return `https://api.whatsapp.com/send/?phone=${rawPhoneNumber}&text&type=phone_number&app_absent=0`;
-      }
-    }
-  };
   
 
   useEffect(() => {
@@ -433,12 +412,9 @@ const ProductDetail = ({ product, isInWishlist }) => {
 
       {/* Contact Buttons */}
       <div className="flex gap-4">
-<Button
-  className="flex-1 py-3"
-  onClick={() => {
-    const callLink = callLink(product.shop.shop_whatsapp_link);
-    window.location.href = `tel:${callLink}`;
-  }}
+      <Button
+  className="flex-1 py-3 bg-main text-white rounded-lg"
+  onClick={() => copyToClipboard(product.seller_phone)}
 >
   Call Seller
 </Button>
