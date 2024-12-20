@@ -12,6 +12,7 @@ import Image from "next/image";
 import { Edit } from "../../assets";
 import axios from "axios";
 import client from "../sanity/sanityClient";
+import Loader from "@/components/Loader";
 
 const Page = () => {
   const router = useRouter();
@@ -287,7 +288,7 @@ const Page = () => {
     <div className="w-full h-full relative">
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
-          <div className="loader">Uploading...</div>
+          <Loader /> {/* Show Loader */}
         </div>
       )}
       <div className="bg-[#004AAD] pt-4 w-full h-[15%]">
