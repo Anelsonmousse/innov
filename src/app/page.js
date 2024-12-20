@@ -20,6 +20,7 @@ import { FaStar, FaRegStar, FaSearch } from "react-icons/fa";
 import { MdStore, MdHomeFilled } from "react-icons/md";
 import { IoPersonCircleSharp } from "react-icons/io5";
 import axios from "axios";
+import Loader from "@/components/Loader";
 
 const Page = () => {
   const router = useRouter();
@@ -29,6 +30,7 @@ const Page = () => {
   const [userDatax, setUserDatax] = useState([]);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const userDatay = JSON.parse(localStorage.getItem("userData"));
@@ -508,13 +510,25 @@ const handleWishlistClick = async () => {
                 size={30}
               />
             )}
-            <div className="h-[50px] w-[50px] mt-[-10px] rounded-full bg-white text-center items-center justify-center">
-              <MdHomeFilled
-                color="#004AAD"
-                className="ml-[10px] pt-[2px] mt-[7px]"
-                size={30}
-              />
-            </div>
+            <div className="h-[50px] w-[50px] mt-[-10px] rounded-full bg-white text-center items-center justify-center relative">
+        {loading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-50 rounded-full z-10">
+            <Loader />
+          </div>
+        )}
+        <MdHomeFilled
+          onClick={() => {
+            setLoading(true); // Show loader
+            setTimeout(() => {
+              window.location.reload();
+              setLoading(false); // Hide loader
+            }, 1000); // Optional: Add slight delay for visual feedback
+          }}
+          color="#004AAD"
+          className="ml-[10px] pt-[2px] mt-[7px]"
+          size={30}
+        />
+      </div>
             {token ? (
               <IoPersonCircleSharp
                 onClick={() => router.push("/profile")}
