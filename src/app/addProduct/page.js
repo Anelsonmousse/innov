@@ -8,6 +8,7 @@ import { FaTrash } from "react-icons/fa";
 import axios from "axios";
 import client from "../sanity/sanityClient";
 import "../../../dev/styles.css";
+import Loader from "@/components/Loader";
 
 const Page = () => {
   const router = useRouter();
@@ -43,7 +44,7 @@ const Page = () => {
   }, []);
 
   if (!userData) {
-    return <div>Loading...</div>;
+    return <div><Loader /> {/* Show Loader */}</div>;
   }
 
   // Handle image file changes
@@ -262,7 +263,7 @@ const Page = () => {
           />
         </div>
         {/* Add the message below */}
-        <div className="text-center text-sm text-red-600 mt-4">
+        <div className="text-center text-sm text-blue-600 mt-4">
           Ensure to add more than 1 image
         </div>
 
