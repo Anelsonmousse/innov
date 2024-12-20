@@ -247,7 +247,7 @@ const Page = () => {
           </select>
 
           <input
-            type="number"
+            type="tel"
             placeholder="Price"
             value={amount}
             onChange={(e) => setPrice(e.target.value)}
