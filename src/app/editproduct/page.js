@@ -314,7 +314,7 @@ const Page = () => {
           className="w-full p-3 border border-blue-200 rounded-lg min-h-[120px] focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
         />
       </div>
-      <div className="text-center text-sm text-red-600 mt-4">
+      <div className="text-center text-sm text-blue-600 mt-4">
           Ensure to add more than 1 image
         </div>
 
