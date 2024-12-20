@@ -471,6 +471,7 @@ const handleWishlistClick = async () => {
                  } else {
                    // Retrieve and parse the userData from localStorage
                    const userData = JSON.parse(localStorage.getItem("userData"));
+                   const shopDetails = JSON.parse(localStorage.getItem("shopDetails"));
  
                    // Check if userData exists and then access the shop_status and shop_plan
                    if (userData) {
@@ -482,6 +483,8 @@ const handleWishlistClick = async () => {
                      if (shopStatus === 0) {
                        //alert("Redirecting to market page");
                        router.push("/market");
+                      } else if (shopStatus === 1 && !shopDetails) {
+                        router.push("/editstore");
                      } else if (shopStatus === 1) {
                       // alert("Redirecting to store page");
                        router.push("/store/product");
