@@ -226,7 +226,7 @@ const Page = () => {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="Enter your Phone number"
-              type="number"
+              type="tel"
               className="w-[80%] opacity-40 border-2 rounded-lg pl-3 h-[45px] border-black"
             />
             <div className="w-[100%]">
