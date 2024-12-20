@@ -71,8 +71,8 @@ const Page = () => {
         if (userData.user_location) {
           requestData.university = userData.user_location;
         } else {
-          console.error("University location not found in userData");
-          return; // Exit if no university location found
+          router.push("/editprofile"); // Redirect to edit profile page
+          return; // Exit to prevent further execution
         }
       } else {
         // Use 'getAllProducts' endpoint
@@ -106,7 +106,7 @@ const Page = () => {
         } else {
           console.log(response.data.data);
           const fetchedItems = shuffleArray(response.data.data);
-          const visibleItems = tkenn ? fetchedItems.slice(0, 25) : fetchedItems;
+          const visibleItems = tkenn ? fetchedItems.slice(0, 50) : fetchedItems;
           setItems(visibleItems);
           setFilteredItems(visibleItems); // Initialize filtered items
         }
