@@ -460,8 +460,8 @@ const handleWishlistClick = async () => {
       </div>
 
       {/* Footer */}
-      <div className="w-full  h-[100px] sticky bottom-0 bg-white ">
-        <div className="bg-[#004AAD] justify-between flex  w-[100%] h-[65%]">
+      <div className="w-full  h-[80px] sticky bottom-0 bg-white">
+        <div className="bg-[#004AAD] justify-between flex  w-[100%] h-[100%]">
           <div className=" flex justify-between ml-[5%] mt-5 w-[90%]">
             {token ? (
                <MdStore
