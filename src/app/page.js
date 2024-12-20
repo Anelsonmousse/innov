@@ -74,7 +74,6 @@ const Page = () => {
           requestData.university = userData.user_location;
         } else {
           router.push("/editprofile"); // Redirect to edit profile page
-          return; // Exit to prevent further execution
         }
       } else {
         // Use 'getAllProducts' endpoint
