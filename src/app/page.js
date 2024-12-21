@@ -233,7 +233,7 @@ const ProductList = ({ items }) => {
                               className="w-[150px] h-[150px] object-cover"
                           />
                           <div className="w-full">
-                              <div className="mt-2 text-[14px] font-bold">
+                              <div className="mt-2 text-[12px] font-bold">
                                   {item.details.product_name}
                               </div>
                           </div>
@@ -244,7 +244,7 @@ const ProductList = ({ items }) => {
                               <div className="font-medium text-xs">{item.shopDetails.shop_name}</div>
                           </div>
                           <div className="font-semibold flex w-full text-lg">
-                              <div className="text-sm"> ₦{parseInt(item.details.amount).toLocaleString()}</div>
+                              <div className="text-md"> ₦{parseInt(item.details.amount).toLocaleString()}</div>
                               <div className="text-sm mt-[8px] ml-3 text-[#004AAD] font-medium">
                                   {item.status}
                               </div>
