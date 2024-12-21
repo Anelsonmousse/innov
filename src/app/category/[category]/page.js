@@ -3,6 +3,7 @@ import { Product, Tag } from "@/assets";
 import Header from "@/components/header";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
+import { IoArrowBack } from "react-icons/io5";
 import { FaStar, FaRegStar } from "react-icons/fa";
 import { IoFunnel, IoHeartOutline, IoHeart } from "react-icons/io5";
 import { useEffect, useState } from 'react';
@@ -156,20 +157,28 @@ const Page = () => {
     }
 
  const formattedName = categoryName 
-    ? `${categoryName[0].toUpperCase()}${categoryName.slice(1).toLowerCase()} Products`
+    ? `${categoryName[0].toUpperCase()}${categoryName.slice(1).toLowerCase()} Category`
     : "Products";
 
     return (
-        <main className="pt-8 px-2">
+        <main className="pt-0">
            
-                  <div className="flex justify-center items-center w-full h-20">
-      <h1 className="text-2xl font-bold text-center">
-        {formattedName}
-      </h1>
-    </div>
+           <div className="flex justify-between items-center w-full h-[50px] sticky top-0 z-10" style={{ backgroundColor: "#004AAD" }}>
+  <IoArrowBack
+    onClick={() => {
+      router.push("/");
+    }}
+    color="white"
+    size={24}
+    className="cursor-pointer ml-4"
+  />
+  <h1 className="text-xl font-bold text-center text-white flex-1">
+    {formattedName}
+  </h1>
+</div>
        
             
-            <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+            <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-2">
                 {products.length > 0 ? (
                     products.map((product, index) => (
                         <div 
