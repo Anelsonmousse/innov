@@ -206,7 +206,7 @@ const Page = () => {
             }
           );
 
-          if (response.status === 200) {
+          if (response.data.status === true) {
             uploadedImageUrl = response.data.imageUrl;
             console.log(response);
             localStorage.setItem(
@@ -256,7 +256,7 @@ const Page = () => {
           }
         );
 
-        if (response.status === 200) {
+        if (response.data.status === true) {
           console.log(response);
           localStorage.setItem(
             "userData",
