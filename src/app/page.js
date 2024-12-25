@@ -484,9 +484,9 @@ const handleWishlistClick = async () => {
                      if (shopStatus === 0) {
                        //alert("Redirecting to market page");
                        router.push("/market");
-                      } else if (shopStatus === 1 && !shopDetails) {
+                      } else if (shopStatus === 1 && (!shopDetails || shopDetails.shop_name === null)) {
                         router.push("/editstore");
-                     } else if (shopStatus === 1) {
+                      } else if (shopStatus === 1) {
                       // alert("Redirecting to store page");
                        router.push("/store/product");
                      } else {
