@@ -178,7 +178,7 @@ const copyToClipboard = (text) => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      if (response.status === 200) {
+      if (response.data.status === true) {
         const newReview = {
           id: Date.now(),
           product_id: product.data.product_id,
