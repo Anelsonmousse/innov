@@ -24,7 +24,7 @@ const Delete = ({ productId, productName, productImage, amount, onClose }) => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      if (response.status === 200) {
+      if (response.data.status === true) {
         console.log(response.data.message);
         alert(response.data.message);
         // Remove the viewed product from local storage
