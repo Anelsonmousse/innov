@@ -143,7 +143,7 @@ const copyToClipboard = (text) => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      if (response.status === 200) {
+      if (response.data.status === true) {
         setIsInWishlistState(!isInWishlistState);
         alert(response.data.message);
       }
@@ -166,7 +166,7 @@ const copyToClipboard = (text) => {
     setLoading(true);
     try {
       const formData = new FormData();
-      formData.append("product_id", product.details.product_id);
+      formData.append("product_id", product.data.product_id);
       formData.append("rating", selectedRating);
       formData.append("review", reviewText);
       formData.append("requestID", requestID);
@@ -181,7 +181,7 @@ const copyToClipboard = (text) => {
       if (response.status === 200) {
         const newReview = {
           id: Date.now(),
-          product_id: product.details.product_id,
+          product_id: product.data.product_id,
           desc: reviewText,
           rating: selectedRating.toString(),
           username: uname,
