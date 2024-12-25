@@ -65,7 +65,7 @@ const Page = () => {
 
           setImagePreviews(imageUrls);
 
-          console.log("Loaded images:", imageUrls);
+          // console.log("Loaded images:", imageUrls);
         }
       }
     }
@@ -172,7 +172,7 @@ const Page = () => {
     };
 
 
-      console.log("Sending data to backend (editProduct):", dataToSend);
+      // console.log("Sending data to backend (editProduct):", dataToSend);
 
       const response = await axios.post(
         "https://api.vplaza.com.ng/products/editProduct",
@@ -184,8 +184,8 @@ const Page = () => {
         }
       );
 
-      if (response.status === 200) {
-        console.log(response);
+      if (response.data.status === true) {
+        // console.log(response);
         alert("Product updated successfully!");
         router.push("/store/product");
       } else {
