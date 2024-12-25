@@ -106,7 +106,7 @@ const Page = () => {
                 }
             );
 
-            if (response.status === 200) {
+            if (response.data.status === true) {
                 // Update wishlist state locally
                 setWishlistStates(prev => ({
                     ...prev,
