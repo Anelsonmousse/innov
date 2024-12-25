@@ -89,23 +89,23 @@ const Page = () => {
         : {};
 
       // Log the request configuration before sending the request
-      console.log("Request Config:", {
-        endpoint,
-        requestData,
-        config,
-      });
+      // console.log("Request Config:", {
+      //   endpoint,
+      //   requestData,
+      //   config,
+      // });
 
       try {
         const response = await axios.post(endpoint, requestData, config);
 
         // Log the response from the API
-        console.log(`Response from endpoint: ${endpoint}`, response);
+        // console.log(`Response from endpoint: ${endpoint}`, response);
 
         // Check if the response contains the message "no product from this university"
         if (response.data.status === false && response.data.message === "Failed to get product from this uni") {
           setError("No products are available from this university. Please check back later or select a different location.");
         } else {
-          console.log(response.data.data);
+          // console.log(response.data.data);
           const fetchedItems = shuffleArray(response.data.data);
           const visibleItems = tkenn ? fetchedItems.slice(0, 50) : fetchedItems;
           setItems(visibleItems);
@@ -136,7 +136,7 @@ const Page = () => {
       router.push("/signin");
     } else {
       // Fetch more products logic (if needed)
-      console.log("Fetching more products...");
+      // console.log("Fetching more products...");
     }
   };
 
@@ -344,7 +344,7 @@ const handleWishlistClick = async () => {
   const tkenn = localStorage.getItem("token");
   const requestID = "rid_1983";
 
-  console.log(requestID)
+  // console.log(requestID)
   if (!tkenn) {
     router.push("/signin");
     return;
@@ -363,12 +363,12 @@ const handleWishlistClick = async () => {
   };
 
   try {
-    console.log(config, requestData)
+    // console.log(config, requestData)
     const response = await axios.post(endpoint, requestData, config);
     
     if (response.data.status) {
       // Store the wishlist data in localStorage
-      console.log(response.data)
+      // console.log(response.data)
       localStorage.setItem('wishlistData', JSON.stringify({
         products: response.data.data,
         timestamp: Date.now()
