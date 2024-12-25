@@ -173,7 +173,7 @@ const ProductDetail2 = ({ product, isInWishlist }) => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      if (response.status === 200) {
+      if (response.data.status === true) {
         setIsInWishlistState(!isInWishlistState);
         alert(response.data.message);
       }
@@ -208,7 +208,7 @@ const ProductDetail2 = ({ product, isInWishlist }) => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      if (response.status === 200) {
+      if (response.data.status === true) {
         const newReview = {
           id: Date.now(),
           product_id: product.details.product_id,
