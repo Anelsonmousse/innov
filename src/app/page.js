@@ -292,6 +292,7 @@ const ProductList = ({ items }) => {
 
   
 const handleCategoryClick = async (category) => {
+  setLoading(true); // Activate full-screen loader
   const tkenn = localStorage.getItem("token");
   const requestID = "rid_1983";
   const userData = JSON.parse(localStorage.getItem("userData"));
@@ -337,6 +338,8 @@ const handleCategoryClick = async (category) => {
   } catch (error) {
       console.error("Error fetching products by category:", error);
       alert("An error occurred while fetching products.");
+  } finally {
+    setLoading(false); // Hide loader after request is complete
   }
 };
 
@@ -389,7 +392,12 @@ const handleWishlistClick = async () => {
 };
 
   return (
-    <div className="flex flex-col min-h-screen justify-between">
+    <div className="flex flex-col min-h-screen justify-between relative">
+      {loading && (
+        <div className="absolute inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+          <Loader />
+        </div>
+      )}
       {/* Main Content */}
       <div>
         {/* Search Nav */}
@@ -478,6 +486,8 @@ const handleWishlistClick = async () => {
                    if (userData) {
                      const shopStatus = userData.shop_status;
                      const shopPlan = userData.shop_plan;
+
+                     setLoading(true); // Show loader
  
                      //alert(`shop_status: ${shopStatus}, shop_plan: ${shopPlan}`);
  
@@ -504,7 +514,10 @@ const handleWishlistClick = async () => {
              />
             ) : (
               <MdStore
-                onClick={() => router.push("/signin")}
+              onClick={() => {
+                setLoading(true); // Show loader
+                router.push("/signin");
+              }}
                 color="#686868"
                 size={30}
               />
@@ -530,13 +543,19 @@ const handleWishlistClick = async () => {
       </div>
             {token ? (
               <IoPersonCircleSharp
-                onClick={() => router.push("/profile")}
+              onClick={() => {
+                setLoading(true); // Show loader
+                router.push("/profile");
+              }}
                 color="#686868"
                 size={30}
               />
             ) : (
               <IoPersonCircleSharp
-                onClick={() => router.push("/signin")}
+              onClick={() => {
+                setLoading(true); // Show loader
+                router.push("/signin");
+              }}
                 color="#686868"
                 size={30}
               />
