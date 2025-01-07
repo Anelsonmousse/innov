@@ -230,7 +230,7 @@ const ProductList = ({ items }) => {
                               alt={item.details.product_name}
                               width={200}
                               height={180}
-                              className="w-[200px] h-[180px] object-cover"
+                              className="w-[200px] h-[180px] object-cover rounded-[7px]"
                           />
                           <div className="w-full">
                               <div className="mt-2 text-[12px] font-bold">
