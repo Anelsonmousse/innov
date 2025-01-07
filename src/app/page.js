@@ -223,14 +223,14 @@ const ProductList = ({ items }) => {
                       <div
                           onClick={() => handleProductClick(item)}
                           key={index}
-                          className="flex flex-col items-center p-4 border border-gray-300 rounded cursor-pointer transition-all hover:shadow-lg"
+                          className="flex flex-col items-center p-4 rounded cursor-pointer transition-all hover:shadow-lg"
                       >
                           <img
                               src={item.details.product_img1}
                               alt={item.details.product_name}
-                              width={150}
-                              height={150}
-                              className="w-[150px] h-[150px] object-cover"
+                              width={200}
+                              height={180}
+                              className="w-[200px] h-[180px] object-cover"
                           />
                           <div className="w-full">
                               <div className="mt-2 text-[12px] font-bold">
