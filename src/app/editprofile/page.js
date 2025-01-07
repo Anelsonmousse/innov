@@ -155,7 +155,7 @@ const Page = () => {
           <div className="loader">Uploading...</div>
         </div>
       )}
-      <div className="bg-[#004AAD] pt-4 w-full h-[15%]">
+      <div className="bg-[#004AAD] pt-2 w-full h-[15%]">
         <div className="text-white font-bold flex justify-between ml-8 mt-6">
           <div className="flex">
             <IoArrowBack
