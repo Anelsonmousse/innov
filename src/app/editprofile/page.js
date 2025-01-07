@@ -156,7 +156,7 @@ const Page = () => {
         </div>
       )}
       <div className="bg-[#004AAD] pt-2 w-full h-[15%]">
-        <div className="text-white font-bold flex justify-between ml-8 mt-6">
+        <div className="text-white font-bold flex justify-between ml-4 mt-3">
           <div className="flex">
             <IoArrowBack
               onClick={() => {
