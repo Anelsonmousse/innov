@@ -58,7 +58,7 @@ const Page = () => {
         router.push("/");
       } else {
         console.log("Failed:", response.data);
-        alert("Invalid Credentials entered")
+        alert("Invalid Credentials entered");
         return;
       }
     } catch (error) {
@@ -70,77 +70,83 @@ const Page = () => {
   };
 
   return (
-    <div className="w-full h-full">
-      <div className="bg-[#004AAD] pt-4 w-full h-[15%]">
-        <IoArrowBack
-          color="white"
-          className="mt-4 ml-3"
-          size={30}
-          onClick={() => router.back()}
-        />
+    <div className="w-full h-screen">
+  <div className="bg-[#004AAD] pt-4 w-full h-screen flex flex-col">
+    <IoArrowBack
+      color="white"
+      className="mt-4 ml-3"
+      size={30}
+      onClick={() => router.back()}
+    />
 
-        <div className="bg-white w-full h-[85%] rounded-tr-[50px] rounded-tl-[50px] mt-[15%]">
-          <div className="font-bold text-3xl pt-32 px-8">Log In</div>
-          <form onSubmit={handleSubmit} className="w-full px-8">
-            <div className="mt-4">
-              <label htmlFor="email" className="block ml-[10%]">
-                Email:
-              </label>
-              <input
-                placeholder="Enter your Email"
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="w-[80%] opacity-40 border-2 ml-[10%] rounded-lg pl-3 h-[45px] border-black"
-                required
-              />
-            </div>
-            <div className="mt-4">
-              <label htmlFor="password" className="block ml-[10%]">
-                Password:
-              </label>
-              <input
-                placeholder="Enter your Password"
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="w-[80%] opacity-40 border-2 ml-[10%] rounded-lg pl-3 h-[45px] border-black"
-                required
-              />
-            </div>
-            <button
-              type="submit"
-              className="bg-[#004AAD] w-[90%] ml-[5%] mt-16 text-center font-bold text-lg h-[45px] rounded-lg text-white py-2"
-              disabled={loading} // Disable button during loading
-            >
-              {loading ? "Logging In..." : "Log In"}
-            </button>
-          </form>
-          <div 
-            onClick={() => router.push("/forgot_pass")}
-            className="w-full text-right text-[#004AAD] pr-[5%] font-bold mt-1 cursor-pointer">
-            Forgotten Password?
+    <div className="bg-white w-full h-full rounded-tr-[50px] rounded-tl-[50px] mt-[15%] flex flex-col justify-between">
+      <div>
+        <div className="font-bold text-3xl pt-32 ml-[9%]">Log In</div>
+        <form onSubmit={handleSubmit} className="w-full px-8">
+          <div className="mt-4">
+            <label htmlFor="email" className="block ml-[5%]">
+              Email:
+            </label>
+            <input
+              placeholder="Enter your Email"
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-[90%] opacity-40 border-2 ml-[5%] rounded-lg pl-3 h-[45px] border-black"
+              required
+            />
           </div>
-          <div className="font-bold text-center text-md w-full text-wrap mt-12">
-            Don't have an Account?{" "}
-            <div
-              onClick={() => router.push("/signup")}
-              className="text-[#004AAD] text-center cursor-pointer"
-            >
-              Sign Up
-            </div>
+          <div className="mt-4">
+            <label htmlFor="password" className="block ml-[5%]">
+              Password:
+            </label>
+            <input
+              placeholder="Enter your Password"
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              className="w-[90%] opacity-40 border-2 ml-[5%] rounded-lg pl-3 h-[45px] border-black"
+              required
+            />
           </div>
+          <button
+            type="submit"
+            className="bg-[#004AAD] w-[90%] ml-[5%] mt-8 text-center font-bold text-md h-[45px] rounded-lg text-white py-2"
+            disabled={loading}
+          >
+            {loading ? "Logging In..." : "Login"}
+          </button>
+        </form>
+        <div
+          onClick={() => router.push("/forgot_pass")}
+          className="w-full text-right text-[#004AAD] text-sm pr-[10%] font-bold mt-1 cursor-pointer"
+        >
+          Forgotten Password?
         </div>
       </div>
 
-      {loading && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="text-white text-lg">Loading...</div>
+      {/* Footer Section */}
+      <div className="flex items-center justify-center space-x-2 text-md font-bold w-full text-center mb-4">
+        <span>Don't have an Account?</span>
+        <div
+          onClick={() => router.push("/signup")}
+          className="text-[#004AAD] cursor-pointer"
+        >
+          Sign Up
         </div>
-      )}
+      </div>
     </div>
+  </div>
+
+  {loading && (
+    <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
+      <div className="text-white text-lg">Loading...</div>
+    </div>
+  )}
+</div>
+
   );
 };
 
