@@ -15,9 +15,8 @@ const Page = () => {
   const [uImage, setUserImage] = useState(null);
   const router = useRouter();
   let Umage;
-  
+
   useEffect(() => {
-  
     const fetchData = async () => {
       try {
         // Retrieve the token from localStorage
@@ -39,17 +38,14 @@ const Page = () => {
         );
 
         // Handle the response data
-      
-      //   console.log(response.data.imageUrl);
-      //    Umage = response.data.imageUrl;
-      //    console.log(Umage);
-         console.log(response.data);
-         setUser(response.data);
-      //  localStorage.setItem("token", response.data.access_token);
-        localStorage.setItem(
-          "userData",
-          JSON.stringify(response.data)
-        );
+
+        //   console.log(response.data.imageUrl);
+        //    Umage = response.data.imageUrl;
+        //    console.log(Umage);
+        console.log(response.data);
+        setUser(response.data);
+        //  localStorage.setItem("token", response.data.access_token);
+        localStorage.setItem("userData", JSON.stringify(response.data));
       } catch (error) {
         // Handle any errors
         console.error("Error fetching data:", error);
@@ -70,8 +66,8 @@ const Page = () => {
   return (
     <div className="w-full bg-gray-200 h-screen">
       <div className="bg-[#004AAD] rounded-br-[50px] rounded-bl-[50px] pt-4 w-full h-[35%]">
-        <div className="text-white font-bold flex justify-between text-xl ml-8 mt-6">
-          <div className="flex w-full">
+        <div className="text-white font-bold flex justify-between ml-8 mt-6">
+          <div className="flex">
             <IoArrowBack
               onClick={() => {
                 router.push("/");
@@ -79,20 +75,21 @@ const Page = () => {
               color="white"
               size={24}
             />
-            <div className="-mt-1">Profile</div>
+            <div className="ml-1 text-lg">Profile</div>
           </div>
           <div
             onClick={() => {
               router.push("/editprofile");
             }}
-            className="w-full text-sm text-right pr-4"
+            className="w-auto text-sm bg-white text-[#004AAD] rounded-lg py-2 px-4 shadow-md cursor-pointer"
           >
             Edit Profile
           </div>
         </div>
         <div className="flex flex-col items-center">
           <img
-            src={user?.imageUrl} alt="profile"
+            src={user?.imageUrl}
+            alt="profile"
             className="w-32 h-32 mt-3 object-cover mb-2 rounded-full"
           />
           <div className="text-white mt-2 font-semibold text-lg">
@@ -113,17 +110,19 @@ const Page = () => {
         </div>
         <div className="bg-white flex px-4 py-4 mt-4 rounded-lg mx-4">
           <CiLock color="black" size={26} />
-          <div 
-           onClick={() => router.push('/privacypolicy')}
-           className="text-black pl-4 text-[16px] font-semibold">
+          <div
+            onClick={() => router.push("/privacypolicy")}
+            className="text-black pl-4 text-[16px] font-semibold"
+          >
             Privacy Policy
           </div>
         </div>
         <div className="bg-white flex px-4 mt-4 py-4 rounded-lg mx-4">
           <MdHelpOutline color="black" size={26} />
-          <div 
-          onClick={() => router.push('/helpcenter')}
-          className="text-black pl-4 text-[16px] font-semibold">
+          <div
+            onClick={() => router.push("/helpcenter")}
+            className="text-black pl-4 text-[16px] font-semibold"
+          >
             Help Center
           </div>
         </div>
