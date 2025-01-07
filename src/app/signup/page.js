@@ -81,18 +81,22 @@ const SignUpPage = () => {
   };
 
   return (
-    <div
-      className={`w-full h-full ${
-        loading ? "pointer-events-none opacity-50" : ""
-      }`}
-    >
-      <div className="bg-[#004AAD] pt-4 w-full h-[15%]">
-        <IoArrowBack color="white" className="mt-4 ml-3" size={30} />
-        <div className="bg-white h-[85%] rounded-tr-[50px] rounded-tl-[50px] mt-[15%]">
-          <div className="font-bold text-2xl pt-16 px-8">Sign Up</div>
+    <div className="w-full h-screen">
+      <div className="bg-[#004AAD] pt-4 w-full h-screen flex flex-col">
+        <IoArrowBack
+          color="white"
+          className="mt-4 ml-3"
+          size={30}
+          onClick={() => router.back()}
+        />
+
+      {/* Main Content */}
+      <div className="bg-white w-full h-full rounded-tr-[50px] rounded-tl-[50px] mt-[15%] flex flex-col justify-between">
+        <div>
+          <div className="font-bold text-3xl pt-28 ml-[7.5%]">Sign Up</div>
           <form onSubmit={handleSubmit} className="flex flex-col items-center">
             <div className="w-[100%]">
-              <div className="ml-[5%] mt-4 text-sm">Email:</div>
+              <div className="ml-[7.5%] mt-4 text-sm">Email:</div>
             </div>
             <input
               type="email"
@@ -100,12 +104,12 @@ const SignUpPage = () => {
               value={formData.email}
               onChange={handleChange}
               placeholder="Enter your Email"
-              className="w-[90%] opacity-40 border-2 rounded-lg pl-3 h-[45px] border-black"
+              className="w-[85%] opacity-40 border-2 rounded-lg pl-3 h-[45px] border-black"
               required
               disabled={loading} // Disable input fields when loading
             />
             <div className="w-[100%]">
-              <div className="ml-[5%] mt-4 text-sm">Password:</div>
+              <div className="ml-[7.5%] mt-4 text-sm">Password:</div>
             </div>
             <input
               type="password"
@@ -113,12 +117,12 @@ const SignUpPage = () => {
               value={formData.password}
               onChange={handleChange}
               placeholder="Enter your Password"
-              className="w-[90%] opacity-40 border-2 rounded-lg pl-3 h-[45px] border-black"
+              className="w-[85%] opacity-40 border-2 rounded-lg pl-3 h-[45px] border-black"
               required
               disabled={loading} // Disable input fields when loading
             />
             <div className="w-[100%]">
-              <div className="ml-[5%] mt-4 text-sm">Confirm Password:</div>
+              <div className="ml-[7.5%] mt-4 text-sm">Confirm Password:</div>
             </div>
             <input
               value={formData.confirm_password}
@@ -126,7 +130,7 @@ const SignUpPage = () => {
               placeholder="Confirm your Password"
               type="password"
               name="confirm_password"
-              className="w-[90%] opacity-40 border-2 rounded-lg pl-3 h-[45px] border-black"
+              className="w-[85%] opacity-40 border-2 rounded-lg pl-3 h-[45px] border-black"
               required
               disabled={loading} // Disable input fields when loading
             />
@@ -134,7 +138,7 @@ const SignUpPage = () => {
 
             <button
               type="submit"
-              className={`bg-[#004AAD] w-[90%] mt-8 text-center font-bold text-md h-[45px] rounded-lg text-white ${
+              className={`bg-[#004AAD] w-[85%] mt-8 text-center font-bold text-md h-[45px] rounded-lg text-white ${
                 loading ? "opacity-50 cursor-not-allowed" : ""
               }`}
               disabled={loading} // Disable button when loading
@@ -142,21 +146,24 @@ const SignUpPage = () => {
               {loading ? "Please wait..." : "Sign Up"}
             </button>
           </form>
-          <div className="flex items-center justify-center font-bold text-sm w-full mt-4 space-x-2">
-            <span>Already have an Account?</span>
-            <div
-              onClick={() => {
-                if (!loading) router.push("/signin");
-              }}
-              className={`text-[#004AAD] cursor-pointer ${
-                loading ? "pointer-events-none" : ""
-              }`}
-            >
-              Login
-            </div>
+        </div>
+
+        {/* Footer Section */}
+        <div className="flex items-center justify-center space-x-2 text-sm font-bold w-full text-center mb-8">
+          <span>Already have an Account?</span>
+          <div
+            onClick={() => {
+              if (!loading) router.push("/signin");
+            }}
+            className={`text-[#004AAD] cursor-pointer ${
+              loading ? "pointer-events-none" : ""
+            }`}
+          >
+            Login
           </div>
         </div>
       </div>
+    </div> 
     </div>
   );
 };
