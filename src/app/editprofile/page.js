@@ -1,12 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { IoArrowBack } from "react-icons/io5";
-import {
-  MdPhone,
-  MdDescription,
-  MdRoomService,
-  MdLocationOn,
-} from "react-icons/md";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Edit } from "../../assets";
