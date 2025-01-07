@@ -314,7 +314,7 @@ const copyToClipboard = (text) => {
       {/* Description */}
       <div className="mb-4">
         <h2 className="font-bold ">Description</h2>
-        <p className="text-gray-600 text-sm">{product.data.product_desc}</p>
+        <p className="text-gray-600 text-[12px]">{product.data.product_desc}</p>
       </div>
 
       {/* Reviews Section */}
