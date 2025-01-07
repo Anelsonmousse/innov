@@ -81,10 +81,10 @@ const Page = () => {
 
     <div className="bg-white w-full h-full rounded-tr-[50px] rounded-tl-[50px] mt-[15%] flex flex-col justify-between">
       <div>
-        <div className="font-bold text-3xl pt-32 ml-[9%]">Log In</div>
+        <div className="font-bold text-3xl pt-32 ml-[10%]">Login</div>
         <form onSubmit={handleSubmit} className="w-full px-8">
           <div className="mt-4">
-            <label htmlFor="email" className="block ml-[5%]">
+            <label htmlFor="email" className="block ml-[5%] text-sm">
               Email:
             </label>
             <input
@@ -98,7 +98,7 @@ const Page = () => {
             />
           </div>
           <div className="mt-4">
-            <label htmlFor="password" className="block ml-[5%]">
+            <label htmlFor="password" className="block ml-[5%] text-sm">
               Password:
             </label>
             <input
@@ -128,7 +128,7 @@ const Page = () => {
       </div>
 
       {/* Footer Section */}
-      <div className="flex items-center justify-center space-x-2 text-md font-bold w-full text-center mb-4">
+      <div className="flex items-center justify-center space-x-2 text-sm font-bold w-full text-center mb-8">
         <span>Don't have an Account?</span>
         <div
           onClick={() => router.push("/signup")}
