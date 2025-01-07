@@ -1,19 +1,19 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
 import { IoArrowBack } from "react-icons/io5";
 import { useRouter } from "next/navigation";
-import { Edit, Prof } from "../../assets";
 import { FaSchool } from "react-icons/fa";
 import { CiLock } from "react-icons/ci";
 import { MdHelpOutline } from "react-icons/md";
 import { IoIosLogOut } from "react-icons/io";
 import axios from "axios";
+import Loader from "@/components/Loader";
 
 const Page = () => {
   const [user, setUser] = useState(null);
   const [uImage, setUserImage] = useState(null);
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   let Umage;
 
   useEffect(() => {
@@ -63,8 +63,21 @@ const Page = () => {
     router.push("/signin");
   };
 
+  const handleEditProfileClick = () => {
+    setLoading(true); // Activate loader before navigating
+    setTimeout(() => {
+      router.push("/editprofile");
+      setLoading(false); // Deactivate loader after navigating
+    }, 500); // Adjust the timeout if needed to simulate loading time
+  };
+
   return (
     <div className="w-full bg-gray-200 h-screen">
+      {loading && (
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
+          <Loader />
+        </div>
+      )}
       <div className="bg-[#004AAD] rounded-br-[50px] rounded-bl-[50px] pt-4 w-full h-[35%]">
         <div className="text-white font-bold flex justify-between ml-8 mt-6">
           <div className="flex">
@@ -78,10 +91,8 @@ const Page = () => {
             <div className="ml-1 text-lg">Profile</div>
           </div>
           <div
-            onClick={() => {
-              router.push("/editprofile");
-            }}
-            className="w-auto text-sm bg-white text-[#004AAD] rounded-lg py-2 px-4 shadow-md cursor-pointer"
+            onClick={handleEditProfileClick} // Trigger the loader on click
+            className="w-auto text-sm bg-white text-[#004AAD] rounded-lg py-2 px-4 shadow-md cursor-pointer mr-2"
           >
             Edit Profile
           </div>
