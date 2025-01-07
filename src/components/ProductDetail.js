@@ -89,6 +89,11 @@ const ProductDetail = ({ product, isInWishlist }) => {
       if (e.key === 'Escape') handleCloseModal();
     }
   };
+
+  const handleSellerClick = (product) => {
+    router.push(`/store/${product.shop.shop_tag}`);
+    
+  };
   
   // Function to copy text to clipboard
 const copyToClipboard = (text) => {
@@ -282,19 +287,24 @@ const copyToClipboard = (text) => {
 
     {/* Product Details Section */}
     <section className="col-span-12 lg:col-span-5 p-4 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
-      <h1 className="text-2xl lg:text-3xl font-bold mb-4">
+      <h1 className="text-xl lg:text-3xl font-bold mb-2 -mt-4">
         {product.data.product_name}
       </h1>
 
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2">
-          <div className="flex items-center">
-            <FaStar className="text-yellow-400" />
-            <span className="ml-1">{Math.floor(product.average_r ?? 0)}</span>
-          </div>
-          <span className="px-2 py-1 bg-gray-100 rounded-full text-sm">
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-2 bg-[#004AAD] py-2 px-2 rounded-[5px]">
+        <img
+          src={product.shop.shop_image_url}
+          alt={product.data.product_name}
+          className="w-8 h-8 object-cover rounded-full"
+          />
+          <span className=" text-[12px] text-white">
             {product.shop.shop_name}
           </span>
+          <div className="flex items-center ml-3">
+            <span className="text-[8px] text-white">{Math.floor(product.average_r ?? 0)}</span>
+            <FaStar className="text-yellow-400 ml-1 h-4 w-3" />
+          </div>
         </div>
         <span className="text-2xl font-bold text-main">
           ₦{parseInt(product.data.amount).toLocaleString()}
@@ -302,9 +312,9 @@ const copyToClipboard = (text) => {
       </div>
 
       {/* Description */}
-      <div className="mb-8">
-        <h2 className="font-bold mb-2">Description</h2>
-        <p className="text-gray-600">{product.data.product_desc}</p>
+      <div className="mb-4">
+        <h2 className="font-bold ">Description</h2>
+        <p className="text-gray-600 text-sm">{product.data.product_desc}</p>
       </div>
 
       {/* Reviews Section */}
