@@ -95,10 +95,18 @@ const Page = () => {
         }
       }
 
+      // Ensure that gender is either Male or Female before sending the value
+      let genderValue = null;  // Default to null if gender is invalid
+      if (gender === "Male") {
+        genderValue = 1;
+      } else if (gender === "Female") {
+         genderValue = 0;
+      }
+
       const payload = {
         imageUrl: uploadedImageUrl,
         username,
-        gender: gender === "Male" ? 1 : 0,
+        gender: genderValue, // Send 1 for Male, 0 for Female
         phone,
         servicesOffered,
         user_location,
@@ -212,8 +220,8 @@ const Page = () => {
               <option value="" disabled>
                 Select your Gender
               </option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
             </select>
 
             <div className="w-[100%]">
