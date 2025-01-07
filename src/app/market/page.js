@@ -314,44 +314,42 @@ const page = () => {
         </div>
 
         {/* Nav FOoter */}
-        <div className="w-full  h-[100px] sticky bottom-0 bg-white ">
-          <div className="bg-[#004AAD] justify-between flex w-[100%] h-[65%]">
+        <div className="w-full  h-[80px] sticky bottom-0 bg-white ">
+          <div className="bg-[#004AAD] justify-between flex w-[100%] h-full">
             <div className=" flex justify-between ml-[5%] mt-5 w-[90%]">
               <div className="h-[50px] w-[50px] mt-[-10px] rounded-full bg-white text-center items-center justify-center">
               <MdStore className="ml-[10px] pt-[2px] mt-[7px]"
               onClick={() => {
-            
                 if (!token) {
                   router.push("/signin");
-                 
                 } else {
-                  // Retrieve and parse the userData from localStorage
+                  // Retrieve and parse the userData and shopDetails from localStorage
                   const userData = JSON.parse(localStorage.getItem("userData"));
-
+                  const shopDetails = JSON.parse(localStorage.getItem("shopDetails"));
+              
                   // Check if userData exists and then access the shop_status and shop_plan
                   if (userData) {
                     const shopStatus = userData.shop_status;
                     const shopPlan = userData.shop_plan;
-
-                    //alert(`shop_status: ${shopStatus}, shop_plan: ${shopPlan}`);
-
+              
+                    // Redirect based on shopStatus and shopDetails
                     if (shopStatus === 0) {
-                      //alert("Redirecting to market page");
                       router.push("/market");
+                    } else if (shopStatus === 1 && !shopDetails) {
+                      router.push("/editstore");
                     } else if (shopStatus === 1) {
-                     // alert("Redirecting to store page");
                       router.push("/store/product");
                     } else {
                       // Handle other cases or provide a default route
-                      //alert("Unhandled shop status");
                       router.push("/");
                     }
                   } else {
-                  //  alert("User data not found");
+                    console.error("User data not found.");
                   }
                 }
               }}
-              color="#686868"
+              
+              color="#004AAD"
               size={30}
             />
               </div>
