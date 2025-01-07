@@ -292,7 +292,7 @@ const copyToClipboard = (text) => {
       </h1>
 
       <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2 bg-[#004AAD] py-2 px-2 rounded-[5px]">
+        <div className="flex items-center gap-2 bg-[#8999AF] py-2 px-2 rounded-[5px]">
         <img
           src={product.shop.shop_image_url}
           alt={product.data.product_name}
