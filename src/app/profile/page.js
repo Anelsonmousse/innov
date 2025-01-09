@@ -21,7 +21,7 @@ const Page = () => {
       try {
         // Retrieve the token from localStorage
         const token = localStorage.getItem("token");
-        console.log(token);
+        // console.log(token);
 
         const form = new FormData();
         form.append("requestID", "rid_1983");
@@ -42,7 +42,7 @@ const Page = () => {
         //   console.log(response.data.imageUrl);
         //    Umage = response.data.imageUrl;
         //    console.log(Umage);
-        console.log(response.data);
+        // console.log(response.data);
         setUser(response.data);
         //  localStorage.setItem("token", response.data.access_token);
         localStorage.setItem("userData", JSON.stringify(response.data));
