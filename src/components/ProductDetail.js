@@ -431,7 +431,12 @@ const copyToClipboard = (text) => {
 <Button
   variant="outline"
   className="flex-1 py-3 flex items-center justify-center gap-2"
-  onClick={() => window.open(product.shop.shop_whatsapp_link, '_blank')}
+  onClick={() => {
+    const phoneNumber = product.shop.shop_whatsapp_link; // Get the number from backend
+    const message = `Hello, I am interested in this product on VPlaza:\n\nProduct Name: ${product.data.product_name}\nPrice: ${product.data.amount}\nImage: ${product.data.product_img1}\n\nIs this still available?`;
+    const whatsappLink = `https://wa.me/234${phoneNumber.substring(1)}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappLink, '_blank'); // Open the generated link
+  }}
 >
   <IoLogoWhatsapp size={24} />
   Message on WhatsApp
