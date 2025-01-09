@@ -36,7 +36,7 @@ const Page = () => {
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("userData"));
     if (userData) {
-      console.log(userData);
+      // console.log(userData);
       setUsername(userData.username || "");
       setGender(userData.gender === 1 ? "Male" : "Female");
       setPhone(userData.phone || "");
@@ -55,7 +55,7 @@ const Page = () => {
         );
         const data = response.data;
         setLocations(data);
-        console.log(data);
+        // console.log(data);
       } catch (error) {
         console.error("Error fetching locations:", error);
       }
@@ -84,7 +84,7 @@ const Page = () => {
       let uploadedImageUrl = imageUrl; // Use existing image URL by default
 
       if (imageFile) {
-        console.log("Uploading to Sanity:", { imageFile });
+        // console.log("Uploading to Sanity:", { imageFile });
 
         try {
           // Upload the image to Sanity
@@ -113,7 +113,7 @@ const Page = () => {
         requestID,
       };
 
-      console.log("Sending data to backend (editUser):", payload);
+      // console.log("Sending data to backend (editUser):", payload);
 
       const response = await axios.post(
         "https://api.vplaza.com.ng/users/editUser",
@@ -126,14 +126,14 @@ const Page = () => {
       );
 
       if (response.data.status === true) {
-        console.log(response.data.status);
-        console.log(response);
+        // console.log(response.data.status);
+        // console.log(response);
         alert("Profile updated successfully");
         router.push("/profile");
       } else if (response.message === "signature verification failed") {
         router.push("/signin");
       } else {
-        console.log(response);
+        // console.log(response);
         alert("Failed to update profile");
       }
     } catch (error) {
