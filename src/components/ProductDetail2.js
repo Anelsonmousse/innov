@@ -187,6 +187,8 @@ const ProductDetail2 = ({ product, isInWishlist }) => {
     }
   };
 
+
+
   const handleSubmitReview = async () => {
     if (!selectedRating || !reviewText.trim()) {
       alert("Please provide both rating and review text");

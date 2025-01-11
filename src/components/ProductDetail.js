@@ -20,6 +20,7 @@ const ProductDetail = ({ product, isInWishlist }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const reviewsPerPage = 5;
   const requestID = "rid_1983"; // static request ID
+  
 
   const getValidImages = () => {
     if (!product) return [];
@@ -81,6 +82,9 @@ const ProductDetail = ({ product, isInWishlist }) => {
       handleNextImage();
     }
   };
+  const handleClick = () => {
+    router.push(`/store/store/${product.shop.shop_tag}`);
+  };
 
   const handleKeyDown = (e) => {
     if (isModalOpen) {
@@ -90,10 +94,6 @@ const ProductDetail = ({ product, isInWishlist }) => {
     }
   };
 
-  const handleSellerClick = (product) => {
-    router.push(`/store/${product.shop.shop_tag}`);
-    
-  };
   
   // Function to copy text to clipboard
 const copyToClipboard = (text) => {
@@ -292,20 +292,20 @@ const copyToClipboard = (text) => {
       </h1>
 
       <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2 bg-[#8999AF] py-2 px-2 rounded-[5px]">
-        <img
-          src={product.shop.shop_image_url}
-          alt={product.data.product_name}
-          className="w-8 h-8 object-cover rounded-full"
-          />
-          <span className=" text-[12px] text-white">
-            {product.shop.shop_name}
-          </span>
-          <div className="flex items-center ml-3">
-            <span className="text-[8px] text-white">{Math.floor(product.average_r ?? 0)}</span>
-            <FaStar className="text-yellow-400 ml-1 h-4 w-3" />
-          </div>
-        </div>
+      <button onClick={handleClick} className="flex items-center gap-2 bg-[#8999AF] py-2 px-2 rounded-[5px]">
+      <img
+        src={product.shop.shop_image_url}
+        alt={product.data.product_name}
+        className="w-8 h-8 object-cover rounded-full"
+      />
+      <span className="text-[12px] text-white">
+        {product.shop.shop_name}
+      </span>
+      <div className="flex items-center ml-3">
+        <span className="text-[8px] text-white">{Math.floor(product.average_r ?? 0)}</span>
+        <FaStar className="text-yellow-400 ml-1 h-4 w-3" />
+      </div>
+    </button>
         <span className="text-2xl font-bold text-main">
           ₦{parseInt(product.data.amount).toLocaleString()}
         </span>
