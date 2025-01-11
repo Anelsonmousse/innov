@@ -8,12 +8,34 @@ const ShopDetails = ({ product }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [token, setToken] = useState(null);
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]); // Filtered product list
   const reviewsPerPage = 5;
   const requestID = "rid_1983"; // static request ID
 
   const products = product.data || []; // Ensure product.data is an array
+
+  const handleProductClick = async (item) => {
+    setLoading(true); // Show loader
+    try {
+      if (!token) {
+        router.push("/signin");
+      } else {
+        router.push(`/product/${item.details.product_id}`);
+      }
+    } catch (error) {
+      console.error("Error navigating to product:", error);
+    } finally {
+      setLoading(false); // Hide loader after navigation or error
+    }
+  };
+
+  // Get token from localStorage when component mounts
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    setToken(storedToken); // Set token from localStorage
+  }, []);
 
   useEffect(() => {
     setItems(products);
@@ -57,13 +79,23 @@ const ShopDetails = ({ product }) => {
         </div>
       </div>
 
+      {/* Show loader if loading */}
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <Loader /> {/* Replace with your loader component */}
+        </div>
+      )}
+
       {/* Product listing */}
       <section className="grid grid-cols-2 w-full gap-4">
         {filteredItems.length === 0 ? (
-          <div className="col-span-2 text-center text-xl">No products found</div>
+          <div className="col-span-2 text-center text-xl">
+            No products found
+          </div>
         ) : (
           filteredItems.map((item, index) => (
             <div
+              onClick={() => handleProductClick(item)}
               key={index}
               className="flex flex-col items-left p-4 rounded cursor-pointer transition-all hover:shadow-lg"
             >
