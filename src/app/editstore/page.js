@@ -97,7 +97,7 @@ const Page = () => {
     const errors = {
       shop_name: !shop_name.trim(),
       shop_desc: !shop_desc.trim(),
-      shop_whatsapp_link: !shop_whatsapp_link.trim(),
+      shop_whatsapp_link: !shop_whatsapp_link.trim() || shop_whatsapp_link.length !== 11,
       shop_location: !shop_location.trim(),
       shop_image: !imagePreview
     };
@@ -357,7 +357,7 @@ const Page = () => {
            
             {/* Chat Link Input */}
             <div className="w-[100%]">
-              <div className="ml-[10%] mt-4">WhatsApp or Chat Link:</div>
+              <div className="ml-[10%] mt-4">WhatsApp Number:</div>
             </div>
             <div className="relative w-[80%] mt-2">
               <MdPhone 
@@ -367,16 +367,21 @@ const Page = () => {
               <input
                 value={shop_whatsapp_link}
                 onChange={(e) => {
-                  setChatLink(e.target.value);
-                  setValidationErrors(prev => ({...prev, shop_whatsapp_link: false}));
+                  const value = e.target.value;
+                  if (/^\d*$/.test(value)) { // Allow only numeric input
+                    setChatLink(value);
+                    setValidationErrors((prev) => ({ ...prev, shop_whatsapp_link: false }));
+                  }
                 }}
-                placeholder="Enter your link"
-                type="text"
+                placeholder="Enter your whatsapp number"
+                type="tel"
                 className={`pl-10 opacity-40 border-2 rounded-lg h-[45px] peer focus:border-[#004AAD] focus:ring-0 w-full ${validationErrors.shop_whatsapp_link ? 'border-red-500' : 'border-black'}`}
               />
             </div>
             {validationErrors.shop_whatsapp_link && (
-              <span className="text-red-500 text-sm w-[80%] text-left">WhatsApp or Chat link is required</span>
+              <span className="text-red-500 text-sm w-[80%] text-left">
+              WhatsApp Number must be 11 digits
+              </span>
             )}
 
             <div className="w-[100%]">

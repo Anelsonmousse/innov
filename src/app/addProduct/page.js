@@ -87,9 +87,11 @@ const Page = () => {
   // Upload images to Sanity.io
   const uploadImageToSanity = async (file) => {
     try {
+      console.log("Uploading file to Sanity:", file.name); // Log the file name being uploaded
       const response = await client.assets.upload("image", file, {
         filename: file.name,
       });
+      console.log("Response from Sanity for file:", file.name, response); // Log the response from Sanity
       return response.url;
     } catch (error) {
       console.error("Image upload failed:", error);

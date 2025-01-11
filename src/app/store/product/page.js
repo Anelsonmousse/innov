@@ -20,6 +20,7 @@ const page = () => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [shopName, setShopName] = useState("");
   const [shopDesc, setShopDesc] = useState("");
+  const [shopTag, setShopTag] = useState("");
   const [shopImageUrl, setShopImageUrl] = useState("");
   const [items, setItems] = useState([]);
   const [error, setError] = useState("");
@@ -30,6 +31,7 @@ const page = () => {
     const shopData = JSON.parse(localStorage.getItem("shopDetails"));
     if (shopData) {
       setShopName(shopData.shop_name);
+      setShopTag(shopData.shop_tag);
       setShopDesc(shopData.shop_desc);
       setShopImageUrl(shopData.shop_image_url);
     }
@@ -98,7 +100,7 @@ const page = () => {
   };
 
   const handleCopyStoreLink = () => {
-    const storeLink = `https://yourstore.com/${shopName}`;
+    const storeLink = `https://www.vplaza.com.ng/store/store/${shopTag}`;
     navigator.clipboard
       .writeText(storeLink)
       .then(() => alert("Store link copied to clipboard!"))
@@ -156,13 +158,13 @@ const page = () => {
           </div>
         </div>
         <div className="flex mt-6 justify-between items-center">
-          {/* <Button
+          <Button
             variant="plain"
             onClick={handleCopyStoreLink}
             className="flex gap-1 px-2 py-1 text-xs items-center text-gray-600 hover:text-gray-800 transition-colors"
           >
             <FiCopy size={16} /> Copy Store Link
-          </Button> */}
+          </Button>
           <Button
             variant="plain"
             onClick={() => router.push("/addProduct")}

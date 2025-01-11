@@ -223,7 +223,7 @@ const ProductList = ({ items }) => {
                       <div
                           onClick={() => handleProductClick(item)}
                           key={index}
-                          className="flex flex-col items-center p-4 rounded cursor-pointer transition-all hover:shadow-lg"
+                          className="flex flex-col items-left p-4 rounded cursor-pointer transition-all hover:shadow-lg"
                       >
                           <img
                               src={item.details.product_img1}
@@ -238,9 +238,12 @@ const ProductList = ({ items }) => {
                               </div>
                           </div>
                           <div className="flex flex-col text-sm w-full">
-                              <div className="flex items-center">
-                                  <StarRating rating={getRating(item)} />
-                              </div>
+                              <p className="flex items-center text-[10px]">
+                                                {item.average_r.average ?? "No rating"} {/* Show average rating if available */}
+                                                <span className="inline-block">
+                                                  <FaStar size={10} className="fill-[#FFF500]" />
+                                                </span>
+                                              </p>
                               <div className="font-medium text-xs">{item.shopDetails.shop_name}</div>
                           </div>
                           <div className="font-semibold flex w-full text-lg">
