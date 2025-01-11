@@ -107,7 +107,7 @@ const Page = () => {
         } else {
           // console.log(response.data.data);
           const fetchedItems = shuffleArray(response.data.data);
-          const visibleItems = tkenn ? fetchedItems.slice(0, 50) : fetchedItems;
+          const visibleItems = tkenn ? fetchedItems.slice(0, 200) : fetchedItems;
           setItems(visibleItems);
           setFilteredItems(visibleItems); // Initialize filtered items
         }
@@ -182,7 +182,7 @@ const CategoryItem = ({ image, label, onClick }) => (
 const ProductList = ({ items }) => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 50;
+  const productsPerPage = 200;
   const totalPages = Math.ceil(items.length / productsPerPage);
 
   const handleProductClick = (item) => {
