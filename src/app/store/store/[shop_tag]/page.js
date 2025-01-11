@@ -20,7 +20,6 @@ const fetchShoptag = async (shop_tag) => {
       formData,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data", // Ensure content type is set to multipart/form-data
         },
       }
