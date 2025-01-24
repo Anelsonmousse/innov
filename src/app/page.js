@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
@@ -16,6 +16,7 @@ import {
 } from "../assets";
 import { IoIosHeart } from "react-icons/io";
 import { FaFilter } from "react-icons/fa";
+import { IoMdArrowDropdown } from "react-icons/io";
 import { FaStar, FaRegStar, FaSearch } from "react-icons/fa";
 import { MdStore, MdHomeFilled } from "react-icons/md";
 import { IoPersonCircleSharp } from "react-icons/io5";
@@ -31,6 +32,11 @@ const Page = () => {
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
 
   useEffect(() => {
     const userDatay = JSON.parse(localStorage.getItem("userData"));
@@ -38,6 +44,10 @@ const Page = () => {
     const tken = localStorage.getItem("token");
     setToken(tken);
   }, []);
+
+  
+
+  
 
   const shuffleArray = (array) => {
     return array.sort(() => Math.random() - 0.5);
@@ -345,6 +355,10 @@ const handleCategoryClick = async (category) => {
     setLoading(false); // Hide loader after request is complete
   }
 };
+  
+
+
+
 
 const handleWishlistClick = async () => {
   const tkenn = localStorage.getItem("token");
@@ -436,23 +450,139 @@ const handleWishlistClick = async () => {
       </header>
 
      {/* Categories */}
-     <div className="bg-[#004AAD] py-6">
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-center text-xl md:text-2xl font-bold text-white mb-6">
-            Categories
-          </h2>
-          <div className="grid grid-cols-4 md:grid-cols-8 gap-4 md:gap-6">
-            <CategoryItem image={Five} label="Phones" onClick={() => handleCategoryClick("phones")} />
-            <CategoryItem image={Six} label="Furnitures" onClick={() => handleCategoryClick("furnitures")} />
-            <CategoryItem image={Seven} label="Electronics" onClick={() => handleCategoryClick("electronics")} />
-            <CategoryItem image={Eight} label="Tops" onClick={() => handleCategoryClick("tops")} />
-            <CategoryItem image={Nine} label="Trousers" onClick={() => handleCategoryClick("trousers")} />
-            <CategoryItem image={Ten} label="Women" onClick={() => handleCategoryClick("women")} />
-            <CategoryItem image={Twelve} label="Accessories" onClick={() => handleCategoryClick("accessories")} />
-            <CategoryItem image={Thirteen} label="Food" onClick={() => handleCategoryClick("food")} />
+     <div className="bg-[#004AAD] py-2">
+      <div className="max-w-7xl mx-auto px-4">
+        <h2 className="text-center text-xl md:text-2xl font-bold text-white mb-6 mt-2">
+          Categories
+        </h2>
+        <div className="grid grid-cols-4 md:grid-cols-8 gap-4 md:gap-6">
+          <CategoryItem
+            image={Five}
+            label="Phones"
+            onClick={() => handleCategoryClick("phones")}
+          />
+          <CategoryItem
+            image={Six}
+            label="Furnitures"
+            onClick={() => handleCategoryClick("furnitures")}
+          />
+          <CategoryItem
+            image={Seven}
+            label="Electronics"
+            onClick={() => handleCategoryClick("electronics")}
+          />
+          <CategoryItem
+            image={Eight}
+            label="Tops"
+            onClick={() => handleCategoryClick("tops")}
+          />
+          <CategoryItem
+            image={Nine}
+            label="Trousers"
+            onClick={() => handleCategoryClick("trousers")}
+          />
+          <CategoryItem
+            image={Ten}
+            label="Women"
+            onClick={() => handleCategoryClick("women")}
+          />
+          <CategoryItem
+            image={Twelve}
+            label="Accessories"
+            onClick={() => handleCategoryClick("accessories")}
+          />
+          <CategoryItem
+            image={Thirteen}
+            label="Food"
+            onClick={() => handleCategoryClick("food")}
+          />
+        </div>
+        <div className="relative flex justify-end w-full items-center">
+          {/* More Categories Button */}
+          <div
+            className="flex items-center cursor-pointer"
+            onClick={toggleDropdown}
+          >
+            <p className="text-white pr-[5px] pt-[10px] text-[13px]">
+              More Categories
+            </p>
+            <IoMdArrowDropdown className="text-white text-[16px] mt-3" />
           </div>
+
+          {/* Dropdown Menu */}
+          {isOpen && (
+            <ul className="absolute right-0 mt-2 bg-gray-800 text-white rounded shadow-lg">
+              <li
+                className="px-4 py-2 hover:bg-gray-700 cursor-pointer"
+                onClick={() => handleCategoryClick("skincare")}
+              >
+                Skincare
+              </li>
+              <li
+                className="px-4 py-2 hover:bg-gray-700 cursor-pointer"
+                onClick={() => handleCategoryClick("bags")}
+              >
+                Bags
+              </li>
+              <li
+                className="px-4 py-2 hover:bg-gray-700 cursor-pointer"
+                onClick={() => handleCategoryClick("phones")}
+              >
+                Phones
+              </li>
+              <li
+                className="px-4 py-2 hover:bg-gray-700 cursor-pointer"
+                onClick={() => handleCategoryClick("furnitures")}
+              >
+                Furnitures
+              </li>
+              <li
+                className="px-4 py-2 hover:bg-gray-700 cursor-pointer"
+                onClick={() => handleCategoryClick("top")}
+              >
+                Top
+              </li>
+              <li
+                className="px-4 py-2 hover:bg-gray-700 cursor-pointer"
+                onClick={() => handleCategoryClick("trousers")}
+              >
+                Trousers
+              </li>
+              <li
+                className="px-4 py-2 hover:bg-gray-700 cursor-pointer"
+                onClick={() => handleCategoryClick("electronics")}
+              >
+                Electronics
+              </li>
+              <li
+                className="px-4 py-2 hover:bg-gray-700 cursor-pointer"
+                onClick={() => handleCategoryClick("lingerie")}
+              >
+                Lingerie
+              </li>
+              <li
+                className="px-4 py-2 hover:bg-gray-700 cursor-pointer"
+                onClick={() => handleCategoryClick("jean")}
+              >
+                Jean
+              </li>
+              <li
+                className="px-4 py-2 hover:bg-gray-700 cursor-pointer"
+                onClick={() => handleCategoryClick("suit")}
+              >
+                Suit
+              </li>
+              <li
+                className="px-4 py-2 hover:bg-gray-700 cursor-pointer"
+                onClick={() => handleCategoryClick("supplement")}
+              >
+                Supplement
+              </li>
+            </ul>
+          )}
         </div>
       </div>
+    </div>
       
         
         {/* Main Body */}
