@@ -474,38 +474,38 @@ const handleWishlistClick = async () => {
     <div className="grid grid-cols-4 md:grid-cols-8 gap-4 md:gap-6">
       <CategoryItem
         image={Five}
-        label="Phones"
-        onClick={() => handleCategoryClick("phones")}
+        label="Jewelries"
+        onClick={() => handleCategoryClick("jewelries")}
       />
       <CategoryItem
         image={Six}
-        label="Furnitures"
-        onClick={() => handleCategoryClick("furnitures")}
+        label="Gadgets"
+        onClick={() => handleCategoryClick("gadgets")}
       />
       <CategoryItem
         image={Seven}
-        label="Electronics"
-        onClick={() => handleCategoryClick("electronics")}
+        label="Hairs"
+        onClick={() => handleCategoryClick("hairs")}
       />
       <CategoryItem
         image={Eight}
-        label="Tops"
-        onClick={() => handleCategoryClick("tops")}
+        label="Perfumes"
+        onClick={() => handleCategoryClick("perfumes")}
       />
       <CategoryItem
         image={Nine}
-        label="Trousers"
-        onClick={() => handleCategoryClick("trousers")}
+        label="Gown"
+        onClick={() => handleCategoryClick("gown")}
       />
       <CategoryItem
         image={Ten}
-        label="Women"
-        onClick={() => handleCategoryClick("women")}
+        label="Kitchen"
+        onClick={() => handleCategoryClick("kitchen")}
       />
       <CategoryItem
         image={Twelve}
-        label="Accessories"
-        onClick={() => handleCategoryClick("accessories")}
+        label="Footwears"
+        onClick={() => handleCategoryClick("footwears")}
       />
       <CategoryItem
         image={Thirteen}
@@ -513,7 +513,7 @@ const handleWishlistClick = async () => {
         onClick={() => handleCategoryClick("food")}
       />
     </div>
-    <div className="relative flex justify-end w-full items-center">
+    <div className="relative flex justify-end w-full items-center mt-2">
       {/* More Categories Button */}
       <div
         className="flex items-center cursor-pointer"
