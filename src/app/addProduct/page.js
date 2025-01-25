@@ -239,14 +239,24 @@ const Page = () => {
             className="w-full p-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
           >
             <option value="">Select Category</option>
-            <option value="furniture">Furniture</option>
-            <option value="accessories">Accessories</option>
+            <option value="jewelries">Jewelries</option>
+            <option value="gadgets">Gadgets</option>
+            <option value="hairs">Hairs</option>
+            <option value="perfumes">Perfumes</option>
+            <option value="gown">Gown</option>
+            <option value="kitchen">Kitchen</option>
+            <option value="footwears">Footwears</option>
+            <option value="skincare">Skincare</option>
+            <option value="bags">Bags</option>
             <option value="phones">Phones</option>
+            <option value="furnitures">Furnitures</option>
+            <option value="top">Top</option>
+            <option value="trousers">Trousers</option>
             <option value="electronics">Electronics</option>
-            <option value="tops">Tops</option>
-            <option value="pants">Pants</option>
-            <option value="women">Women</option>
-            <option value="services">Services</option>
+            <option value="lingerie">Lingerie</option>
+            <option value="jean">Jean</option>
+            <option value="suit">Suit</option>
+            <option value="supplement">Supplement</option>
           </select>
 
           <input
