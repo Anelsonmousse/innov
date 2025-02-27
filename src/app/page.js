@@ -5,6 +5,10 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   Five,
+  GA,
+  FA,
+  TOP,
+  FUNNY,
   Six,
   Seven,
   Eight,
@@ -18,6 +22,7 @@ import { IoIosHeart } from "react-icons/io";
 import { FaFilter } from "react-icons/fa";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { FaStar, FaRegStar, FaSearch } from "react-icons/fa";
+import { FaLocationDot } from "react-icons/fa6";
 import { MdStore, MdHomeFilled } from "react-icons/md";
 import { IoPersonCircleSharp } from "react-icons/io5";
 import axios from "axios";
@@ -185,22 +190,62 @@ const Page = () => {
     );
 };
 
-const CategoryItem = ({ image, label, onClick }) => (
+// const CategoryItem = ({ image, label, onClick }) => (
+//   <div 
+//     onClick={onClick}
+//     className="relative w-full h-[110px] overflow-hidden cursor-pointer group"
+//   >
+//     <div className="">
+//       <Image 
+//         src={image} 
+//         alt={label}
+//         width={460}
+//         className="transition-transform hover:scale-110"
+//       />
+//     </div>
+//     <div className="text-xs md:text-sm text-center text-white font-medium mt-1">
+//       {label}
+//     </div>
+//   </div>
+// );
+const CategoryItem = ({ image, label, onClick, desc, prod }) => (
   <div 
     onClick={onClick}
-    className="flex flex-col items-center p-2 hover:bg-[#003288] rounded-lg transition-all cursor-pointer"
-  >
-    <div className="w-12 h-12 md:w-16 md:h-16 relative">
-      <Image 
-        src={image} 
-        alt={label}
-        layout="fill"
-        objectFit="contain"
-        className="transition-transform hover:scale-110"
-      />
+    className="relative w-[363px] aspect-[363/109] sm:w-[500px] md:w-[700px] lg:w-[900px] xl:w-[1200px] rounded-2xl overflow-hidden mt-3 border-[1px] border-white"
+>
+    <Image
+      src={image}
+      alt="Background"
+      layout="fill"
+      objectFit="cover"
+      quality={100}
+    />
+
+    <div className="absolute inset-0 flex flex-col justify-center  bg-black bg-opacity-50 text-white p-4">
+      <p className="text-[14px] font-semibold">{label}</p>
+      <p className="text-[10px]">{desc}</p>
+      <p className="text-sm pt-4">{prod}</p>
     </div>
-    <div className="text-xs md:text-sm text-center text-white font-medium mt-1">
-      {label}
+  </div>
+);
+const CategoryItem2 = ({ image, label, onClick, desc, prod }) => (
+  <div 
+    onClick={onClick}
+    className="relative w-[115px] aspect-[115/109] sm:w-[500px] md:w-[700px] lg:w-[900px] xl:w-[1200px] 
+             rounded-xl border-[1px] border-white overflow-hidden"
+>
+    <Image
+      src={image}
+      alt="Background"
+      layout="fill"
+      objectFit="cover"
+      quality={100}
+    />
+
+    <div className="absolute inset-0 flex flex-col justify-center  bg-black bg-opacity-50 text-white p-4">
+      <p className="text-[14px] font-semibold">{label}</p>
+      <p className="text-[10px]">{desc}</p>
+      <p className="text-[10px] pt-2">{prod}</p>
     </div>
   </div>
 );
@@ -456,10 +501,13 @@ const handleWishlistClick = async () => {
               <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             </div>
             
-            <div className="bg-[#004AAD] px-4 py-2 rounded-lg">
+            {/* <div className="bg-[#004AAD] px-4 py-2 rounded-lg">
               <span className="text-white text-[10px] font-medium truncate max-w-[80px] block">
                 {userDatax?.user_location || "No University selected"}
               </span>
+            </div> */}
+            <div className="bg-[#004AAD] inline-flex items-center justify-center p-2 rounded">
+              <FaLocationDot className="text-white" />
             </div>
           </div>
         </div>
@@ -467,11 +515,12 @@ const handleWishlistClick = async () => {
 
      {/* Categories */}
 <div className="bg-[#004AAD] py-2">
-  <div className="max-w-7xl mx-auto px-4">
-    <h2 className="text-center text-xl md:text-2xl font-bold text-white mb-6 mt-2">
+  <div className="max-w-7xl mx-auto px-0">
+    <h2 className="text-center text-xl md:text-2xl font-bold text-white mb-2 mt-2">
       Categories
     </h2>
-    <div className="grid grid-cols-4 md:grid-cols-8 gap-4 md:gap-6">
+    <div className="w-full h-px bg-gray-300"></div>
+    {/* <div className="grid grid-cols-4 md:grid-cols-8 gap-4 md:gap-6">
       <CategoryItem
         image={Five}
         label="Jewelries"
@@ -512,7 +561,53 @@ const handleWishlistClick = async () => {
         label="Food"
         onClick={() => handleCategoryClick("food")}
       />
+    </div> */}
+    
+    <div className="flex justify-center items-center w-full">
+    <CategoryItem
+        image={GA}
+        label="Gadgets and Accessories"
+        onClick={() => handleCategoryClick("gadgets")}
+        desc="Hardware Technologies"
+        prod="500+ Products"
+      />
     </div>
+    <div className="flex flex-row mt-2 -space-x-14">
+    <div className="flex justify-center items-center w-full">
+    <CategoryItem2
+        image={FUNNY}
+        label="Furniture"
+        onClick={() => handleCategoryClick("gadgets")}
+        desc="Durability"
+        prod="500+ Items"
+      />
+    </div>
+    <div className="flex justify-center items-center w-full">
+    <CategoryItem2
+        image={TOP}
+        label="Tops"
+        onClick={() => handleCategoryClick("top")}
+        desc="Quality"
+        prod="500+ Items"
+      />
+    </div>
+    <div className="flex justify-center items-center w-full">
+    <CategoryItem2
+        image={FA}
+        label="Food"
+        onClick={() => handleCategoryClick("food")}
+        desc="Nurishing"
+        prod="500+ items"
+      />
+    </div>
+    </div>
+    
+    {/* <div
+  className="h-64 w-full bg-cover bg-center"
+  style={{ backgroundImage: `url("/assets/ganda.png")` }}
+>
+  
+</div> */}
     <div className="relative flex justify-end w-full items-center mt-2">
       {/* More Categories Button */}
       <div
