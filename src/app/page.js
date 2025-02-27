@@ -572,8 +572,8 @@ const handleWishlistClick = async () => {
         prod="500+ Products"
       />
     </div>
-    <div className="flex flex-row mt-2 -space-x-14">
-    <div className="flex justify-center items-center w-full">
+    <div className="flex flex-row w-full justify-center items-center mt-2 gap-2 ">
+    <div className="">
     <CategoryItem2
         image={FUNNY}
         label="Furniture"
@@ -582,7 +582,7 @@ const handleWishlistClick = async () => {
         prod="500+ Items"
       />
     </div>
-    <div className="flex justify-center items-center w-full">
+    <div className="">
     <CategoryItem2
         image={TOP}
         label="Tops"
@@ -591,7 +591,7 @@ const handleWishlistClick = async () => {
         prod="500+ Items"
       />
     </div>
-    <div className="flex justify-center items-center w-full">
+    <div className="">
     <CategoryItem2
         image={FA}
         label="Food"
