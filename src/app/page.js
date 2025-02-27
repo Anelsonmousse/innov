@@ -242,7 +242,7 @@ const CategoryItem2 = ({ image, label, onClick, desc, prod }) => (
       quality={100}
     />
 
-    <div className="absolute inset-0 flex flex-col justify-center  text-white p-4">
+    <div className="absolute inset-0 flex flex-col justify-center  text-white p-3">
       <p className="text-[14px] font-semibold">{label}</p>
       <p className="text-[10px]">{desc}</p>
       <p className="text-[10px] pt-2">{prod}</p>
