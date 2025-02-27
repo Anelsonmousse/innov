@@ -211,7 +211,7 @@ const Page = () => {
 const CategoryItem = ({ image, label, onClick, desc, prod }) => (
   <div 
     onClick={onClick}
-    className="relative w-[363px] aspect-[363/109] sm:w-[500px] md:w-[700px] lg:w-[900px] xl:w-[1200px] rounded-2xl overflow-hidden mt-3 border-[1px] border-white"
+    className="relative w-[363px] aspect-[363/109] sm:w-[500px] md:w-[700px] lg:w-[900px] xl:w-[1200px] rounded-2xl overflow-hidden mt-3 border-[1px] border-white/50"
 >
     <Image
       src={image}
@@ -232,7 +232,7 @@ const CategoryItem2 = ({ image, label, onClick, desc, prod }) => (
   <div 
     onClick={onClick}
     className="relative w-[115px] aspect-[115/109] sm:w-[500px] md:w-[700px] lg:w-[900px] xl:w-[1200px] 
-             rounded-xl border-[1px] border-white overflow-hidden"
+             rounded-xl border-[1px] border-white/50 overflow-hidden"
 >
     <Image
       src={image}
@@ -519,7 +519,7 @@ const handleWishlistClick = async () => {
     <h2 className="text-center text-xl md:text-2xl font-bold text-white mb-2 mt-2">
       Categories
     </h2>
-    <div className="w-full h-px bg-gray-300"></div>
+    <div className="w-full h-px bg-[#8CBDFF] opacity-30"></div>
     {/* <div className="grid grid-cols-4 md:grid-cols-8 gap-4 md:gap-6">
       <CategoryItem
         image={Five}
