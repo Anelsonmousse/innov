@@ -221,7 +221,7 @@ const CategoryItem = ({ image, label, onClick, desc, prod }) => (
       quality={100}
     />
 
-    <div className="absolute inset-0 flex flex-col justify-center  bg-black bg-opacity-50 text-white p-4">
+    <div className="absolute inset-0 flex flex-col justify-center   text-white p-4">
       <p className="text-[14px] font-semibold">{label}</p>
       <p className="text-[10px]">{desc}</p>
       <p className="text-sm pt-4">{prod}</p>
@@ -242,7 +242,7 @@ const CategoryItem2 = ({ image, label, onClick, desc, prod }) => (
       quality={100}
     />
 
-    <div className="absolute inset-0 flex flex-col justify-center  bg-black bg-opacity-50 text-white p-4">
+    <div className="absolute inset-0 flex flex-col justify-center  text-white p-4">
       <p className="text-[14px] font-semibold">{label}</p>
       <p className="text-[10px]">{desc}</p>
       <p className="text-[10px] pt-2">{prod}</p>
