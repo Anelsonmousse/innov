@@ -28,6 +28,12 @@ import BB from "../assets/bb.png";
 import BC from "../assets/bc.png";
 import BE from "../assets/be.png";
 import Tag from "../assets/tag.png";
+import GA from "../assets/ganda.png";
+import FA from "../assets/fud.png";
+import FUNNY from "../assets/funny.png";
+import TOP from "../assets/top.png";
+
+
 
 export {
   One,
@@ -60,4 +66,8 @@ export {
   Fan,
   Tag,
   Edit,
+  GA,
+  FA,
+  FUNNY,
+  TOP,
 };
