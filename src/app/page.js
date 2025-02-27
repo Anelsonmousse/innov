@@ -19,6 +19,8 @@ import {
   Fourteen,
 } from "../assets";
 import { IoIosHeart } from "react-icons/io";
+import { IoIosNotifications } from "react-icons/io";
+import { HiOutlineExternalLink } from "react-icons/hi";
 import { FaFilter } from "react-icons/fa";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { FaStar, FaRegStar, FaSearch } from "react-icons/fa";
@@ -755,8 +757,8 @@ const handleWishlistClick = async () => {
                    }
                  }
                }}
-               color="#686868"
-               size={30}
+               color="#FFF"
+               size={25}
              />
             ) : (
               <MdStore
@@ -764,8 +766,27 @@ const handleWishlistClick = async () => {
                 setLoading(true); // Show loader
                 router.push("/signin");
               }}
-                color="#686868"
-                size={30}
+                color="#FFF"
+                size={25}
+              />
+            )}
+{token ? (
+              <HiOutlineExternalLink
+              onClick={() => {
+                setLoading(true); // Show loader
+                router.push("/");
+              }}
+                color="#FFF"
+                size={25}
+              />
+            ) : (
+              <HiOutlineExternalLink
+              onClick={() => {
+                setLoading(true); // Show loader
+                router.push("/signin");
+              }}
+                color="#FFF"
+                size={25}
               />
             )}
             <div className="h-[50px] w-[50px] mt-[-10px] rounded-full bg-white text-center items-center justify-center relative">
@@ -787,14 +808,33 @@ const handleWishlistClick = async () => {
           size={30}
         />
       </div>
+      {token ? (
+              <IoIosNotifications
+              onClick={() => {
+                setLoading(true); // Show loader
+                router.push("/");
+              }}
+                color="#FFF"
+                size={25}
+              />
+            ) : (
+              <IoIosNotifications
+              onClick={() => {
+                setLoading(true); // Show loader
+                router.push("/signin");
+              }}
+                color="#FFF"
+                size={25}
+              />
+            )}
             {token ? (
               <IoPersonCircleSharp
               onClick={() => {
                 setLoading(true); // Show loader
                 router.push("/profile");
               }}
-                color="#686868"
-                size={30}
+                color="#FFF"
+                size={25}
               />
             ) : (
               <IoPersonCircleSharp
@@ -802,8 +842,8 @@ const handleWishlistClick = async () => {
                 setLoading(true); // Show loader
                 router.push("/signin");
               }}
-                color="#686868"
-                size={30}
+                color="#FFF"
+                size={25}
               />
             )}
           </div>
