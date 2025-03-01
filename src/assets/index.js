@@ -2,15 +2,6 @@ import One from "../assets/one.png";
 import Two from "../assets/two.png";
 import Three from "../assets/three.png";
 import Four from "../assets/four.png";
-import Five from "../assets/92.png";
-import Six from "../assets/91.png";
-import Seven from "../assets/90.png";
-import Eight from "../assets/89.png";
-import Nine from "../assets/88.png";
-import Ten from "../assets/87.png";
-import Eleven from "../assets/7.png";
-import Twelve from "../assets/86.png";
-import Thirteen from "../assets/9.png";
 import Fourteen from "../assets/10.png";
 import Chair from "../assets/a.png";
 import TV from "../assets/b.png";
@@ -32,6 +23,16 @@ import GA from "../assets/ganda.png";
 import FA from "../assets/fud.png";
 import FUNNY from "../assets/funny.png";
 import TOP from "../assets/top.png";
+import SKINCARE from "../assets/skincare.png";
+import ELECTRONICS from "../assets/electronics.png";
+import BAGS from "../assets/bags.png";
+import FOOTWEAR from "../assets/footwear.png";
+import HAIR from "../assets/hair.png";
+import JEAN from "../assets/jean.png";
+import JEWELRIES from "../assets/jewelries.png";
+import KITCHEN from "../assets/kitchen.png";
+import LINGERIE from "../assets/lingerie.png";
+import PERFUME from "../assets/perfume.png";
 
 
 
@@ -48,17 +49,8 @@ export {
   BB,
   BC,
   BE,
-  Five,
   Product,
-  Six,
-  Seven,
-  Eight,
-  Nine,
   Prof,
-  Ten,
-  Eleven,
-  Twelve,
-  Thirteen,
   Fourteen,
   Chair,
   TV,
@@ -70,4 +62,14 @@ export {
   FA,
   FUNNY,
   TOP,
+  SKINCARE,
+  ELECTRONICS,
+  BAGS,
+  FOOTWEAR,
+  HAIR,
+  JEAN,
+  JEWELRIES,
+  KITCHEN,
+  LINGERIE,
+  PERFUME,
 };
