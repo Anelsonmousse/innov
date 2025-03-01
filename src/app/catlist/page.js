@@ -218,7 +218,7 @@ const CategoryItem2 = ({ image, label, onClick, desc, prod }) => (
     />
 
     <div className="absolute inset-0 flex flex-col justify-start  text-white p-3">
-      <p className="text-[14px] font-semibold pt-2">{label}</p>
+      <p className="text-[16px] font-semibold pt-2">{label}</p>
       <p className="text-[10px]">{desc}</p>
       <p className="text-[10px] pt-[90px]">{prod}</p>
     </div>
