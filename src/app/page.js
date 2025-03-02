@@ -200,7 +200,7 @@ const Page = () => {
 const CategoryItem = ({ image, label, onClick, desc, prod }) => (
   <div 
     onClick={onClick}
-    className="relative w-[363px] aspect-[363/109] sm:w-[500px] md:w-[700px] lg:w-[900px] xl:w-[1200px] rounded-2xl overflow-hidden mt-3 border-[1px] border-white/50"
+    className="relative w-[363px] aspect-[363/109] sm:w-[500px] md:w-[700px] lg:w-[700px] xl:w-[900px] rounded-2xl overflow-hidden mt-3 border-[1px] border-white/50"
 >
     <Image
       src={image}
@@ -220,7 +220,7 @@ const CategoryItem = ({ image, label, onClick, desc, prod }) => (
 const CategoryItem2 = ({ image, label, onClick, desc, prod }) => (
   <div 
     onClick={onClick}
-    className="relative w-[115px] aspect-[115/109] sm:w-[500px] md:w-[700px] lg:w-[900px] xl:w-[1200px] 
+    className="relative w-[115px] aspect-[115/109] sm:w-[160px] md:w-[230px] lg:w-[230px] xl:w-[300px] 
              rounded-xl border-[1px] border-white/50 overflow-hidden"
 >
     <Image
@@ -277,7 +277,7 @@ const ProductList = ({ items }) => {
 
   return (
       <div className="w-full">
-          <div className="grid grid-cols-2 w-full gap-4">
+          <div className="flex flex-wrap justify-center items-center w-full gap-4">
               {Array.isArray(currentProducts) &&
                   currentProducts.map((item, index) => (
                       <div
@@ -288,12 +288,12 @@ const ProductList = ({ items }) => {
                           <img
                               src={item.details.product_img1}
                               alt={item.details.product_name}
-                              width={200}
-                              height={180}
-                              className="w-[200px] h-[180px] object-cover rounded-[7px]"
+                              width={140}
+                              height={160}
+                              className="w-[140px] h-[160px] object-cover rounded-[7px]"
                           />
                           <div className="w-full">
-                              <div className="mt-2 text-[12px] font-bold">
+                              <div className="mt-2 text-[12px] font-bold w-[140px] truncate overflow-hidden whitespace-nowrap">
                                   {item.details.product_name}
                               </div>
                           </div>
@@ -304,7 +304,7 @@ const ProductList = ({ items }) => {
                                                   <FaStar size={10} className="fill-[#FFF500]" />
                                                 </span>
                                               </p>
-                              <div className="font-medium text-xs">{item.shopDetails.shop_name}</div>
+                              <div className="font-medium text-xs w-[140px] truncate overflow-hidden whitespace-nowrap">{item.shopDetails.shop_name}</div>
                           </div>
                           <div className="font-semibold flex w-full text-lg">
                               <div className="text-md"> ₦{parseInt(item.details.amount).toLocaleString()}</div>
@@ -515,7 +515,7 @@ const handleWishlistClick = async () => {
     <div className="flex justify-center items-center w-full">
     <CategoryItem
         image={GA}
-        label="Gadgets"
+        label="Gadgets and Accessories"
         onClick={() => handleCategoryClick("gadgets")}
         desc="Hardware Technologies"
         prod="500+ Products"
