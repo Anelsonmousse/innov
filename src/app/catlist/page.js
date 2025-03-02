@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   FA,
+  GA,
   SKINCARE,
   FUNNY,
 ELECTRONICS,
@@ -502,13 +503,6 @@ const handleWishlistClick = async () => {
     <div className="w-full h-px bg-[#8CBDFF] opacity-30"></div>
     <div className="flex flex-wrap w-full bg-[#004AAD] justify-center items-center pt-2 gap-5 ">
         <CategoryItem2
-            image={FUNNY}
-            label="Accessories"
-            onClick={() => handleCategoryClick("accessories")}
-            desc="Durability"
-            prod="500+ Items"
-        />
-        <CategoryItem2
             image={BAGS}
             label="Bags"
             onClick={() => handleCategoryClick("bags")}
@@ -522,12 +516,32 @@ const handleWishlistClick = async () => {
             desc="Innovation"
             prod="500+ Items"
         />
-        
+        <CategoryItem2
+            image={FA}
+            label="Food"
+            onClick={() => handleCategoryClick("food")}
+            desc="Nourishing"
+            prod="500+ Items"
+        />
         <CategoryItem2
             image={FOOTWEAR}
             label="Footwear"
             onClick={() => handleCategoryClick("footwear")}
             desc="Comfort"
+            prod="500+ items"
+        />
+        <CategoryItem2
+            image={FUNNY}
+            label="Furniture"
+            onClick={() => handleCategoryClick("furniture")}
+            desc="Durability"
+            prod="500+ Items"
+        />
+        <CategoryItem2
+            image={GA}
+            label="Gadgets and Accessories"
+            onClick={() => handleCategoryClick("gadgets")}
+            desc="Technology"
             prod="500+ items"
         />
         <CategoryItem2
@@ -573,34 +587,47 @@ const handleWishlistClick = async () => {
             prod="500+ Items"
         />
         <CategoryItem2
+            image={PERFUME}
+            label="Phones"
+            onClick={() => handleCategoryClick("phone")}
+            desc="Connectivity"
+            prod="500+ Items"
+        />
+        <CategoryItem2
             image={SKINCARE}
             label="Skincare"
             onClick={() => handleCategoryClick("skincare")}
             desc="Hydration"
             prod="500+ Items"
         />
-        
-        <CategoryItem2
-            image={FA}
-            label="Lingerie"
-            onClick={() => handleCategoryClick("trousers")}
-            desc="Intimacy"
-            prod="500+ items"
+      <CategoryItem2
+          image={FA}
+          label="Suit"
+          onClick={() => handleCategoryClick("suit")}
+          desc="Elegance"
+          prod="500+ items"
         />
-    <CategoryItem2
-        image={FUNNY}
-        label="Jean"
-        onClick={() => handleCategoryClick("jean")}
-        desc="Durability"
-        prod="500+ Items"
-      />
-    <CategoryItem2
-        image={FA}
-        label="Suit"
-        onClick={() => handleCategoryClick("suit")}
-        desc="Elegance"
-        prod="500+ items"
-      />
+        <CategoryItem2
+            image={PERFUME}
+            label="Supplement"
+            onClick={() => handleCategoryClick("perfume")}
+            desc="Potency"
+            prod="500+ Items"
+        />
+        <CategoryItem2
+            image={PERFUME}
+            label="Top"
+            onClick={() => handleCategoryClick("perfume")}
+            desc="Quality"
+            prod="500+ Items"
+        />
+        <CategoryItem2
+            image={PERFUME}
+            label="Trousers"
+            onClick={() => handleCategoryClick("perfume")}
+            desc="Comfort"
+            prod="500+ Items"
+        />
     </div>
 </div>
       </div>
