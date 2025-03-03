@@ -182,7 +182,7 @@ export default function ProductRequestForm() {
               name="estimatedPrice"
               value={formData.estimatedPrice}
               onChange={handleInputChange}
-              placeholder="Givenchy Bag"
+              placeholder="Expected Amount"
               className={`w-full p-3 bg-[#f0f7ff] rounded-md border ${
                 formSubmitted && errors.estimatedPrice ? "border-red-500" : "border-gray-200"
               }`}
