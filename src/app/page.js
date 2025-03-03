@@ -277,7 +277,7 @@ const ProductList = ({ items }) => {
 
   return (
       <div className="w-full">
-          <div className="flex flex-wrap justify-center items-center w-full gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 justify-center items-center w-full gap-4">
               {Array.isArray(currentProducts) &&
                   currentProducts.map((item, index) => (
                       <div
