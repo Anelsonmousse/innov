@@ -313,13 +313,13 @@ const copyToClipboard = (text) => {
 
       {/* Description */}
       <div className="mb-4">
-        <h2 className="font-bold ">Description</h2>
+        <h2 className="font-bold mb-2 ">Description</h2>
         <p className="text-gray-600 text-[12px]">{product.data.product_desc}</p>
       </div>
 
       {/* Reviews Section */}
       <div className="mb-8">
-        <h2 className="font-bold mb-4">
+        <h2 className="font-bold mb-2">
           Reviews ({product.reviews?.length || 0})
         </h2>
         
@@ -379,12 +379,12 @@ const copyToClipboard = (text) => {
 
       {/* Review Form */}
       <div className="flex flex-col">
-        <h2 className="font-bold mb-4">Write a Review</h2>
+        <h2 className="font-bold mb-2">Write a Review</h2>
         <div className="flex gap-1 mb-4">
           {Array.from({ length: 5 }).map((_, index) => (
             <FaStar
               key={index}
-              size={24}
+              size={20}
               className={`cursor-pointer ${
                 selectedRating > index ? 'text-yellow-400' : 'text-gray-300'
               }`}
@@ -393,20 +393,20 @@ const copyToClipboard = (text) => {
           ))}
         </div>
         <textarea
-          className="w-full p-3 border rounded-lg mb-4 resize-none"
+          className="w-full p-3 border rounded-lg resize-none"
           rows={4}
           value={reviewText}
           onChange={(e) => setReviewText(e.target.value)}
           placeholder="Share your thoughts about this product..."
         />
         <Button
-            className="font-black text-main flex self-end items-center gap-2 mt-2"
+            className="font-black text-main flex self-end items-center gap-2 mb-2"
             variant="plain"
             onClick={handleSubmitReview}
           >
             Submit
             <svg
-              width="31"
+              width="25"
               height="15"
               viewBox="0 0 31 15"
               fill="none"
@@ -423,14 +423,14 @@ const copyToClipboard = (text) => {
       {/* Contact Buttons */}
       <div className="flex gap-4">
       <Button
-  className="flex-1 py-3 bg-main text-white rounded-lg"
+  className="flex-1 py-3 bg-main text-[12px] text-white rounded-lg"
   onClick={() => copyToClipboard(product.seller_phone)}
 >
   Call Seller
 </Button>
 <Button
   variant="outline"
-  className="flex-1 py-3 flex items-center justify-center gap-2"
+  className="py-3 flex items-center justify-center gap-[4px] text-[12px]"
   onClick={() => {
     const phoneNumber = product.shop.shop_whatsapp_link; // Get the number from backend
     const message = `Hello, I am interested in this product on VPlaza:\n\nProduct Name: ${product.data.product_name}\nPrice: ${product.data.amount}\nImage: ${product.data.product_img1}\n\nIs this still available?`;
