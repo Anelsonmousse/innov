@@ -33,6 +33,11 @@ import JEWELRIES from "../assets/jewelries.png";
 import KITCHEN from "../assets/kitchen.png";
 import LINGERIE from "../assets/lingerie.png";
 import PERFUME from "../assets/perfume.png";
+import GOWN from "../assets/gown.png";
+import PHONE from "../assets/phone.png";
+import SUIT from "../assets/suit.png";
+import SUPPLEMENT from "../assets/supplement.png";
+
 
 
 
@@ -72,4 +77,8 @@ export {
   KITCHEN,
   LINGERIE,
   PERFUME,
+  GOWN,
+  PHONE,
+  SUIT,
+  SUPPLEMENT,
 };
