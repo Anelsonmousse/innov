@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from "react"
 import { IoArrowBack } from "react-icons/io5";
+import { useRouter } from "next/navigation";
 
 export default function ProductRequestForm() {
+    const router = useRouter();
   const [formData, setFormData] = useState({
     productName: "",
     estimatedPrice: "",
