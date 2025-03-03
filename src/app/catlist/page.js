@@ -17,6 +17,11 @@ JEWELRIES,
   KITCHEN,
   LINGERIE,
   PERFUME,
+  GOWN,
+  PHONE,
+  SUIT,
+  TOP,
+  SUPPLEMENT,
 } from "../../assets";
 import { IoArrowBack } from "react-icons/io5";
 import { IoIosHeart } from "react-icons/io";
@@ -545,6 +550,13 @@ const handleWishlistClick = async () => {
             prod="500+ items"
         />
         <CategoryItem2
+            image={GOWN}
+            label="Gown"
+            onClick={() => handleCategoryClick("gown")}
+            desc="Elegance"
+            prod="500+ items"
+        />
+        <CategoryItem2
             image={HAIR}
             label="Hairs"
             onClick={() => handleCategoryClick("hair")}
@@ -587,7 +599,7 @@ const handleWishlistClick = async () => {
             prod="500+ Items"
         />
         <CategoryItem2
-            image={PERFUME}
+            image={PHONE}
             label="Phones"
             onClick={() => handleCategoryClick("phone")}
             desc="Connectivity"
@@ -601,21 +613,21 @@ const handleWishlistClick = async () => {
             prod="500+ Items"
         />
       <CategoryItem2
-          image={FA}
+          image={SUIT}
           label="Suit"
           onClick={() => handleCategoryClick("suit")}
           desc="Elegance"
           prod="500+ items"
         />
         <CategoryItem2
-            image={PERFUME}
+            image={SUPPLEMENT}
             label="Supplement"
             onClick={() => handleCategoryClick("perfume")}
             desc="Potency"
             prod="500+ Items"
         />
         <CategoryItem2
-            image={PERFUME}
+            image={TOP}
             label="Top"
             onClick={() => handleCategoryClick("perfume")}
             desc="Quality"
