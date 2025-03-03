@@ -645,7 +645,7 @@ const handleWishlistClick = async () => {
               <HiOutlineExternalLink
               onClick={() => {
                 setLoading(true); // Show loader
-                router.push("/");
+                router.push("/request");
               }}
                 color="#FFF"
                 size={25}
