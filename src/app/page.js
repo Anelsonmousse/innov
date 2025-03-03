@@ -288,12 +288,12 @@ const ProductList = ({ items }) => {
                           <img
                               src={item.details.product_img1}
                               alt={item.details.product_name}
-                              width={140}
-                              height={160}
-                              className="w-[140px] h-[160px] object-cover rounded-[7px]"
+                              width={130}
+                              height={140}
+                              className="w-[130px] h-[140px] object-cover rounded-[7px]"
                           />
                           <div className="w-full">
-                              <div className="mt-2 text-[12px] font-bold w-[140px] truncate overflow-hidden whitespace-nowrap">
+                              <div className="mt-2 text-[12px] font-bold w-[130px] truncate overflow-hidden whitespace-nowrap">
                                   {item.details.product_name}
                               </div>
                           </div>
@@ -304,7 +304,7 @@ const ProductList = ({ items }) => {
                                                   <FaStar size={10} className="fill-[#FFF500]" />
                                                 </span>
                                               </p>
-                              <div className="font-medium text-xs w-[140px] truncate overflow-hidden whitespace-nowrap">{item.shopDetails.shop_name}</div>
+                              <div className="font-medium text-xs w-[130px] truncate overflow-hidden whitespace-nowrap">{item.shopDetails.shop_name}</div>
                           </div>
                           <div className="font-semibold flex w-full text-lg">
                               <div className="text-md"> ₦{parseInt(item.details.amount).toLocaleString()}</div>
