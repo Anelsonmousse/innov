@@ -5,7 +5,7 @@ import { AuthProvider } from "../context/AuthContext"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
-  title: "VPlaza - Proximity Based Marketplace",
+  title: "VPlaza",
   description: "Buy and sell products within your proximity",
   manifest: "/manifest.json",
   themeColor: "#004AAD",
