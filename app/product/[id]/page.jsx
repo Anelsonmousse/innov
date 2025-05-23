@@ -83,7 +83,7 @@ export default function ProductPage() {
   // Generate WhatsApp message link
   const generateWhatsAppLink = (phoneNumber, productName) => {
     const formattedNumber = formatWhatsAppNumber(phoneNumber)
-    const message = encodeURIComponent(`Hello, I'm interested in your product: ${productName} i saw on Vplaza for ${product.price} `)
+    const message = encodeURIComponent(`Hello, I'm interested in your product: ${productName} I saw on Vplaza for ${product.price}. Is it still available? `)
     return `https://wa.me/${formattedNumber}?text=${message}`
   }
 
