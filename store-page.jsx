@@ -583,7 +583,9 @@ const StorePage = () => {
                         <span>{activeStore.university}</span>
                       </div>
                     </div>
-                    <button className="absolute top-4 right-4 p-2 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-colors">
+                    <button
+                    onClick={() => router.push(`/store/edit/${activeStore.id}`)}
+                    className="absolute top-4 right-4 p-2 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-colors">
                       <IoPencilOutline className="text-white" size={18} />
                     </button>
                   </div>
