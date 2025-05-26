@@ -257,10 +257,10 @@ const SignUpPage = () => {
         }
 
         // Show success message with OTP information
-        alert(`${response.data.message || "Registration successful!"} Please check your email for the OTP code.`)
+        alert(`${response.data.message || "Registration successful!"} Please Login`)
 
         // Navigate to OTP verification page
-        router.push("/verify-otp")
+        router.push("/signin")
       }
     } catch (error) {
       console.error("Error:", error)
