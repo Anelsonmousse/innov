@@ -1,5 +1,6 @@
 "use client"
 import { createContext, useContext, useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 
 // Create the auth context
 const AuthContext = createContext()
@@ -9,6 +10,7 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const [token, setToken] = useState(null)
+  const router = useRouter()
 
   // Check if user is logged in on initial load
   useEffect(() => {
@@ -20,6 +22,44 @@ export function AuthProvider({ children }) {
     }
     setLoading(false)
   }, [])
+
+  // Handle 401 unauthorized errors
+  const handle401Error = () => {
+    localStorage.removeItem("token")
+    setToken(null)
+    setUser(null)
+    router.push("/signin")
+  }
+
+  // Custom fetch wrapper that handles 401 errors
+  const authenticatedFetch = async (url, options = {}) => {
+    const headers = {
+      ...options.headers,
+    }
+
+    if (token) {
+      headers.Authorization = `Bearer ${token}`
+    }
+
+    try {
+      const response = await fetch(url, {
+        ...options,
+        headers,
+      })
+
+      if (response.status === 401) {
+        handle401Error()
+        throw new Error("Unauthorized")
+      }
+
+      return response
+    } catch (error) {
+      if (error.message === "Unauthorized") {
+        throw error
+      }
+      throw error
+    }
+  }
 
   // Login function
   const login = (userToken, userData) => {
@@ -33,6 +73,7 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("token")
     setToken(null)
     setUser(null)
+    router.push("/signin")
   }
 
   // Check if user is logged in
@@ -46,7 +87,18 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, isLoggedIn, getToken }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        login,
+        logout,
+        isLoggedIn,
+        getToken,
+        handle401Error,
+        authenticatedFetch,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   )
