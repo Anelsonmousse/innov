@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
+// import { useAuth } from "../context/AuthContext"
 import axios from "axios"
 import {
   IoStorefrontOutline,
@@ -250,6 +251,18 @@ const HomePage = () => {
         }
       } catch (err) {
         console.error("Error fetching wishlist:", err)
+        // Check for 401 error with specific message
+        if (
+          err.response &&
+          err.response.status === 401 &&
+          err.response.data &&
+          err.response.data.message === "Unauthenticated."
+        ) {
+          // Clear token and redirect to signin
+          localStorage.removeItem("token")
+          setIsLoggedIn(false)
+          router.push("/signin")
+        }
       }
     }
 
