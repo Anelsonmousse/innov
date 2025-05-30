@@ -125,7 +125,17 @@ const StorePage = () => {
         }
       } catch (err) {
         console.error("Error checking store:", err)
-        setError(err.response?.data?.message || "Failed to check store status. Please try again later.")
+        // Check for 401 error with specific message
+        if (
+          err.response &&
+          err.response.status === 401 &&
+          err.response.data &&
+          err.response.data.message === "Unauthenticated."
+        ) {
+          // Clear token and redirect to signin
+          localStorage.removeItem("token")
+          router.push("/signin")
+        }
       } finally {
         setLoading(false)
       }
