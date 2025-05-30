@@ -162,7 +162,7 @@ const SignInPage = () => {
             </div>
 
             {/* Form Content */}
-            <div className="max-w-md mx-auto w-full px-6 py-8 lg:py-12 flex flex-col justify-between min-h-[calc(100vh-120px)] lg:min-h-0">
+            <div className="max-w-md mx-auto w-full px-6 py-8 lg:py-12 flex flex-col justify-between  lg:min-h-0">
               <div>
                 <h1 className="font-bold text-3xl text-[#004AAD] mb-2 lg:block hidden">Sign In</h1>
                 <p className="text-gray-500 mb-8 lg:block hidden">Welcome back! Please enter your details</p>
