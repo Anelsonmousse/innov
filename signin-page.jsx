@@ -100,7 +100,7 @@ const SignInPage = () => {
             </div>
             <h1 className="text-4xl font-bold mb-6 leading-tight">Welcome Back!</h1>
             <p className="text-xl mb-8 opacity-90">
-              Sign in to access your VPlaza account and connect with your local community
+              Login to access your VPlaza account and connect with your local community
             </p>
 
             <div className="space-y-6 mt-10">
@@ -136,7 +136,7 @@ const SignInPage = () => {
 
             {/* Mobile Blue Section */}
             <div className="py-6 px-6 text-white mb-4">
-              <h1 className="text-3xl font-bold">Sign In</h1>
+              <h1 className="text-3xl font-bold">Login</h1>
               <p className="text-sm opacity-90 mt-2">Welcome back to VPlaza</p>
             </div>
           </div>
@@ -164,7 +164,7 @@ const SignInPage = () => {
             {/* Form Content */}
             <div className="max-w-md mx-auto w-full px-6 py-8 lg:py-12 flex flex-col justify-between  lg:min-h-0">
               <div>
-                <h1 className="font-bold text-3xl text-[#004AAD] mb-2 lg:block hidden">Sign In</h1>
+                <h1 className="font-bold text-3xl text-[#004AAD] mb-2 lg:block hidden">Login</h1>
                 <p className="text-gray-500 mb-8 lg:block hidden">Welcome back! Please enter your details</p>
 
                 {/* Success Message */}
@@ -285,7 +285,7 @@ const SignInPage = () => {
                         Signing In...
                       </div>
                     ) : (
-                      "Sign In"
+                      "Login"
                     )}
                   </button>
                 </form>
@@ -303,7 +303,7 @@ const SignInPage = () => {
                   }`}
                   disabled={loading}
                 >
-                  Sign Up
+                  Register
                 </button>
               </div>
             </div>
