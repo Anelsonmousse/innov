@@ -257,7 +257,7 @@ const SignUpPage = () => {
         }
 
         // Show success message with OTP information
-        alert(`${response.data.message || "Registration successful!"} Please Login`)
+        alert('Registration successful! Please Login`)
 
         // Navigate to OTP verification page
         router.push("/signin")
