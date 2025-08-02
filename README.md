@@ -1,30 +1,70 @@
-# Javascript code review
-
-*Automatically synced with your [v0.dev](https://v0.dev) deployments*
-
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/aniekan-dicksons-projects/v0-javascript-code-review)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/3Gdcrhouskw)
-
-## Overview
-
-This repository will stay in sync with your deployed chats on [v0.dev](https://v0.dev).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.dev](https://v0.dev).
-
-## Deployment
-
-Your project is live at:
-
-**[https://vercel.com/aniekan-dicksons-projects/v0-javascript-code-review](https://vercel.com/aniekan-dicksons-projects/v0-javascript-code-review)**
-
-## Build your app
-
-Continue building your app on:
-
-**[https://v0.dev/chat/projects/3Gdcrhouskw](https://v0.dev/chat/projects/3Gdcrhouskw)**
-
-## How It Works
-
-1. Create and modify your project using [v0.dev](https://v0.dev)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+# 🛍️ VPlaza – Student Online Marketplace
+ 
+VPlaza is a modern, student-focused e-commerce platform that enables buyers and sellers within campuses and student communities to trade goods and services in a fast, affordable, and trusted way.
+ 
+ 
+💡 Inspiration & Vision
+ 
+VPlaza was born from the need to create a safe, student-led buying and selling space on Nigerian campuses, where physical marketplaces are often chaotic or inaccessible. We believe that students deserve a clean, trustworthy, and mobile-friendly digital market.
+ 
+ 
+ 
+## 🌍 Live Demo
+ 
+🔗 [Visit VPlaza Online](https://www.vplaza.com.ng)
+ 
+ 
+ 
+## 📦 Features
+ 
+- 🛒 User-friendly marketplace for students
+- 🏷️ Product categories (Gadgets, Food, Fashion, Perfumes, etc.)
+- ❤️ Wishlist and Request features
+- 🔍 Smart search and location-based browsing
+- 🔐 Secure user registration & authentication
+- 📲 Mobile-first responsive design
+ 
+ 
+## 🛠️ Tech Stack
+ 
+### Frontend
+-Next.Js
+ 
+### Backend
+-  Laravel
+ 
+### Hosting & Deployment
+- GitHub
+- Vercel
+ 
+ 
+ 
+## 🚀 Getting Started (For Developers)
+ 
+Clone the repository:
+ 
+```bash
+git clone https://github.com/Anelsonmousse/innov.git
+cd innov
+ 
+Install dependencies:
+ Yarn
+ 
+Run the app:
+Yarn dev
+ 
+ 
+🤝 Contributors
+Aniekan Dickson – Product Manager, Backend Engineer, UI/UX designer.
+ 
+Kingsley momoife – Frontend Engineer
+ 
+Godsmark  Orisakwe – version control
+ 
+📬 Contact
+ 
+Have suggestions or want to contribute?
+ 
+📧 mail@vplaza.com.ng
+📜 License
+This project is licensed under the MIT License. See LICENSE for more info.
