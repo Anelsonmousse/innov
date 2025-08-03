@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
-import { IoCloudUploadOutline, IoCheckmarkCircle, IoAlertCircle, IoCloseCircleOutline } from "react-icons/io5"
+import { IoCloudUploadOutline, IoCheckmarkCircle, IoAlertCircle, IoCloseCircleOutline, IoImageOutline } from "react-icons/io5"
 
-export default function RequestForm() {
+export default function CompactRequestForm() {
   const router = useRouter()
   const [formData, setFormData] = useState({
     name: "",
@@ -109,22 +109,18 @@ export default function RequestForm() {
     for (let i = 0; i < files.length; i++) {
       const file = files[i]
 
-      // Check file type
       if (!file.type.match("image.*")) {
         setError("Only image files are allowed")
         continue
       }
 
-      // Check file size (5MB max)
       if (file.size > 5 * 1024 * 1024) {
         setError("Image size should be less than 5MB")
         continue
       }
 
-      // Add to files array
       newImageFiles.push(file)
 
-      // Create preview
       const reader = new FileReader()
       reader.onload = (e) => {
         newImagePreviews.push(e.target.result)
@@ -153,7 +149,6 @@ export default function RequestForm() {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    // Validate form
     if (!formData.name.trim()) {
       setError("Product name is required")
       return
@@ -184,13 +179,11 @@ export default function RequestForm() {
         return
       }
 
-      // Create form data
       const form = new FormData()
       form.append("name", formData.name)
       form.append("description", formData.description)
       form.append("category_id", formData.category_id)
 
-      // Add images
       imageFiles.forEach((file) => {
         form.append("images[]", file)
       })
@@ -202,14 +195,12 @@ export default function RequestForm() {
         images: `${imageFiles.length} images`,
       })
 
-      // Send request
       const response = await fetch("https://app.vplaza.com.ng/api/v1/product-requests", {
         method: "POST",
         body: form,
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: "application/json",
-          // No Content-Type header as it's set automatically with FormData
         },
       })
 
@@ -218,7 +209,6 @@ export default function RequestForm() {
 
       if (response.ok) {
         setSuccess(true)
-        // Reset form
         setFormData({
           name: "",
           description: "",
@@ -227,7 +217,6 @@ export default function RequestForm() {
         setImages([])
         setImageFiles([])
 
-        // Show success message for 3 seconds
         setTimeout(() => {
           setSuccess(false)
         }, 3000)
@@ -243,15 +232,15 @@ export default function RequestForm() {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+    <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 max-w-2xl mx-auto">
       {/* Success Message */}
       {success && (
-        <div className="mb-6 bg-green-50 border border-green-100 rounded-lg p-4 flex items-start">
-          <IoCheckmarkCircle className="text-green-500 text-xl flex-shrink-0 mt-0.5 mr-3" />
+        <div className="mb-4 bg-green-50 border border-green-200 rounded-lg p-3 flex items-start">
+          <IoCheckmarkCircle className="text-green-500 text-lg flex-shrink-0 mt-0.5 mr-2" />
           <div>
-            <h3 className="font-medium text-green-800">Request Submitted Successfully!</h3>
-            <p className="text-green-700 text-sm mt-1">
-              Your product request has been submitted. Sellers in your proximity will be notified.
+            <h3 className="font-medium text-green-800 text-sm">Request Submitted!</h3>
+            <p className="text-green-700 text-xs mt-1">
+              Sellers in your area will be notified.
             </p>
           </div>
         </div>
@@ -259,11 +248,11 @@ export default function RequestForm() {
 
       {/* Error Message */}
       {error && (
-        <div className="mb-6 bg-red-50 border border-red-100 rounded-lg p-4 flex items-start">
-          <IoAlertCircle className="text-red-500 text-xl flex-shrink-0 mt-0.5 mr-3" />
+        <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-3 flex items-start">
+          <IoAlertCircle className="text-red-500 text-lg flex-shrink-0 mt-0.5 mr-2" />
           <div>
-            <h3 className="font-medium text-red-800">Error</h3>
-            <p className="text-red-700 text-sm mt-1">{error}</p>
+            <h3 className="font-medium text-red-800 text-sm">Error</h3>
+            <p className="text-red-700 text-xs mt-1">{error}</p>
           </div>
         </div>
       )}
@@ -271,14 +260,14 @@ export default function RequestForm() {
       {/* Loading Categories */}
       {fetchingCategories ? (
         <div className="flex flex-col items-center justify-center py-8">
-          <div className="w-10 h-10 border-4 border-[#004AAD] border-t-transparent rounded-full animate-spin mb-4"></div>
-          <p className="text-gray-600">Loading categories...</p>
+          <div className="w-8 h-8 border-3 border-blue-200 border-t-blue-600 rounded-full animate-spin mb-3"></div>
+          <p className="text-gray-600 text-sm">Loading categories...</p>
         </div>
       ) : (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="space-y-5">
           {/* Product Name */}
-          <div className="mb-6">
-            <label htmlFor="name" className="block text-gray-700 font-medium mb-2">
+          <div>
+            <label htmlFor="name" className="block text-gray-700 font-medium mb-2 text-sm">
               Product Name*
             </label>
             <input
@@ -287,38 +276,15 @@ export default function RequestForm() {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              placeholder="Enter product name"
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-[#004AAD] transition-all"
+              placeholder="What product are you looking for?"
+              className="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 transition-all text-sm"
               required
             />
           </div>
 
-          {/* Product Description */}
-          <div className="mb-6">
-            <label htmlFor="description" className="block text-gray-700 font-medium mb-2">
-              Description*
-            </label>
-            <textarea
-              id="description"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              placeholder="Describe the product you're looking for in detail..."
-              rows="4"
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-[#004AAD] transition-all"
-              required
-            ></textarea>
-            <p className="text-xs text-gray-500 mt-1">
-              {formData.description.length}/500 characters
-              {formData.description.length < 10 && formData.description.length > 0 && (
-                <span className="text-red-500 ml-2">(Minimum 10 characters required)</span>
-              )}
-            </p>
-          </div>
-
           {/* Category Selection */}
-          <div className="mb-6">
-            <label htmlFor="category_id" className="block text-gray-700 font-medium mb-2">
+          <div>
+            <label htmlFor="category_id" className="block text-gray-700 font-medium mb-2 text-sm">
               Category*
             </label>
             <select
@@ -326,7 +292,7 @@ export default function RequestForm() {
               name="category_id"
               value={formData.category_id}
               onChange={handleChange}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-[#004AAD] transition-all bg-white"
+              className="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 transition-all bg-white text-sm"
               required
             >
               <option value="">Select a category</option>
@@ -338,13 +304,40 @@ export default function RequestForm() {
             </select>
           </div>
 
+          {/* Product Description */}
+          <div>
+            <label htmlFor="description" className="block text-gray-700 font-medium mb-2 text-sm">
+              Description*
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Describe the product in detail..."
+              rows="3"
+              className="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 transition-all resize-none text-sm"
+              required
+            />
+            <div className="flex justify-between items-center mt-1">
+              <p className="text-xs text-gray-500">
+                {formData.description.length}/500 characters
+              </p>
+              {formData.description.length < 10 && formData.description.length > 0 && (
+                <span className="text-red-500 text-xs">Min 10 characters</span>
+              )}
+            </div>
+          </div>
+
           {/* Image Upload */}
-          <div className="mb-6">
-            <label className="block text-gray-700 font-medium mb-2">Product Images*</label>
+          <div>
+            <label className="block text-gray-700 font-medium mb-2 text-sm">Product Images*</label>
 
             <div
-              className={`border-2 border-dashed rounded-lg p-6 text-center ${
-                dragActive ? "border-[#004AAD] bg-blue-50" : "border-gray-300"
+              className={`border-2 border-dashed rounded-lg p-4 text-center transition-all ${
+                dragActive 
+                  ? "border-blue-400 bg-blue-50" 
+                  : "border-gray-300 hover:border-blue-300"
               }`}
               onDragEnter={handleDrag}
               onDragOver={handleDrag}
@@ -361,28 +354,29 @@ export default function RequestForm() {
               />
 
               <div className="flex flex-col items-center justify-center">
-                <IoCloudUploadOutline className="text-4xl text-gray-400 mb-2" />
-                <p className="text-gray-700 mb-2">
-                  Drag & drop images here, or{" "}
+                <IoCloudUploadOutline className="text-2xl text-gray-400 mb-2" />
+                <p className="text-gray-700 text-sm mb-1">
+                  Drop images here or{" "}
                   <button
                     type="button"
                     onClick={() => fileInputRef.current.click()}
-                    className="text-[#004AAD] font-medium hover:underline"
+                    className="text-blue-600 font-medium hover:underline"
                   >
                     browse
                   </button>
                 </p>
-                <p className="text-xs text-gray-500">Supported formats: JPG, PNG, GIF (Max 5MB per image)</p>
+                <p className="text-xs text-gray-500">JPG, PNG, GIF • Max 5MB each</p>
               </div>
             </div>
 
             {/* Image Previews */}
             {images.length > 0 && (
-              <div className="mt-4">
-                <p className="text-sm text-gray-600 mb-2">
-                  {images.length} {images.length === 1 ? "image" : "images"} selected:
+              <div className="mt-3">
+                <p className="text-sm text-gray-600 mb-2 flex items-center">
+                  <IoImageOutline className="mr-1" />
+                  {images.length} {images.length === 1 ? "image" : "images"}
                 </p>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-4 gap-2">
                   {images.map((image, index) => (
                     <div key={index} className="relative group">
                       <div className="aspect-square rounded-lg overflow-hidden border border-gray-200">
@@ -395,9 +389,9 @@ export default function RequestForm() {
                       <button
                         type="button"
                         onClick={() => removeImage(index)}
-                        className="absolute top-1 right-1 bg-white rounded-full p-1 shadow-sm opacity-70 hover:opacity-100 transition-opacity"
+                        className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity"
                       >
-                        <IoCloseCircleOutline className="text-red-500 text-lg" />
+                        ×
                       </button>
                     </div>
                   ))}
@@ -407,18 +401,20 @@ export default function RequestForm() {
           </div>
 
           {/* Submit Button */}
-          <div className="mt-8">
+          <div className="pt-2">
             <button
               type="submit"
               disabled={loading}
-              className={`w-full py-3 px-6 rounded-lg font-medium text-white transition-all ${
-                loading ? "bg-gray-400 cursor-not-allowed" : "bg-[#004AAD] hover:bg-[#0056c7] hover:shadow-md"
+              className={`w-full py-3 px-4 rounded-lg font-medium text-white transition-all text-sm ${
+                loading 
+                  ? "bg-gray-400 cursor-not-allowed" 
+                  : "bg-[#004AAD] hover:bg-[#0056c7] hover:shadow-md"
               }`}
             >
               {loading ? (
                 <div className="flex items-center justify-center">
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                  Submitting Request...
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                  Submitting...
                 </div>
               ) : (
                 "Submit Request"
