@@ -1,7 +1,6 @@
 "use client"
 import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
-// import { useAuth } from "../context/AuthContext"
 import axios from "axios"
 import {
   IoStorefrontOutline,
@@ -41,8 +40,6 @@ const HomePage = () => {
   const [deferredPrompt, setDeferredPrompt] = useState(null)
   const [isIOS, setIsIOS] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-
-  // Location selection state
   const [showLocationModal, setShowLocationModal] = useState(false)
   const [universities, setUniversities] = useState([])
   const [loadingUniversities, setLoadingUniversities] = useState(false)
@@ -50,49 +47,40 @@ const HomePage = () => {
   const [selectedLocation, setSelectedLocation] = useState(null)
   const [searchQuery, setSearchQuery] = useState("")
   const searchInputRef = useRef(null)
-
-  // Food category ID
   const FOOD_CATEGORY_ID = "0196f23e-a0e8-7201-a8d3-42042967e78e"
-
-  // Hardcoded categories
   const categories = [
     {
       id: "0196f23e-f015-719a-846a-1d602ee50705",
       name: "Gadgets",
       subtitle: "Hardware Technologies",
-      count: "23 Products",
+      count: "Products",
       image: "/gadget-image.jpg",
     },
     {
       id: FOOD_CATEGORY_ID,
       name: "Food",
-      subtitle: "Nurishing",
-      count: "23 Items",
+      subtitle: "Nourishing",
+      count: "Items",
       image: "/food-image.jpg",
     },
     {
       id: "90890ab0-4e75-40fa-abcc-3fea9b651360",
       name: "Women",
       subtitle: "Quality",
-      count: "23 Items",
+      count: "Items",
       image: "/diverse-clothing-rack.png",
     },
     {
       id: "941ed023-1ec9-4f17-afe5-a2c5b504fa4d",
       name: "Perfume",
       subtitle: "Fragrance",
-      count: "15 Items",
+      count: "Items",
       image: "/perfume-image.jpg",
     },
   ]
-
   const [wishlistItems, setWishlistItems] = useState([])
   const [wishlistLoading, setWishlistLoading] = useState(false)
-
-  // Add a new state for the selected category
   const [selectedCategory, setSelectedCategory] = useState(null)
-
-  // Search state
   const [searchKeyword, setSearchKeyword] = useState("")
   const [minPrice, setMinPrice] = useState("")
   const [maxPrice, setMaxPrice] = useState("")
@@ -101,68 +89,41 @@ const HomePage = () => {
   const [searchResults, setSearchResults] = useState([])
 
   useEffect(() => {
-    // Check if user is logged in
     const token = localStorage.getItem("token")
     setIsLoggedIn(!!token)
-
-    // Reset to default location when page loads
     setSelectedLocation(null)
   }, [])
 
-  // Check if the app can be installed (PWA)
   useEffect(() => {
-    // Detect iOS device
     const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
     setIsIOS(isIOSDevice)
-
-    // For non-iOS devices, listen for beforeinstallprompt
     if (!isIOSDevice) {
       const handleBeforeInstallPrompt = (e) => {
-        // Prevent the mini-infobar from appearing on mobile
         e.preventDefault()
-        // Stash the event so it can be triggered later
         setDeferredPrompt(e)
-        // Show the install prompt after a delay
-        setTimeout(() => {
-          setShowInstallPrompt(true)
-        }, 3000)
+        setTimeout(() => setShowInstallPrompt(true), 3000)
       }
-
       window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt)
-
-      return () => {
-        window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt)
-      }
+      return () => window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt)
     } else {
-      // For iOS, just show the install prompt after a delay
-      setTimeout(() => {
-        setShowInstallPrompt(true)
-      }, 3000)
+      setTimeout(() => setShowInstallPrompt(true), 3000)
     }
   }, [])
 
-  // Fetch universities when location modal is opened
   useEffect(() => {
     if (showLocationModal && universities.length === 0 && !loadingUniversities) {
       fetchUniversities()
     }
-
-    // Focus search input when modal opens
     if (showLocationModal && searchInputRef.current) {
-      setTimeout(() => {
-        searchInputRef.current.focus()
-      }, 100)
+      setTimeout(() => searchInputRef.current.focus(), 100)
     }
   }, [showLocationModal])
 
-  // Fetch universities from API
   const fetchUniversities = async () => {
     try {
       setLoadingUniversities(true)
       setUniversityError(null)
-
       const response = await axios.get("https://app.vplaza.com.ng/api/v1/universities")
-
       if (response.data && response.data.data) {
         setUniversities(response.data.data)
       } else {
@@ -176,59 +137,29 @@ const HomePage = () => {
     }
   }
 
-  // Handle university selection
   const handleSelectUniversity = (university) => {
-    // Check if user is logged in
     const token = localStorage.getItem("token")
     if (!token) {
       router.push("/signin")
       return
     }
-
-    setSelectedLocation({
-      id: university.id,
-      name: university.name,
-      type: "university",
-    })
-
-    // Reset category selection when changing university
+    setSelectedLocation({ id: university.id, name: university.name, type: "university" })
     setSelectedCategory(null)
-
-    // Close the modal
     setShowLocationModal(false)
-
-    // Fetch products from the selected university with authentication token
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
+    const config = { headers: { Authorization: `Bearer ${token}` } }
     fetchProducts(`https://app.vplaza.com.ng/api/v1/products/university/${university.id}/regular`, config)
   }
 
-  // Handle selecting current location (country-based)
   const handleSelectCurrentLocation = () => {
-    // Check if user is logged in
     const token = localStorage.getItem("token")
     if (!token) {
       router.push("/signin")
       return
     }
-
-    // Clear selected location to use default
     setSelectedLocation(null)
-    // Reset category selection
     setSelectedCategory(null)
-
-    // Close the modal
     setShowLocationModal(false)
-
-    // Fetch products with default URL and authentication token
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
+    const config = { headers: { Authorization: `Bearer ${token}` } }
     fetchProducts(null, config)
   }
 
@@ -236,107 +167,60 @@ const HomePage = () => {
     const fetchWishlistItems = async () => {
       const token = localStorage.getItem("token")
       if (!token) return
-
       try {
         const response = await axios.get("https://app.vplaza.com.ng/api/v1/wishlist", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         })
-
         if (response.data && response.data.data) {
-          // Store just the IDs for easier checking
-          const wishlistIds = response.data.data.map((item) => item.id)
-          setWishlistItems(wishlistIds)
+          setWishlistItems(response.data.data.map((item) => item.id))
         }
       } catch (err) {
         console.error("Error fetching wishlist:", err)
-        // Check for 401 error with specific message
-        if (
-          err.response &&
-          err.response.status === 401 &&
-          err.response.data &&
-          err.response.data.message === "Unauthenticated."
-        ) {
-          // Clear token and redirect to signin
+        if (err.response?.status === 401 && err.response.data?.message === "Unauthenticated.") {
           localStorage.removeItem("token")
           setIsLoggedIn(false)
           router.push("/signin")
         }
       }
     }
-
-    if (isLoggedIn) {
-      fetchWishlistItems()
-    }
+    if (isLoggedIn) fetchWishlistItems()
   }, [isLoggedIn])
 
-  // Handle PWA installation
   const handleInstallClick = async () => {
     if (!isIOS && deferredPrompt) {
-      // Show the install prompt
       deferredPrompt.prompt()
-      // Wait for the user to respond to the prompt
       const { outcome } = await deferredPrompt.userChoice
       console.log(`User response to the install prompt: ${outcome}`)
-      // We've used the prompt, and can't use it again, so clear it
       setDeferredPrompt(null)
     }
-    // Hide the install prompt regardless of outcome
     setShowInstallPrompt(false)
   }
 
-  // Fix image URL by removing the first https:// if there are two
   const fixImageUrl = (url) => {
     if (!url) return "/diverse-products-still-life.png"
-
-    // Check if the URL contains a double https://
     const doubleHttpsIndex = url.indexOf("https://", url.indexOf("https://") + 1)
-
-    if (doubleHttpsIndex !== -1) {
-      // Return only the part from the second https:// onwards
-      return url.substring(doubleHttpsIndex)
-    }
-
-    return url
+    return doubleHttpsIndex !== -1 ? url.substring(doubleHttpsIndex) : url
   }
 
-  // Update the fetchProducts function to handle category filtering
   const fetchProducts = async (url = null, customConfig = null) => {
     try {
       setLoading(true)
       setError(null)
-
-      // Determine which URL to use based on login status, selected location, and selected category
       const token = localStorage.getItem("token")
       const isUserLoggedIn = !!token
-
-      // If no specific URL is provided, use the appropriate default based on login status and selected location
       if (!url) {
         if (selectedLocation && selectedLocation.type === "university") {
-          if (selectedCategory) {
-            // If both university and category are selected, use the combined endpoint
-            url = `https://app.vplaza.com.ng/api/v1/products/university/${selectedLocation.id}/category/${selectedCategory.id}`
-          } else {
-            url = `https://app.vplaza.com.ng/api/v1/products/university/${selectedLocation.id}/regular`
-          }
+          url = selectedCategory
+            ? `https://app.vplaza.com.ng/api/v1/products/university/${selectedLocation.id}/category/${selectedCategory.id}`
+            : `https://app.vplaza.com.ng/api/v1/products/university/${selectedLocation.id}/regular`
         } else {
           url = isUserLoggedIn
             ? "https://app.vplaza.com.ng/api/v1/products/type/regular"
             : "https://app.vplaza.com.ng/api/v1/products/country/Nigeria"
         }
       }
-
-      // Set up request config with headers if logged in
-      const config = customConfig || {}
-      if (!customConfig && isUserLoggedIn) {
-        config.headers = {
-          Authorization: `Bearer ${token}`,
-        }
-      }
-
+      const config = customConfig || (isUserLoggedIn ? { headers: { Authorization: `Bearer ${token}` } } : {})
       const response = await axios.get(url, config)
-
       if (response.data && response.data.data) {
         setProducts(response.data.data)
         setNextPageUrl(response.data.links.next)
@@ -351,39 +235,22 @@ const HomePage = () => {
     }
   }
 
-  // Search products using the search endpoint
   const searchProducts = async () => {
     const token = localStorage.getItem("token")
     if (!token) {
       router.push("/signin")
       return
     }
-
     try {
       setLoading(true)
       setError(null)
       setIsSearching(true)
-
-      // Build query parameters
       const params = new URLSearchParams()
-      if (searchKeyword.trim()) {
-        params.append("keyword", searchKeyword.trim())
-      }
-      if (minPrice) {
-        params.append("min_price", minPrice)
-      }
-      if (maxPrice) {
-        params.append("max_price", maxPrice)
-      }
-
+      if (searchKeyword.trim()) params.append("keyword", searchKeyword.trim())
+      if (minPrice) params.append("min_price", minPrice)
+      if (maxPrice) params.append("max_price", maxPrice)
       const url = `https://app.vplaza.com.ng/api/v1/products/search?${params.toString()}`
-
-      const response = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
+      const response = await axios.get(url, { headers: { Authorization: `Bearer ${token}` } })
       if (response.data && response.data.data) {
         setSearchResults(response.data.data)
         setNextPageUrl(response.data.links?.next || null)
@@ -398,7 +265,6 @@ const HomePage = () => {
     }
   }
 
-  // Clear search and return to regular product listing
   const clearSearch = () => {
     setSearchKeyword("")
     setMinPrice("")
@@ -408,86 +274,48 @@ const HomePage = () => {
     fetchProducts()
   }
 
-  // Add a function to handle category selection
   const handleCategorySelect = (category) => {
-    // Check if user is logged in
     const token = localStorage.getItem("token")
     if (!token) {
       router.push("/signin")
       return
     }
-
-    // If the same category is selected, deselect it
-    if (selectedCategory && selectedCategory.id === category.id) {
-      setSelectedCategory(null)
-    } else {
-      setSelectedCategory({
-        id: category.id,
-        name: category.name,
-      })
-    }
-
-    // Fetch products with the new category filter
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-
-    // If we have both university and category selected
+    const newCategory = selectedCategory?.id === category.id ? null : { id: category.id, name: category.name }
+    setSelectedCategory(newCategory)
+    const config = { headers: { Authorization: `Bearer ${token}` } }
     if (selectedLocation && selectedLocation.type === "university") {
-      if (category && selectedCategory?.id !== category.id) {
+      if (newCategory) {
         fetchProducts(
           `https://app.vplaza.com.ng/api/v1/products/university/${selectedLocation.id}/category/${category.id}`,
-          config,
+          config
         )
       } else {
-        // If category was deselected, fetch all products from the university
         fetchProducts(`https://app.vplaza.com.ng/api/v1/products/university/${selectedLocation.id}/regular`, config)
       }
     }
   }
 
-  // Update the handleCategoryClick function to handle category filtering
   const handleCategoryClick = (e, categoryId) => {
     if (checkLoginAndRedirect(e)) {
-      // If we have a university selected, filter by category within that university
       if (selectedLocation && selectedLocation.type === "university") {
         const category = categories.find((cat) => cat.id === categoryId)
-        if (category) {
-          handleCategorySelect(category)
-        }
+        if (category) handleCategorySelect(category)
       } else {
-        // Otherwise navigate to the category page
         router.push(`/category/${categoryId}`)
       }
     }
   }
 
-  // Replace the existing loadMoreProducts function with this updated version
   const loadMoreProducts = async () => {
     if (!nextPageUrl || loadingMore) return
-
     try {
       setLoadingMore(true)
       setError(null)
-
-      // Get token for authenticated requests
       const token = localStorage.getItem("token")
-      const isUserLoggedIn = !!token
-
-      // Set up request config with headers if logged in
-      const config = {}
-      if (isUserLoggedIn) {
-        config.headers = {
-          Authorization: `Bearer ${token}`,
-        }
-      }
-
+      const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {}
       const response = await axios.get(nextPageUrl, config)
-
       if (response.data && response.data.data) {
-        setProducts((prevProducts) => [...prevProducts, ...response.data.data])
+        setProducts((prev) => [...prev, ...response.data.data])
         setNextPageUrl(response.data.links.next)
       } else {
         setError("Unexpected API response format")
@@ -500,7 +328,6 @@ const HomePage = () => {
     }
   }
 
-  // Add this helper function to check login and redirect if needed
   const checkLoginAndRedirect = (e) => {
     if (!isLoggedIn) {
       e.preventDefault()
@@ -510,21 +337,16 @@ const HomePage = () => {
     return true
   }
 
-  // Handle product click - navigate to product detail page
   const handleProductClick = (e, productId) => {
     if (checkLoginAndRedirect(e)) {
       router.push(`/product/${productId}`)
     }
   }
 
-  // Handle category click - navigate to category products page
-
-  // Fetch products on component mount
   useEffect(() => {
     fetchProducts()
   }, [])
 
-  // Format price with commas
   const formatPrice = (price) => {
     return Number.parseFloat(price).toLocaleString("en-NG", {
       style: "currency",
@@ -534,61 +356,46 @@ const HomePage = () => {
     })
   }
 
-  // Rating stars component
   const RatingStars = ({ rating }) => {
     const fullStars = Math.floor(rating)
     const hasHalfStar = rating % 1 >= 0.5
     const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0)
-
     return (
       <div className="flex items-center">
         {[...Array(fullStars)].map((_, i) => (
-          <IoStarSharp key={`full-${i}`} className="text-yellow-400 text-sm" />
+          <IoStarSharp key={`full-${i}`} className="text-yellow-400 text-xs" />
         ))}
-        {hasHalfStar && <IoStarHalfSharp className="text-yellow-400 text-sm" />}
+        {hasHalfStar && <IoStarHalfSharp className="text-yellow-400 text-xs" />}
         {[...Array(emptyStars)].map((_, i) => (
-          <IoStarOutline key={`empty-${i}`} className="text-yellow-400 text-sm" />
+          <IoStarOutline key={`empty-${i}`} className="text-yellow-400 text-xs" />
         ))}
-        <span className="text-xs text-gray-600 ml-1">{rating}</span>
+        <span className="text-xs text-gray-500 ml-1">{rating}</span>
       </div>
     )
   }
 
   const toggleWishlist = async (e, productId) => {
-    e.stopPropagation() // Prevent navigating to product detail
-
+    e.stopPropagation()
     const token = localStorage.getItem("token")
     if (!token) {
       router.push("/signin")
       return
     }
-
     setWishlistLoading(productId)
-
     try {
       if (wishlistItems.includes(productId)) {
-        // Remove from wishlist
         const response = await axios.delete(`https://app.vplaza.com.ng/api/v1/wishlist/${productId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         })
-
         if (response.status === 200 || response.status === 201) {
           setWishlistItems(wishlistItems.filter((id) => id !== productId))
         }
       } else {
-        // Add to wishlist
         const response = await axios.post(
           "https://app.vplaza.com.ng/api/v1/wishlist",
           { product_id: productId },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
+          { headers: { Authorization: `Bearer ${token}` } }
         )
-
         if (response.status === 200 || response.status === 201) {
           setWishlistItems([...wishlistItems, productId])
         }
@@ -600,33 +407,34 @@ const HomePage = () => {
     }
   }
 
-  // Filter universities based on search query
   const filteredUniversities = universities.filter((university) =>
-    university.name.toLowerCase().includes(searchQuery.toLowerCase()),
+    university.name.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  // Get the food category
-  const foodCategory = categories.find((category) => category.id === FOOD_CATEGORY_ID)
-
   return (
-    <div className="min-h-screen bg-gray-50 pb-20 lg:pb-0">
+    <div className="min-h-screen bg-gray-100 pb-16 lg:pb-0 font-sans">
       {/* Location Selection Modal */}
       {showLocationModal && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl w-full max-w-md max-h-[80vh] flex flex-col overflow-hidden">
-            <div className="p-4 border-b border-gray-100 flex items-center justify-between">
-              <div className="flex items-center">
-                <button onClick={() => setShowLocationModal(false)} className="mr-2 p-1 rounded-full hover:bg-gray-100">
-                  <IoChevronBackOutline size={20} className="text-gray-700" />
+        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-3 transition-opacity duration-300">
+          <div className="bg-white rounded-xl w-full max-w-sm max-h-[85vh] flex flex-col shadow-2xl transform transition-transform duration-300 scale-100">
+            <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setShowLocationModal(false)}
+                  className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
+                >
+                  <IoChevronBackOutline size={18} className="text-gray-600" />
                 </button>
-                <h3 className="text-lg font-semibold">Select Location</h3>
+                <h3 className="text-base font-semibold text-gray-900">Choose Location</h3>
               </div>
-              <button onClick={() => setShowLocationModal(false)} className="p-1 rounded-full hover:bg-gray-100">
-                <IoCloseOutline size={24} className="text-gray-700" />
+              <button
+                onClick={() => setShowLocationModal(false)}
+                className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <IoCloseOutline size={20} className="text-gray-600" />
               </button>
             </div>
-
-            <div className="p-4 border-b border-gray-100">
+            <div className="p-4">
               <div className="relative">
                 <input
                   ref={searchInputRef}
@@ -634,76 +442,75 @@ const HomePage = () => {
                   placeholder="Search universities..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full py-2.5 pl-10 pr-4 bg-gray-100 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 transition-all"
+                  className="w-full py-2.5 pl-9 pr-9 bg-gray-50 rounded-lg text-sm border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all"
                 />
                 <IoSearchOutline
-                  size={20}
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                  size={18}
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
                 />
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery("")}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
-                    <IoCloseOutline size={20} />
+                    <IoCloseOutline size={18} />
                   </button>
                 )}
               </div>
             </div>
-
             <div className="overflow-y-auto flex-1">
-              {/* Current Location Option */}
               <div
-                className="p-4 border-b border-gray-100 flex items-center justify-between hover:bg-gray-50 cursor-pointer"
+                className="px-4 py-3 border-b border-gray-200 flex items-center justify-between hover:bg-gray-50 cursor-pointer transition-colors"
                 onClick={handleSelectCurrentLocation}
               >
-                <div className="flex items-center">
-                  <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-                    <IoGlobeOutline size={20} className="text-[#004AAD]" />
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center">
+                    <IoGlobeOutline size={18} className="text-[#004AAD]" />
                   </div>
                   <div>
-                    <p className="font-medium">Current Location</p>
-                    <p className="text-sm text-gray-500">Products from Nigeria</p>
+                    <p className="font-medium text-gray-900 text-sm">Current Location</p>
+                    <p className="text-xs text-gray-500">Products from Nigeria</p>
                   </div>
                 </div>
-                {!selectedLocation && <IoCheckmarkCircleOutline size={20} className="text-[#004AAD]" />}
+                {!selectedLocation && <IoCheckmarkCircleOutline size={18} className="text-[#004AAD]" />}
               </div>
-
-              {/* Universities List */}
               {loadingUniversities ? (
-                <div className="p-8 text-center">
-                  <div className="w-10 h-10 border-2 border-[#004AAD] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                  <p className="text-gray-500">Loading universities...</p>
+                <div className="p-6 text-center">
+                  <div className="w-8 h-8 border-2 border-[#004AAD] border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+                  <p className="text-gray-500 text-sm">Loading universities...</p>
                 </div>
               ) : universityError ? (
-                <div className="p-8 text-center">
-                  <p className="text-red-500 mb-4">{universityError}</p>
-                  <button onClick={fetchUniversities} className="px-4 py-2 bg-[#004AAD] text-white rounded-lg text-sm">
+                <div className="p-6 text-center">
+                  <p className="text-red-500 text-sm mb-3">{universityError}</p>
+                  <button
+                    onClick={fetchUniversities}
+                    className="px-3 py-1.5 bg-[#004AAD] text-white rounded-lg text-sm hover:bg-[#0056c7] transition-colors"
+                  >
                     Retry
                   </button>
                 </div>
               ) : filteredUniversities.length === 0 ? (
-                <div className="p-8 text-center">
-                  <p className="text-gray-500">No universities found matching "{searchQuery}"</p>
+                <div className="p-6 text-center">
+                  <p className="text-gray-500 text-sm">No universities found matching "{searchQuery}"</p>
                 </div>
               ) : (
                 filteredUniversities.map((university) => (
                   <div
                     key={university.id}
-                    className="p-4 border-b border-gray-100 flex items-center justify-between hover:bg-gray-50 cursor-pointer"
+                    className="px-4 py-3 border-b border-gray-200 flex items-center justify-between hover:bg-gray-50 cursor-pointer transition-colors"
                     onClick={() => handleSelectUniversity(university)}
                   >
-                    <div className="flex items-center">
-                      <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-                        <IoSchoolOutline size={20} className="text-[#004AAD]" />
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center">
+                        <IoSchoolOutline size={18} className="text-[#004AAD]" />
                       </div>
                       <div>
-                        <p className="font-medium">{university.name}</p>
-                        <p className="text-sm text-gray-500">{university.country}</p>
+                        <p className="font-medium text-gray-900 text-sm">{university.name}</p>
+                        <p className="text-xs text-gray-500">{university.country}</p>
                       </div>
                     </div>
-                    {selectedLocation && selectedLocation.id === university.id && (
-                      <IoCheckmarkCircleOutline size={20} className="text-[#004AAD]" />
+                    {selectedLocation?.id === university.id && (
+                      <IoCheckmarkCircleOutline size={18} className="text-[#004AAD]" />
                     )}
                   </div>
                 ))
@@ -715,70 +522,67 @@ const HomePage = () => {
 
       {/* PWA Install Prompt */}
       {showInstallPrompt && (
-        <div className="fixed bottom-20 lg:bottom-4 left-4 right-4 lg:left-auto lg:right-4 lg:max-w-md bg-white rounded-xl shadow-lg z-50 overflow-hidden animate-slideUp">
+        <div className="fixed bottom-3 left-3 right-3 lg:max-w-sm lg:left-auto lg:right-3 bg-white rounded-xl shadow-2xl z-50 overflow-hidden animate-slide-up">
           <div className="bg-[#004AAD] px-4 py-3 flex items-center justify-between">
-            <div className="flex items-center">
-              <IoInformationCircleOutline size={20} className="text-white mr-2" />
-              <h3 className="text-white font-medium">Install VPlaza App</h3>
+            <div className="flex items-center gap-2">
+              <IoInformationCircleOutline size={18} className="text-white" />
+              <h3 className="text-white font-semibold text-sm">Install VPlaza App</h3>
             </div>
             <button
               onClick={() => setShowInstallPrompt(false)}
-              className="text-white hover:bg-white/10 rounded-full p-1"
+              className="p-1 hover:bg-white/10 rounded-full transition-colors"
             >
-              <IoCloseOutline size={20} />
+              <IoCloseOutline size={18} className="text-white" />
             </button>
           </div>
           <div className="p-4">
             {isIOS ? (
               <div>
-                <p className="text-sm text-gray-700 mb-3">Install this app on your iPhone for a better experience:</p>
-                <div className="bg-gray-50 rounded-lg p-3 mb-3">
-                  <div className="flex items-center mb-2">
-                    <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center mr-2">
+                <p className="text-xs text-gray-700 mb-3">Install this app on your iPhone:</p>
+                <div className="space-y-2 bg-gray-50 rounded-lg p-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center">
                       <span className="text-xs font-bold">1</span>
                     </div>
-                    <p className="text-sm">
-                      Tap <IoShareOutline className="inline" /> at the bottom of your screen
-                    </p>
+                    <p className="text-xs">Tap <IoShareOutline className="inline" /> at the bottom</p>
                   </div>
-                  <div className="flex items-center mb-2">
-                    <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center mr-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center">
                       <span className="text-xs font-bold">2</span>
                     </div>
-                    <p className="text-sm">
-                      Scroll down and tap <span className="font-medium">Add to Home Screen</span>
-                    </p>
+                    <p className="text-xs">Select <span className="font-medium">Add to Home Screen</span></p>
                   </div>
-                  <div className="flex items-center">
-                    <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center mr-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center">
                       <span className="text-xs font-bold">3</span>
                     </div>
-                    <p className="text-sm">
-                      Tap <span className="font-medium">Add</span> in the top right corner
-                    </p>
+                    <p className="text-xs">Tap <span className="font-medium">Add</span> in the top right</p>
                   </div>
                 </div>
               </div>
             ) : (
               <div>
-                <p className="text-sm text-gray-700 mb-3">Install this app on your device for a better experience:</p>
+                <p className="text-xs text-gray-700 mb-3">Install for a better experience:</p>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <IoDownloadOutline size={20} className="text-[#004AAD] mr-2" />
-                    <span className="text-sm">Get app-like experience</span>
+                  <div className="flex items-center gap-2">
+                    <IoDownloadOutline size={18} className="text-[#004AAD]" />
+                    <span className="text-xs font-medium">App-like experience</span>
                   </div>
                   <button
                     onClick={handleInstallClick}
-                    className="bg-[#004AAD] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#0056c7] transition-colors"
+                    className="px-3 py-1.5 bg-[#004AAD] text-white rounded-lg text-xs font-medium hover:bg-[#0056c7] transition-colors"
                   >
                     Install
                   </button>
                 </div>
               </div>
             )}
-            <div className="mt-3 pt-3 border-t border-gray-100 flex justify-end">
-              <button onClick={() => setShowInstallPrompt(false)} className="text-gray-500 text-xs hover:underline">
-                Maybe later
+            <div className="mt-3 pt-3 border-t border-gray-200 flex justify-end">
+              <button
+                onClick={() => setShowInstallPrompt(false)}
+                className="text-xs text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                Later
               </button>
             </div>
           </div>
@@ -786,79 +590,60 @@ const HomePage = () => {
       )}
 
       {/* Top Header - Mobile */}
-      <div className="lg:hidden bg-white p-4 shadow-sm sticky top-0 z-20">
-        <div className="flex items-center justify-between gap-3">
-          <div
-            className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
-            onClick={(e) => {
-              if (checkLoginAndRedirect(e)) {
-                router.push("/wishlist")
-              }
-            }}
+      <div className="lg:hidden bg-white p-3 shadow-md sticky top-0 z-30">
+        <div className="flex items-center justify-between gap-2">
+          <button
+            className="p-1.5 rounded-full bg-gray-50 hover:bg-gray-100 transition-colors"
+            onClick={(e) => checkLoginAndRedirect(e) && router.push("/wishlist")}
           >
-            <IoHeartOutline size={20} className="text-gray-700" />
-          </div>
-
+            <IoHeartOutline size={18} className="text-gray-700" />
+          </button>
           <div className="flex-1 relative">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault()
-                if (checkLoginAndRedirect(e)) {
-                  searchProducts()
-                }
-              }}
-            >
+            <div className="relative">
               <input
                 type="text"
                 placeholder="Search products..."
                 value={searchKeyword}
                 onChange={(e) => setSearchKeyword(e.target.value)}
-                onClick={(e) => {
-                  if (!isLoggedIn) {
-                    e.preventDefault()
-                    router.push("/signin")
-                  }
-                }}
-                className="w-full py-2.5 pl-10 pr-4 bg-gray-100 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 transition-all"
+                onClick={(e) => !isLoggedIn && (e.preventDefault(), router.push("/signin"))}
+                className="w-full py-2.5 pl-9 pr-9 bg-gray-50 rounded-lg text-sm border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all"
               />
-              <IoSearchOutline size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+              <IoSearchOutline
+                size={18}
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              />
               {searchKeyword && (
                 <button
-                  type="button"
-                  onClick={() => {
-                    if (isLoggedIn) {
-                      clearSearch()
-                    }
-                  }}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  onClick={() => isLoggedIn && clearSearch()}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  <IoCloseOutline size={20} />
+                  <IoCloseOutline size={18} />
                 </button>
               )}
-            </form>
-          </div>
-
-          <div
-            className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors relative"
-            onClick={(e) => {
-              if (checkLoginAndRedirect(e)) {
-                setShowLocationModal(true)
-              }
-            }}
-          >
-            <IoLocationOutline size={20} className="text-gray-700" />
-            {selectedLocation && <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#004AAD] rounded-full"></span>}
-          </div>
-        </div>
-
-        {/* Selected Location Indicator - Mobile */}
-        {selectedLocation && (
-          <div className="mt-2 px-3 py-1.5 bg-blue-50 rounded-full flex items-center justify-between">
-            <div className="flex items-center">
-              <IoSchoolOutline size={16} className="text-[#004AAD] mr-1.5" />
-              <span className="text-xs text-[#004AAD] font-medium truncate max-w-[200px]">{selectedLocation.name}</span>
             </div>
-            <button onClick={handleSelectCurrentLocation} className="ml-2 text-xs text-[#004AAD] font-medium">
+          </div>
+          <button
+            className="relative p-1.5 rounded-full bg-gray-50 hover:bg-gray-100 transition-colors"
+            onClick={(e) => checkLoginAndRedirect(e) && setShowLocationModal(true)}
+          >
+            <IoLocationOutline size={18} className="text-gray-700" />
+            {selectedLocation && (
+              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-[#004AAD] rounded-full"></span>
+            )}
+          </button>
+        </div>
+        {selectedLocation && (
+          <div className="mt-2 flex items-center justify-between bg-blue-50 rounded-lg px-2 py-1.5">
+            <div className="flex items-center gap-1.5">
+              <IoSchoolOutline size={14} className="text-[#004AAD]" />
+              <span className="text-xs text-[#004AAD] font-medium truncate max-w-[180px]">
+                {selectedLocation.name}
+              </span>
+            </div>
+            <button
+              onClick={handleSelectCurrentLocation}
+              className="text-xs text-[#004AAD] font-medium hover:underline"
+            >
               Clear
             </button>
           </div>
@@ -866,137 +651,96 @@ const HomePage = () => {
       </div>
 
       {/* Desktop Header */}
-      <div className="hidden lg:block bg-white shadow-sm sticky top-0 z-20">
-        <div className="container mx-auto px-6">
-          <div className="flex items-center justify-between py-4">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-[#004AAD]">VPlaza</h1>
-            </div>
-
-            <div className="flex-1 max-w-xl mx-8 relative">
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault()
-                  if (checkLoginAndRedirect(e)) {
-                    searchProducts()
-                  }
-                }}
-              >
+      <div className="hidden lg:block bg-white shadow-md sticky top-0 z-30">
+        <div className="container mx-auto px-6 py-3">
+          <div className="flex items-center justify-between">
+            <h1 className="text-xl font-bold text-[#004AAD]">VPlaza</h1>
+            <div className="flex-1 max-w-lg mx-6 relative">
+              <div className="relative">
                 <input
                   type="text"
                   placeholder="Search products..."
                   value={searchKeyword}
                   onChange={(e) => setSearchKeyword(e.target.value)}
-                  onClick={(e) => {
-                    if (!isLoggedIn) {
-                      e.preventDefault()
-                      router.push("/signin")
-                    }
-                  }}
-                  className="w-full py-2.5 pl-10 pr-4 bg-gray-100 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 border border-gray-200 transition-all"
+                  onClick={(e) => !isLoggedIn && (e.preventDefault(), router.push("/signin"))}
+                  className="w-full py-2.5 pl-10 pr-10 bg-gray-50 rounded-lg text-sm border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all"
                 />
                 <IoSearchOutline
-                  size={20}
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                  size={18}
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
                 />
                 {searchKeyword && (
                   <button
-                    type="button"
-                    onClick={() => {
-                      if (isLoggedIn) {
-                        clearSearch()
-                      }
-                    }}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    onClick={() => isLoggedIn && clearSearch()}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
-                    <IoCloseOutline size={20} />
+                    <IoCloseOutline size={18} />
                   </button>
                 )}
-              </form>
+              </div>
             </div>
-
-            <div className="flex items-center gap-6">
-              <div
-                className="flex items-center gap-1 text-gray-700 cursor-pointer hover:text-[#004AAD] transition-colors relative"
-                onClick={(e) => {
-                  if (checkLoginAndRedirect(e)) {
-                    setShowLocationModal(true)
-                  }
-                }}
+            <div className="flex items-center gap-4">
+              <button
+                className="flex items-center gap-1.5 text-gray-700 hover:text-[#004AAD] transition-colors relative"
+                onClick={(e) => checkLoginAndRedirect(e) && setShowLocationModal(true)}
               >
-                <IoLocationOutline size={20} />
-                <span className="text-sm">
+                <IoLocationOutline size={18} />
+                <span className="text-sm font-medium">
                   {selectedLocation ? (
                     <span className="flex items-center">
-                      <span className="truncate max-w-[120px]">{selectedLocation.name}</span>
-                      <span className="ml-1 text-xs text-[#004AAD] font-medium">(Change)</span>
+                      <span className="truncate max-w-[100px]">{selectedLocation.name}</span>
+                      <span className="ml-1 text-xs text-[#004AAD]">(Change)</span>
                     </span>
                   ) : (
                     "Location"
                   )}
                 </span>
                 {selectedLocation && (
-                  <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#004AAD] rounded-full"></span>
+                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-[#004AAD] rounded-full"></span>
                 )}
-              </div>
-              <div
-                className="flex items-center gap-1 text-gray-700 cursor-pointer hover:text-[#004AAD] transition-colors"
-                onClick={(e) => {
-                  if (checkLoginAndRedirect(e)) {
-                    router.push("/wishlist")
-                  }
-                }}
+              </button>
+              <button
+                className="flex items-center gap-1.5 text-gray-700 hover:text-[#004AAD] transition-colors"
+                onClick={(e) => checkLoginAndRedirect(e) && router.push("/wishlist")}
               >
-                <IoHeartOutline size={20} />
-                <span className="text-sm">Wishlist</span>
-              </div>
-              <div
-                className="flex items-center gap-1 text-gray-700 cursor-pointer hover:text-[#004AAD] transition-colors"
-                onClick={(e) => {
-                  if (checkLoginAndRedirect(e)) {
-                    router.push("/request")
-                  }
-                }}
+                <IoHeartOutline size={18} />
+                <span className="text-sm font-medium">Wishlist</span>
+              </button>
+              <button
+                className="flex items-center gap-1.5 text-gray-700 hover:text-[#004AAD] transition-colors"
+                onClick={(e) => checkLoginAndRedirect(e) && router.push("/request")}
               >
-                <IoMailOutline size={20} />
-                <span className="text-sm">Request</span>
-              </div>
-              <div
-                className="flex items-center gap-1 text-gray-700 cursor-pointer hover:text-[#004AAD] transition-colors"
-                onClick={(e) => {
-                  if (checkLoginAndRedirect(e)) {
-                    router.push("/notifications")
-                  }
-                }}
+                <IoMailOutline size={18} />
+                <span className="text-sm font-medium">Request</span>
+              </button>
+              <button
+                className="flex items-center gap-1.5 text-gray-700 hover:text-[#004AAD] transition-colors relative"
+                onClick={(e) => checkLoginAndRedirect(e) && router.push("/notifications")}
               >
                 <div className="relative">
-                  <IoNotificationsOutline size={20} />
-                  <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                  <IoNotificationsOutline size={18} />
+                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full"></span>
                 </div>
-                <span className="text-sm">Notifications</span>
-              </div>
-              <div
-                className="flex items-center gap-1 text-gray-700 cursor-pointer hover:text-[#004AAD] transition-colors"
-                onClick={(e) => {
-                  if (checkLoginAndRedirect(e)) {
-                    router.push("/store")
-                  }
-                }}
+                <span className="text-sm font-medium">Notifications</span>
+              </button>
+              <button
+                className="flex items-center gap-1.5 text-gray-700 hover:text-[#004AAD] transition-colors"
+                onClick={(e) => checkLoginAndRedirect(e) && router.push("/store")}
               >
-                <IoStorefrontOutline size={20} />
-                <span className="text-sm">Store</span>
-              </div>
+                <IoStorefrontOutline size={18} />
+                <span className="text-sm font-medium">Store</span>
+              </button>
               {isLoggedIn ? (
-                <div
-                  className="w-9 h-9 rounded-full bg-gray-200 overflow-hidden border-2 border-white shadow-sm cursor-pointer"
+                <button
+                  className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden border-2 border-white shadow-sm hover:ring-2 hover:ring-blue-300 transition-all"
                   onClick={() => router.push("/profile")}
                 >
                   <img src="/diverse-group.png" alt="Profile" className="w-full h-full object-cover" />
-                </div>
+                </button>
               ) : (
                 <button
                   onClick={() => router.push("/signup")}
-                  className="bg-[#004AAD] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#0056c7] transition-colors"
+                  className="px-3 py-1.5 bg-[#004AAD] text-white rounded-lg text-sm font-medium hover:bg-[#0056c7] transition-colors"
                 >
                   Sign Up
                 </button>
@@ -1007,121 +751,104 @@ const HomePage = () => {
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 lg:px-8 py-6">
+      <div className="container mx-auto px-3 lg:px-6 py-6">
         {/* Categories Section */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-gray-800">Categories</h2>
+            <h2 className="text-xl font-semibold text-gray-900">Explore Categories</h2>
             <button
-              onClick={(e) => {
-                if (isLoggedIn) {
-                  router.push("/categories")
-                } else {
-                  router.push("/signin")
-                }
-              }}
-              className="text-[#004AAD] text-sm font-medium flex items-center hover:underline transition-all"
+              onClick={(e) => (isLoggedIn ? router.push("/categories") : router.push("/signin"))}
+              className="flex items-center text-sm font-medium text-[#004AAD] hover:bg-blue-50 px-2 py-1 rounded-lg transition-all"
             >
               See More
-              <IoChevronForwardOutline size={16} className="ml-1" />
+              <IoChevronForwardOutline size={14} className="ml-1" />
             </button>
           </div>
-
-          {/* Categories on Mobile */}
-          <div className="lg:hidden bg-[#004AAD] rounded-2xl overflow-hidden shadow-md">
-            <div className="p-3 pb-4">
-              {/* First category (larger) */}
-              <div
-                className={`bg-white/20 backdrop-blur-sm rounded-xl overflow-hidden mb-3 relative shadow-sm hover:shadow-md transition-all cursor-pointer ${
-                  selectedCategory && selectedCategory.id === categories[0].id ? "ring-2 ring-white" : ""
-                }`}
-                onClick={(e) => handleCategoryClick(e, categories[0].id)}
-              >
-                <img
-                  src={categories[0].image || "/placeholder.svg"}
-                  alt={categories[0].name}
-                  className="w-full h-32 object-cover opacity-80"
-                />
-                <div className="absolute inset-0 p-4 flex flex-col justify-between">
-                  <div>
-                    <h3 className="text-white font-semibold text-lg capitalize">{categories[0].name}</h3>
-                    <p className="text-white/80 text-xs">{categories[0].subtitle}</p>
-                  </div>
-                  <p className="text-white/90 text-xs font-medium">{categories[0].count}</p>
-                </div>
-                {selectedCategory && selectedCategory.id === categories[0].id && (
-                  <div className="absolute top-2 right-2 bg-white rounded-full p-0.5">
-                    <IoCheckmarkCircleOutline size={18} className="text-[#004AAD]" />
-                  </div>
-                )}
+          <div className="lg:hidden">
+            <div className="relative">
+              <div className="grid grid-cols-2 gap-3">
+                {categories
+                  .filter((category) => category.id !== "941ed023-1ec9-4f17-afe5-a2c5b504fa4d")
+                  .map((category, index) => (
+                    <div
+                      key={category.id}
+                      className={`relative rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer group ${
+                        selectedCategory?.id === category.id ? "ring-2 ring-[#004AAD]" : ""
+                      } ${index === 0 ? "col-span-2" : ""}`}
+                      onClick={(e) => handleCategoryClick(e, category.id)}
+                    >
+                      <img
+                        src={category.image || "/placeholder.svg"}
+                        alt={category.name}
+                        className="w-full h-36 object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-3">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h3 className="text-white font-semibold text-base capitalize">{category.name}</h3>
+                            <p className="text-white/90 text-xs">{category.subtitle}</p>
+                          </div>
+                          <div className="bg-[#004AAD]/90 backdrop-blur-sm text-white text-xs font-medium px-2.5 py-1 rounded-full">
+                            {category.count}
+                          </div>
+                        </div>
+                      </div>
+                      {selectedCategory?.id === category.id && (
+                        <div className="absolute top-2 right-2 bg-white rounded-full p-1 shadow-sm">
+                          <IoCheckmarkCircleOutline size={16} className="text-[#004AAD]" />
+                        </div>
+                      )}
+                      {category.id === FOOD_CATEGORY_ID && (
+                        <div className="absolute top-2 left-2 bg-orange-500 text-white text-xs px-2 py-0.5 rounded-full flex items-center">
+                          <IoRestaurantOutline size={12} className="mr-1" />
+                          <span>Food</span>
+                        </div>
+                      )}
+                    </div>
+                  ))}
               </div>
-
-              {/* Other categories (smaller grid) */}
-              <div className="grid grid-cols-3 gap-3">
-                {categories.slice(1).map((category) => (
+            </div>
+          </div>
+          <div className="hidden lg:block">
+            <div className="relative">
+              <div className="grid grid-cols-4 gap-4">
+                {categories.map((category) => (
                   <div
                     key={category.id}
-                    className={`bg-white/20 backdrop-blur-sm rounded-xl overflow-hidden relative shadow-sm hover:shadow-md transition-all cursor-pointer ${
-                      selectedCategory && selectedCategory.id === category.id ? "ring-2 ring-white" : ""
+                    className={`relative rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer group ${
+                      selectedCategory?.id === category.id ? "ring-2 ring-[#004AAD]" : ""
                     }`}
                     onClick={(e) => handleCategoryClick(e, category.id)}
                   >
                     <img
                       src={category.image || "/placeholder.svg"}
                       alt={category.name}
-                      className="w-full h-24 object-cover opacity-80"
+                      className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    <div className="absolute inset-0 p-2 flex flex-col justify-between">
-                      <div>
-                        <h3 className="text-white font-semibold text-sm capitalize">{category.name}</h3>
-                        <p className="text-white/80 text-xs">{category.subtitle}</p>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="text-white font-semibold text-lg capitalize">{category.name}</h3>
+                          <p className="text-white/90 text-sm">{category.subtitle}</p>
+                        </div>
+                        <div className="bg-[#004AAD]/90 backdrop-blur-sm text-white text-sm font-medium px-3 py-1.5 rounded-full">
+                          {category.count}
+                        </div>
                       </div>
-                      <p className="text-white/90 text-xs font-medium">{category.count}</p>
                     </div>
-                    {selectedCategory && selectedCategory.id === category.id && (
-                      <div className="absolute top-1 right-1 bg-white rounded-full p-0.5">
-                        <IoCheckmarkCircleOutline size={16} className="text-[#004AAD]" />
+                    {selectedCategory?.id === category.id && (
+                      <div className="absolute top-2 right-2 bg-white rounded-full p-1 shadow-sm">
+                        <IoCheckmarkCircleOutline size={18} className="text-[#004AAD]" />
+                      </div>
+                    )}
+                    {category.id === FOOD_CATEGORY_ID && (
+                      <div className="absolute top-2 left-2 bg-orange-500 text-white text-sm px-2.5 py-1 rounded-full flex items-center">
+                        <IoRestaurantOutline size={14} className="mr-1" />
+                        <span>Food</span>
                       </div>
                     )}
                   </div>
                 ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Categories on Desktop */}
-          <div className="hidden lg:block">
-            <div className="bg-[#004AAD] rounded-2xl overflow-hidden shadow-md">
-              <div className="p-4 pb-5">
-                <div className="grid grid-cols-4 gap-4">
-                  {categories.map((category) => (
-                    <div
-                      key={category.id}
-                      className={`bg-white/20 backdrop-blur-sm rounded-xl overflow-hidden relative cursor-pointer hover:transform hover:scale-[1.02] transition-transform shadow-sm ${
-                        selectedCategory && selectedCategory.id === category.id ? "ring-2 ring-white" : ""
-                      }`}
-                      onClick={(e) => handleCategoryClick(e, category.id)}
-                    >
-                      <img
-                        src={category.image || "/placeholder.svg"}
-                        alt={category.name}
-                        className="w-full h-32 object-cover opacity-80"
-                      />
-                      <div className="absolute inset-0 p-3 flex flex-col justify-between">
-                        <div>
-                          <h3 className="text-white font-semibold capitalize">{category.name}</h3>
-                          <p className="text-white/80 text-xs">{category.subtitle}</p>
-                        </div>
-                        <p className="text-white/90 text-xs font-medium">{category.count}</p>
-                      </div>
-                      {selectedCategory && selectedCategory.id === category.id && (
-                        <div className="absolute top-2 right-2 bg-white rounded-full p-0.5">
-                          <IoCheckmarkCircleOutline size={18} className="text-[#004AAD]" />
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
               </div>
             </div>
           </div>
@@ -1131,7 +858,7 @@ const HomePage = () => {
         <div>
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="text-xl font-semibold text-gray-800">
+              <h2 className="text-xl font-semibold text-gray-900">
                 Products
                 {selectedLocation && (
                   <span className="text-sm font-normal text-gray-500 ml-2">from {selectedLocation.name}</span>
@@ -1150,7 +877,7 @@ const HomePage = () => {
                       <span>{selectedLocation.name}</span>
                       <button
                         onClick={handleSelectCurrentLocation}
-                        className="ml-1 hover:bg-blue-100 rounded-full p-0.5"
+                        className="ml-1.5 hover:bg-blue-100 rounded-full p-0.5"
                       >
                         <IoCloseOutline size={14} />
                       </button>
@@ -1167,7 +894,7 @@ const HomePage = () => {
                       <span>{selectedCategory.name}</span>
                       <button
                         onClick={() => handleCategorySelect(selectedCategory)}
-                        className="ml-1 hover:bg-orange-100 rounded-full p-0.5"
+                        className="ml-1.5 hover:bg-orange-100 rounded-full p-0.5"
                       >
                         <IoCloseOutline size={14} />
                       </button>
@@ -1177,12 +904,8 @@ const HomePage = () => {
               )}
             </div>
             <button
-              onClick={(e) => {
-                if (checkLoginAndRedirect(e)) {
-                  setShowPriceFilter(!showPriceFilter)
-                }
-              }}
-              className="flex items-center justify-center w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+              onClick={(e) => checkLoginAndRedirect(e) && setShowPriceFilter(!showPriceFilter)}
+              className="p-1.5 rounded-full bg-gray-50 hover:bg-gray-100 transition-colors"
             >
               <IoFilterOutline size={18} className="text-gray-700" />
             </button>
@@ -1190,11 +913,11 @@ const HomePage = () => {
 
           {/* Price Filter */}
           {showPriceFilter && (
-            <div className="mb-6 p-4 bg-white rounded-xl shadow-sm animate-fadeIn">
-              <h3 className="text-sm font-medium text-gray-700 mb-3">Price Range</h3>
-              <div className="flex items-center gap-3">
-                <div className="flex-1">
-                  <label htmlFor="min-price" className="block text-xs text-gray-500 mb-1">
+            <div className="mb-6 p-4 bg-white rounded-xl shadow-md animate-fade-in">
+              <h3 className="text-sm font-semibold text-gray-900 mb-3">Filter by Price</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label htmlFor="min-price" className="block text-xs text-gray-600 mb-1">
                     Min Price
                   </label>
                   <input
@@ -1203,11 +926,11 @@ const HomePage = () => {
                     placeholder="0"
                     value={minPrice}
                     onChange={(e) => setMinPrice(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition-all"
                   />
                 </div>
-                <div className="flex-1">
-                  <label htmlFor="max-price" className="block text-xs text-gray-500 mb-1">
+                <div>
+                  <label htmlFor="max-price" className="block text-xs text-gray-600 mb-1">
                     Max Price
                   </label>
                   <input
@@ -1216,19 +939,15 @@ const HomePage = () => {
                     placeholder="Any"
                     value={maxPrice}
                     onChange={(e) => setMaxPrice(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition-all"
                   />
                 </div>
                 <div className="flex items-end">
                   <button
-                    onClick={(e) => {
-                      if (checkLoginAndRedirect(e)) {
-                        searchProducts()
-                      }
-                    }}
-                    className="px-4 py-2 bg-[#004AAD] text-white rounded-lg text-sm hover:bg-[#0056c7] transition-colors"
+                    onClick={(e) => checkLoginAndRedirect(e) && searchProducts()}
+                    className="w-full px-3 py-2 bg-[#004AAD] text-white rounded-lg text-sm font-medium hover:bg-[#0056c7] transition-colors"
                   >
-                    Apply
+                    Apply Filters
                   </button>
                 </div>
               </div>
@@ -1237,11 +956,11 @@ const HomePage = () => {
 
           {/* Search Results Indicator */}
           {isSearching && (
-            <div className="mb-4 flex items-center justify-between">
-              <div className="inline-flex items-center px-3 py-1.5 bg-blue-50 text-[#004AAD] rounded-full text-sm">
-                <span className="font-medium">Search Results</span>
-                <button onClick={clearSearch} className="ml-2 hover:bg-blue-100 rounded-full p-0.5">
-                  <IoCloseOutline size={16} />
+            <div className="mb-6 flex items-center justify-between">
+              <div className="inline-flex items-center px-3 py-1.5 bg-blue-50 text-[#004AAD] rounded-lg text-xs font-medium">
+                Search Results
+                <button onClick={clearSearch} className="ml-1.5 hover:bg-blue-100 rounded-full p-0.5">
+                  <IoCloseOutline size={14} />
                 </button>
               </div>
             </div>
@@ -1250,12 +969,12 @@ const HomePage = () => {
           {/* Error Message */}
           {error && (
             <div className="bg-red-50 text-red-600 p-4 rounded-xl border border-red-100 mb-6 flex items-center justify-between">
-              <p>{error}</p>
+              <p className="text-xs">{error}</p>
               <button
                 onClick={() => fetchProducts()}
-                className="flex items-center text-sm font-medium text-red-600 hover:text-red-800"
+                className="flex items-center text-xs font-medium text-red-600 hover:text-red-800 transition-colors"
               >
-                <IoRefreshOutline size={18} className="mr-1" />
+                <IoRefreshOutline size={16} className="mr-1" />
                 Retry
               </button>
             </div>
@@ -1263,81 +982,72 @@ const HomePage = () => {
 
           {/* Loading State */}
           {loading && (
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-              {[...Array(8)].map((_, index) => (
-                <div key={index} className="bg-white rounded-2xl overflow-hidden shadow-sm animate-pulse">
-                  <div className="w-full h-40 bg-gray-200"></div>
+            <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 lg:gap-4">
+              {[...Array(10)].map((_, index) => (
+                <div key={index} className="bg-white rounded-xl shadow-md animate-pulse">
+                  <div className="w-full h-36 bg-gray-200 rounded-t-xl"></div>
                   <div className="p-3">
-                    <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                    <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
-                    <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+                    <div className="h-3 bg-gray-200 rounded w-3/4 mb-2"></div>
+                    <div className="h-3 bg-gray-200 rounded w-1/2 mb-2"></div>
+                    <div className="h-3 bg-gray-200 rounded w-1/4"></div>
                   </div>
                 </div>
               ))}
             </div>
           )}
 
-          {/* Products Grid - Mobile (2 columns) and Desktop (4 columns) */}
+          {/* Products Grid */}
           {!loading && (isSearching ? searchResults.length > 0 : products.length > 0) && (
             <>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+              <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 lg:gap-4">
                 {(isSearching ? searchResults : products).map((product) => {
-                  // Check if this is a food product (based on selected category)
-                  const isFood = selectedCategory && selectedCategory.id === FOOD_CATEGORY_ID
-
+                  const isFood = selectedCategory?.id === FOOD_CATEGORY_ID
                   return (
                     <div
                       key={product.id}
-                      className={`${
-                        isFood
-                          ? "bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group cursor-pointer border border-orange-100"
-                          : "bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group cursor-pointer"
+                      className={`bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer transform hover:-translate-y-1 ${
+                        isFood ? "border border-orange-100" : ""
                       }`}
                       onClick={(e) => handleProductClick(e, product.id)}
                     >
                       <div className="relative">
                         <img
                           src={
-                            product.images && product.images.length > 0
+                            product.images?.length > 0
                               ? fixImageUrl(product.images[0].url)
                               : "/placeholder.svg?height=200&width=200&query=product"
                           }
                           alt={product.name}
-                          className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
+                          className="w-full h-36 object-cover rounded-t-xl hover:scale-105 transition-transform duration-300"
                           onError={(e) => {
                             e.target.onerror = null
                             e.target.src = "/diverse-products-still-life.png"
                           }}
                         />
                         <button
-                          className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/90 flex items-center justify-center hover:bg-white transition-colors shadow-sm"
+                          className="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 flex items-center justify-center hover:bg-white transition-colors shadow-sm"
                           onClick={(e) => toggleWishlist(e, product.id)}
                           disabled={wishlistLoading === product.id}
                         >
                           {wishlistLoading === product.id ? (
-                            <div className="w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full animate-spin"></div>
+                            <div className="w-3 h-3 border-2 border-gray-500 border-t-transparent rounded-full animate-spin"></div>
                           ) : wishlistItems.includes(product.id) ? (
-                            <IoHeartSharp size={18} className="text-red-500" />
+                            <IoHeartSharp size={16} className="text-red-500" />
                           ) : (
-                            <IoHeartOutline size={18} className="text-gray-700" />
+                            <IoHeartOutline size={16} className="text-gray-700" />
                           )}
                         </button>
-
-                        {/* Food-specific badge */}
                         {isFood && (
-                          <div className="absolute top-2 left-2 bg-orange-500 text-white text-xs px-2 py-1 rounded-full">
-                            <div className="flex items-center">
-                              <IoTimeOutline className="mr-1" />
-                              <span>15-30 min</span>
-                            </div>
+                          <div className="absolute top-2 left-2 bg-orange-500 text-white text-xs px-2 py-0.5 rounded-full flex items-center">
+                            <IoTimeOutline className="mr-1" size={12} />
+                            <span>15-30 min</span>
                           </div>
                         )}
-
-                        <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-black/50 to-transparent"></div>
+                        <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-black/40 to-transparent rounded-b-xl"></div>
                       </div>
                       <div className="p-3">
-                        <h3 className="font-medium text-gray-800 mb-1 truncate">{product.name}</h3>
-                        <p className={`${isFood ? "text-orange-600" : "text-[#004AAD]"} font-bold mb-1`}>
+                        <h3 className="font-medium text-gray-900 mb-1 truncate text-sm">{product.name}</h3>
+                        <p className={`font-semibold text-sm ${isFood ? "text-orange-600" : "text-[#004AAD]"}`}>
                           {formatPrice(product.price)}
                         </p>
                         <RatingStars rating={product.average_rating || 0} />
@@ -1347,11 +1057,11 @@ const HomePage = () => {
                             {product.store}
                           </p>
                           <button
-                            className={`text-xs ${
+                            className={`px-2 py-1 rounded-lg text-xs font-medium transition-colors ${
                               isFood
-                                ? "bg-orange-100 text-orange-600 hover:bg-orange-200"
-                                : "bg-[#004AAD]/10 text-[#004AAD] hover:bg-[#004AAD]/20"
-                            } px-2 py-1 rounded-full font-medium transition-colors`}
+                                ? "bg-orange-50 text-orange-600 hover:bg-orange-100"
+                                : "bg-blue-50 text-[#004AAD] hover:bg-blue-100"
+                            }`}
                             onClick={(e) => {
                               e.stopPropagation()
                               handleProductClick(e, product.id)
@@ -1365,25 +1075,23 @@ const HomePage = () => {
                   )
                 })}
               </div>
-
-              {/* Load More Button */}
               {nextPageUrl && (
-                <div className="flex justify-center mt-8">
+                <div className="flex justify-center mt-6">
                   <button
                     onClick={loadMoreProducts}
                     disabled={loadingMore}
-                    className={`flex items-center justify-center px-6 py-3 rounded-xl transition-all ${
+                    className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                       loadingMore
                         ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                        : selectedCategory && selectedCategory.id === FOOD_CATEGORY_ID
-                          ? "bg-orange-500 text-white hover:bg-orange-600 hover:shadow-md"
-                          : "bg-[#004AAD] text-white hover:bg-[#0056c7] hover:shadow-md"
+                        : selectedCategory?.id === FOOD_CATEGORY_ID
+                        ? "bg-orange-500 text-white hover:bg-orange-600"
+                        : "bg-[#004AAD] text-white hover:bg-[#0056c7]"
                     }`}
                   >
                     {loadingMore ? (
                       <>
                         <svg
-                          className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                          className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
@@ -1402,10 +1110,10 @@ const HomePage = () => {
                             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                           ></path>
                         </svg>
-                        Loading More...
+                        Loading...
                       </>
                     ) : (
-                      "Load More Products"
+                      "Load More"
                     )}
                   </button>
                 </div>
@@ -1415,54 +1123,58 @@ const HomePage = () => {
 
           {/* No Products Found */}
           {!loading && (isSearching ? searchResults.length === 0 : products.length === 0) && !error && (
-            <div className="bg-white rounded-2xl p-8 text-center">
-              <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-                {selectedCategory && selectedCategory.id === FOOD_CATEGORY_ID ? (
-                  <IoRestaurantOutline size={32} className="text-orange-400" />
+            <div className="bg-white rounded-xl p-6 text-center shadow-md">
+              <div
+                className={`w-14 h-14 mx-auto mb-3 rounded-full flex items-center justify-center ${
+                  selectedCategory?.id === FOOD_CATEGORY_ID ? "bg-orange-50" : "bg-gray-50"
+                }`}
+              >
+                {selectedCategory?.id === FOOD_CATEGORY_ID ? (
+                  <IoRestaurantOutline size={28} className="text-orange-400" />
                 ) : (
-                  <IoStorefrontOutline size={32} className="text-gray-400" />
+                  <IoStorefrontOutline size={28} className="text-gray-400" />
                 )}
               </div>
-              <h3 className="text-lg font-medium text-gray-800 mb-2">No Products Found</h3>
-              <p className="text-gray-500 mb-6">
+              <h3 className="text-base font-semibold text-gray-900 mb-2">No Products Found</h3>
+              <p className="text-gray-500 mb-4 text-xs">
                 {isSearching
-                  ? "We couldn't find any products matching your search criteria."
+                  ? "No products match your search criteria."
                   : selectedLocation
-                    ? `We couldn't find any products from ${selectedLocation.name}.`
-                    : "We couldn't find any products at the moment."}
+                  ? `No products found from ${selectedLocation.name}.`
+                  : "No products available at the moment."}
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 {isSearching ? (
                   <button
                     onClick={clearSearch}
-                    className="inline-flex items-center px-4 py-2 bg-[#004AAD] text-white rounded-lg hover:bg-[#0056c7] transition-colors"
+                    className="inline-flex items-center px-3 py-1.5 bg-[#004AAD] text-white rounded-lg text-xs font-medium hover:bg-[#0056c7] transition-colors"
                   >
-                    <IoRefreshOutline size={18} className="mr-2" />
+                    <IoRefreshOutline size={16} className="mr-1" />
                     Clear Search
                   </button>
                 ) : (
                   <button
                     onClick={() => fetchProducts()}
-                    className={`inline-flex items-center px-4 py-2 rounded-lg transition-colors ${
-                      selectedCategory && selectedCategory.id === FOOD_CATEGORY_ID
+                    className={`inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                      selectedCategory?.id === FOOD_CATEGORY_ID
                         ? "bg-orange-500 text-white hover:bg-orange-600"
                         : "bg-[#004AAD] text-white hover:bg-[#0056c7]"
                     }`}
                   >
-                    <IoRefreshOutline size={18} className="mr-2" />
+                    <IoRefreshOutline size={16} className="mr-1" />
                     Refresh
                   </button>
                 )}
                 {selectedLocation && !isSearching && (
                   <button
                     onClick={handleSelectCurrentLocation}
-                    className={`inline-flex items-center px-4 py-2 bg-white rounded-lg hover:bg-gray-50 transition-colors ${
-                      selectedCategory && selectedCategory.id === FOOD_CATEGORY_ID
-                        ? "border border-orange-500 text-orange-500"
-                        : "border border-[#004AAD] text-[#004AAD]"
+                    className={`inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium transition-colors border ${
+                      selectedCategory?.id === FOOD_CATEGORY_ID
+                        ? "border-orange-500 text-orange-500 hover:bg-orange-50"
+                        : "border-[#004AAD] text-[#004AAD] hover:bg-blue-50"
                     }`}
                   >
-                    <IoGlobeOutline size={18} className="mr-2" />
+                    <IoGlobeOutline size={16} className="mr-1" />
                     View All Products
                   </button>
                 )}
@@ -1473,62 +1185,49 @@ const HomePage = () => {
       </div>
 
       {/* Bottom Navigation - Mobile Only */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-[#004AAD] text-white py-2 px-4 flex items-center justify-between z-20 shadow-lg">
-        <button
-          className="flex flex-col items-center justify-center w-16 py-1 hover:bg-white/10 rounded-lg transition-colors"
-          onClick={(e) => {
-            if (checkLoginAndRedirect(e)) {
-              router.push("/store")
-            }
-          }}
-        >
-          <IoStorefrontOutline size={22} />
-          <span className="text-[10px] mt-1 font-light">Store</span>
-        </button>
-
-        <button
-          className="flex flex-col items-center justify-center w-16 py-1 hover:bg-white/10 rounded-lg transition-colors"
-          onClick={(e) => {
-            if (checkLoginAndRedirect(e)) {
-              router.push("/request")
-            }
-          }}
-        >
-          <IoMailOutline size={22} />
-          <span className="text-[10px] mt-1 font-light">Request</span>
-        </button>
-
-        <button className="flex flex-col items-center justify-center -mt-6 relative">
-          <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-lg border-4 border-[#004AAD]">
-            <IoHomeSharp size={26} className="text-[#004AAD]" />
-          </div>
-          <span className="text-[10px] mt-1 font-light">Home</span>
-        </button>
-
-        <button
-          className="flex flex-col items-center justify-center w-16 py-1 hover:bg-white/10 rounded-lg transition-colors relative"
-          onClick={(e) => {
-            if (checkLoginAndRedirect(e)) {
-              router.push("/notifications")
-            }
-          }}
-        >
-          <div className="relative">
-            <IoNotificationsOutline size={22} />
-            <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-          </div>
-          <span className="text-[10px] mt-1 font-light">Alerts</span>
-        </button>
-
-        <button
-          className="flex flex-col items-center justify-center w-16 py-1 hover:bg-white/10 rounded-lg transition-colors"
-          onClick={(e) => (isLoggedIn ? router.push("/profile") : router.push("/signin"))}
-        >
-          <div className="w-6 h-6 rounded-full overflow-hidden border border-white">
-            <img src="/diverse-group.png" alt="Profile" className="w-full h-full object-cover" />
-          </div>
-          <span className="text-[10px] mt-1 font-light">Profile</span>
-        </button>
+      <div className="lg:hidden fixed bottom-3 left-3 right-3 z-30">
+        <div className="relative flex items-center justify-between bg-[#004AAD]/95 backdrop-blur-md rounded-xl shadow-xl py-2 px-3 border border-white/10">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent rounded-xl"></div>
+          <button
+            className="relative flex flex-col items-center w-14 py-1.5 hover:bg-white/10 rounded-lg transition-all"
+            onClick={(e) => checkLoginAndRedirect(e) && router.push("/store")}
+          >
+            <IoStorefrontOutline size={20} className="text-white" />
+            <span className="text-xs mt-0.5 font-medium text-white/90">Store</span>
+          </button>
+          <button
+            className="relative flex flex-col items-center w-14 py-1.5 hover:bg-white/10 rounded-lg transition-all"
+            onClick={(e) => checkLoginAndRedirect(e) && router.push("/request")}
+          >
+            <IoMailOutline size={20} className="text-white" />
+            <span className="text-xs mt-0.5 font-medium text-white/90">Request</span>
+          </button>
+          <button className="relative flex flex-col items-center -mt-6">
+            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-xl border-3 border-[#004AAD] hover:scale-105 transition-transform">
+              <IoHomeSharp size={24} className="text-[#004AAD]" />
+            </div>
+            <span className="text-xs mt-1 font-medium text-white/90">Home</span>
+          </button>
+          <button
+            className="relative flex flex-col items-center w-14 py-1.5 hover:bg-white/10 rounded-lg transition-all"
+            onClick={(e) => checkLoginAndRedirect(e) && router.push("/notifications")}
+          >
+            <div className="relative">
+              <IoNotificationsOutline size={20} className="text-white" />
+              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full border border-white/50"></span>
+            </div>
+            <span className="text-xs mt-0.5 font-medium text-white/90">Alerts</span>
+          </button>
+          <button
+            className="relative flex flex-col items-center w-14 py-1.5 hover:bg-white/10 rounded-lg transition-all"
+            onClick={(e) => (isLoggedIn ? router.push("/profile") : router.push("/signin"))}
+          >
+            <div className="w-6 h-6 rounded-full overflow-hidden border-2 border-white shadow-sm">
+              <img src="/diverse-group.png" alt="Profile" className="w-full h-full object-cover" />
+            </div>
+            <span className="text-xs mt-0.5 font-medium text-white/90">Profile</span>
+          </button>
+        </div>
       </div>
     </div>
   )
