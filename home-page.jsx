@@ -97,16 +97,49 @@ const HomePage = () => {
   useEffect(() => {
     const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
     setIsIOS(isIOSDevice)
+    
+    // Check if we should show the install prompt
+    const shouldShowPrompt = () => {
+      const lastShown = localStorage.getItem('pwa-prompt-last-shown')
+      const promptDismissed = localStorage.getItem('pwa-prompt-dismissed')
+      
+      // Don't show if user permanently dismissed it
+      if (promptDismissed === 'true') {
+        return false
+      }
+      
+      // Show if never shown before
+      if (!lastShown) {
+        return true
+      }
+      
+      // Show again after 7 days (7 * 24 * 60 * 60 * 1000 milliseconds)
+      const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000)
+      return parseInt(lastShown) < sevenDaysAgo
+    }
+    
     if (!isIOSDevice) {
       const handleBeforeInstallPrompt = (e) => {
         e.preventDefault()
         setDeferredPrompt(e)
-        setTimeout(() => setShowInstallPrompt(true), 3000)
+        
+        if (shouldShowPrompt()) {
+          setTimeout(() => {
+            setShowInstallPrompt(true)
+            localStorage.setItem('pwa-prompt-last-shown', Date.now().toString())
+          }, 3000)
+        }
       }
       window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt)
       return () => window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt)
     } else {
-      setTimeout(() => setShowInstallPrompt(true), 3000)
+      // For iOS devices
+      if (shouldShowPrompt()) {
+        setTimeout(() => {
+          setShowInstallPrompt(true)
+          localStorage.setItem('pwa-prompt-last-shown', Date.now().toString())
+        }, 3000)
+      }
     }
   }, [])
 
@@ -192,6 +225,11 @@ const HomePage = () => {
       const { outcome } = await deferredPrompt.userChoice
       console.log(`User response to the install prompt: ${outcome}`)
       setDeferredPrompt(null)
+      
+      // If user accepted, don't show again
+      if (outcome === 'accepted') {
+        localStorage.setItem('pwa-prompt-dismissed', 'true')
+      }
     }
     setShowInstallPrompt(false)
   }
@@ -577,7 +615,16 @@ const HomePage = () => {
                 </div>
               </div>
             )}
-            <div className="mt-3 pt-3 border-t border-gray-200 flex justify-end">
+            <div className="mt-3 pt-3 border-t border-gray-200 flex justify-between">
+              <button
+                onClick={() => {
+                  localStorage.setItem('pwa-prompt-dismissed', 'true')
+                  setShowInstallPrompt(false)
+                }}
+                className="text-xs text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                Don't show again
+              </button>
               <button
                 onClick={() => setShowInstallPrompt(false)}
                 className="text-xs text-gray-500 hover:text-gray-700 transition-colors"
