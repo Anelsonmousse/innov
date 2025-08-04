@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
+import { IoHomeSharp } from "react-icons/io5"
 import axios from "axios"
 import {
   IoArrowBack,
@@ -315,16 +316,6 @@ const StorePage = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col">
-        {/* Top Header - Mobile */}
-        <div className="lg:hidden bg-white p-4 shadow-sm sticky top-0 z-20">
-          <div className="flex items-center">
-            <button onClick={() => router.back()} className="p-2 rounded-full hover:bg-gray-100 transition-colors">
-              <IoArrowBack size={24} className="text-gray-700" />
-            </button>
-            <h1 className="ml-4 text-lg font-semibold text-gray-800">My Store</h1>
-          </div>
-        </div>
-
         {/* Desktop Header */}
         <div className="hidden lg:block bg-white shadow-sm sticky top-0 z-20">
           <div className="container mx-auto px-6">
@@ -361,16 +352,6 @@ const StorePage = () => {
   if (error) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col">
-        {/* Top Header - Mobile */}
-        <div className="lg:hidden bg-white p-4 shadow-sm sticky top-0 z-20">
-          <div className="flex items-center">
-            <button onClick={() => router.back()} className="p-2 rounded-full hover:bg-gray-100 transition-colors">
-              <IoArrowBack size={24} className="text-gray-700" />
-            </button>
-            <h1 className="ml-4 text-lg font-semibold text-gray-800">My Store</h1>
-          </div>
-        </div>
-
         {/* Desktop Header */}
         <div className="hidden lg:block bg-white shadow-sm sticky top-0 z-20">
           <div className="container mx-auto px-6">
@@ -440,18 +421,6 @@ const StorePage = () => {
           <span>{errorMessage}</span>
         </div>
       )}
-
-      {/* Top Header - Mobile */}
-      <div className="lg:hidden bg-white p-4 shadow-sm sticky top-0 z-20">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <button onClick={() => router.back()} className="p-2 rounded-full hover:bg-gray-100 transition-colors">
-              <IoArrowBack size={24} className="text-gray-700" />
-            </button>
-            <h1 className="ml-4 text-lg font-semibold text-gray-800">My Store</h1>
-          </div>
-        </div>
-      </div>
 
       {/* Desktop Header */}
       <div className="hidden lg:block bg-white shadow-sm sticky top-0 z-20">
@@ -998,48 +967,51 @@ const StorePage = () => {
       </div>
 
       {/* Bottom Navigation - Mobile Only */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-[#004AAD] text-white py-2 px-4 flex items-center justify-between z-20 shadow-lg">
-        <button
-          className="flex flex-col items-center justify-center w-16 py-1 hover:bg-white/10 rounded-lg transition-colors"
-          onClick={() => router.push("/store")}
-        >
-          <IoStorefrontOutline size={22} />
-          <span className="text-[10px] mt-1 font-light">Store</span>
-        </button>
-
-        <button
-          className="flex flex-col items-center justify-center w-16 py-1 hover:bg-white/10 rounded-lg transition-colors"
-          onClick={() => router.push("/request")}
-        >
-          <IoMailOutline size={22} />
-          <span className="text-[10px] mt-1 font-light">Request</span>
-        </button>
-
-        <button className="flex flex-col items-center justify-center -mt-6 relative" onClick={() => router.push("/")}>
-          <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-lg border-4 border-[#004AAD]">
-            <IoHomeOutline size={26} className="text-[#004AAD]" />
-          </div>
-          <span className="text-[10px] mt-1 font-light">Home</span>
-        </button>
-
-        <button
-          className="flex flex-col items-center justify-center w-16 py-1 hover:bg-white/10 rounded-lg transition-colors relative"
-          onClick={() => router.push("/notifications")}
-        >
-          <div className="relative">
-            <IoNotificationsOutline size={22} />
-            <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-          </div>
-          <span className="text-[10px] mt-1 font-light">Alerts</span>
-        </button>
-
-        <button
-          className="flex flex-col items-center justify-center w-16 py-1 hover:bg-white/10 rounded-lg transition-colors"
-          onClick={() => router.push("/profile")}
-        >
-          <IoPersonOutline size={22} />
-          <span className="text-[10px] mt-1 font-light">Profile</span>
-        </button>
+      <div className="lg:hidden fixed bottom-3 left-3 right-3 z-30">
+        <div className="relative flex items-center justify-between bg-[#004AAD]/95 backdrop-blur-md rounded-xl shadow-xl py-2 px-3 border border-white/10">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent rounded-xl"></div>
+          
+          <button className="relative flex flex-col items-center w-14 py-1.5 hover:bg-white/10 rounded-lg transition-all bg-white/20">
+            <IoStorefrontOutline size={20} className="text-white" />
+            <span className="text-xs mt-0.5 font-medium text-white">Store</span>
+          </button>
+          
+          <button
+            onClick={() => router.push("/request")}
+            className="relative flex flex-col items-center w-14 py-1.5 hover:bg-white/10 rounded-lg transition-all"
+          >
+            <IoMailOutline size={20} className="text-white" />
+            <span className="text-xs mt-0.5 font-medium text-white/90">Request</span>
+          </button>
+          
+          <button onClick={() => router.push("/")} className="relative flex flex-col items-center -mt-6">
+            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-xl border-3 border-[#004AAD] hover:scale-105 transition-transform">
+              <IoHomeSharp size={24} className="text-[#004AAD]" />
+            </div>
+            <span className="text-xs mt-1 font-medium text-white/90">Home</span>
+          </button>
+          
+          <button
+            onClick={() => router.push("/notifications")}
+            className="relative flex flex-col items-center w-14 py-1.5 hover:bg-white/10 rounded-lg transition-all"
+          >
+            <div className="relative">
+              <IoNotificationsOutline size={20} className="text-white" />
+              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full border border-white/50"></span>
+            </div>
+            <span className="text-xs mt-0.5 font-medium text-white/90">Alerts</span>
+          </button>
+          
+          <button
+            onClick={() => router.push("/profile")}
+            className="relative flex flex-col items-center w-14 py-1.5 hover:bg-white/10 rounded-lg transition-all"
+          >
+            <div className="w-6 h-6 rounded-full overflow-hidden border-2 border-white shadow-sm">
+              <img src="/diverse-group.png" alt="Profile" className="w-full h-full object-cover" />
+            </div>
+            <span className="text-xs mt-0.5 font-medium text-white/90">Profile</span>
+          </button>
+        </div>
       </div>
     </div>
   )
