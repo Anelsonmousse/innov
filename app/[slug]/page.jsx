@@ -470,7 +470,10 @@ const StoreDetailPage = () => {
                 }`}
               >
                 {/* Product Image */}
-                <div className={`relative ${viewMode === "list" ? "w-24 h-24 flex-shrink-0" : "h-48"} cursor-pointer`}>
+                <div 
+                  className={`relative ${viewMode === "list" ? "w-24 h-24 flex-shrink-0" : "h-48"} cursor-pointer`}
+                  onClick={() => router.push(`/product/${product.id}`)}
+                >
                   <img
                     src={product.images?.[0]?.url || "/placeholder.svg"}
                     alt={product.name}
@@ -494,14 +497,20 @@ const StoreDetailPage = () => {
                   </button>
 
                   {viewMode === "grid" && (
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
+                    <div 
+                      className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3 cursor-pointer"
+                      onClick={() => router.push(`/product/${product.id}`)}
+                    >
                       <p className="text-white font-medium truncate">{product.name}</p>
                     </div>
                   )}
                 </div>
 
                 {/* Product Details */}
-                <div className={viewMode === "list" ? "flex-1" : "p-3"}>
+                <div 
+                  className={`${viewMode === "list" ? "flex-1 cursor-pointer" : "p-3 cursor-pointer"}`}
+                  onClick={() => router.push(`/product/${product.id}`)}
+                >
                   {viewMode === "list" && (
                     <h3 className="font-medium text-gray-800 mb-1 line-clamp-1">{product.name}</h3>
                   )}

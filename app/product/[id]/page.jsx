@@ -21,8 +21,10 @@ import {
   IoPersonCircleOutline,
   IoTimeOutline,
   IoHeartSharp,
+  IoEyeOutline,
+  IoEyeOffOutline,
 } from "react-icons/io5"
-import { FaStore, FaTag } from "react-icons/fa"
+import { FaStore, FaTag, FaEnvelope, FaLock } from "react-icons/fa"
 
 export default function ProductPage() {
   const router = useRouter()
@@ -47,6 +49,10 @@ export default function ProductPage() {
   // Add these state variables inside the component
   const [isInWishlist, setIsInWishlist] = useState(false)
   const [wishlistLoading, setWishlistLoading] = useState(false)
+  const [showLoginPopup, setShowLoginPopup] = useState(false)
+  const [loginLoading, setLoginLoading] = useState(false)
+  const [loginError, setLoginError] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
 
   // Fix image URL by removing the first https:// if there are two
   const fixImageUrl = (url) => {
@@ -87,13 +93,6 @@ export default function ProductPage() {
     return `https://wa.me/${formattedNumber}?text=${message}`
   }
 
-  // Check if user is logged in and redirect if not
-  useEffect(() => {
-    const token = localStorage.getItem("token")
-    if (!token) {
-      router.push("/signin")
-    }
-  }, [router])
 
   // Fetch product data
   useEffect(() => {
@@ -101,16 +100,15 @@ export default function ProductPage() {
       if (!params.id) return
 
       const token = localStorage.getItem("token")
-      if (!token) return
 
       try {
         setLoading(true)
         setError(null)
 
+        const headers = token ? { Authorization: `Bearer ${token}` } : {}
+
         const response = await axios.get(`https://app.vplaza.com.ng/api/v1/products/${params.id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers,
         })
 
         if (response.data && response.data.data) {
@@ -217,7 +215,13 @@ export default function ProductPage() {
 
   // Handle WhatsApp message
   const handleMessageSeller = () => {
-    if (!product || !product.user || !product.user.phone) return
+    if (!product || !product.user) return
+
+    // Check if phone number is available
+    if (!product.user.phone) {
+      setShowLoginPopup(true)
+      return
+    }
 
     // No need to simulate - we'll directly open WhatsApp
     window.open(generateWhatsAppLink(product.user.phone, product.name), "_blank")
@@ -227,7 +231,7 @@ export default function ProductPage() {
   const toggleWishlist = async () => {
     const token = localStorage.getItem("token")
     if (!token) {
-      router.push("/signin")
+      setShowLoginPopup(true)
       return
     }
 
@@ -278,6 +282,72 @@ export default function ProductPage() {
     }
   }
 
+  const handlePopupLogin = async (email, password) => {
+    setLoginLoading(true)
+    setLoginError("")
+
+    const form = new FormData()
+    form.append("email", email)
+    form.append("password", password)
+
+    try {
+      const response = await axios.post("https://app.vplaza.com.ng/api/v1/login", form, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+
+      if ((response.status === 200 || response.status === 201) && response.data.status === "success") {
+        // Store the token and user data
+        localStorage.setItem("token", response.data.data.access_token)
+        localStorage.setItem("email", response.data.data.user)
+        localStorage.setItem("university", response.data.data.university)
+        localStorage.setItem("token_type", response.data.data.token_type)
+
+        // Close popup
+        setShowLoginPopup(false)
+        
+        // Reload product data to get phone number
+        await reloadProductData()
+        
+        setSuccessMessage("Login successful!")
+        setShowSuccessMessage(true)
+        setTimeout(() => setShowSuccessMessage(false), 3000)
+      } else {
+        setLoginError(response.data.message || "Invalid credentials. Please try again.")
+      }
+    } catch (error) {
+      console.error("Login error:", error)
+      if (error.response && error.response.data && error.response.data.message) {
+        setLoginError(error.response.data.message)
+      } else {
+        setLoginError("Login failed. Please check your connection and try again.")
+      }
+    } finally {
+      setLoginLoading(false)
+    }
+  }
+
+  // Reload product data after login
+  const reloadProductData = async () => {
+    const token = localStorage.getItem("token")
+    if (!token || !params.id) return
+
+    try {
+      const response = await axios.get(`https://app.vplaza.com.ng/api/v1/products/${params.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (response.data && response.data.data) {
+        setProduct(response.data.data)
+      }
+    } catch (err) {
+      console.error("Error reloading product:", err)
+    }
+  }
+
   // Handle review submission
   const handleSubmitReview = async (e) => {
     e.preventDefault()
@@ -294,7 +364,7 @@ export default function ProductPage() {
 
     const token = localStorage.getItem("token")
     if (!token) {
-      router.push("/signin")
+      setShowLoginPopup(true)
       return
     }
 
@@ -486,6 +556,113 @@ export default function ProductPage() {
           </div>
         )}
 
+        {showLoginPopup && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl p-6 w-full max-w-md mx-4 animate-fadeIn">
+              <h2 className="text-xl font-bold text-gray-800 mb-2">Login Required</h2>
+              <p className="text-gray-600 mb-6">Please login to view seller contact information</p>
+              
+              <form onSubmit={(e) => {
+                e.preventDefault()
+                const email = e.target.email.value
+                const password = e.target.password.value
+                handlePopupLogin(email, password)
+              }}>
+                {/* Email */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1.5">
+                    <FaEnvelope className="text-blue-500" size={12} />
+                    Email
+                  </label>
+                  <input
+                    name="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    className="w-full px-4 py-3 border rounded-xl focus:outline-none transition-all duration-200 border-gray-200 bg-gray-50 focus:ring-2 focus:ring-blue-50 focus:border-blue-400"
+                    required
+                    disabled={loginLoading}
+                  />
+                </div>
+
+                {/* Password */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1.5">
+                    <FaLock className="text-blue-500" size={12} />
+                    Password
+                  </label>
+                  <div className="relative">
+                    <input
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Enter your password"
+                      className="w-full px-4 py-3 border rounded-xl focus:outline-none transition-all duration-200 border-gray-200 bg-gray-50 focus:ring-2 focus:ring-blue-50 focus:border-blue-400"
+                      required
+                      disabled={loginLoading}
+                    />
+                    <button
+                      type="button"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <IoEyeOffOutline size={18} /> : <IoEyeOutline size={18} />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Error Message */}
+                {loginError && (
+                  <div className="mb-4 bg-red-50 text-red-600 p-3 rounded-lg text-sm border border-red-100">
+                    {loginError}
+                  </div>
+                )}
+
+                {/* Buttons */}
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setShowLoginPopup(false)}
+                    className="flex-1 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                    disabled={loginLoading}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex-1 py-3 bg-[#004AAD] text-white rounded-lg hover:bg-[#0056c7] transition-colors"
+                    disabled={loginLoading}
+                  >
+                    {loginLoading ? (
+                      <div className="flex items-center justify-center">
+                        <svg className="animate-spin h-4 w-4 text-white mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Logging in...
+                      </div>
+                    ) : (
+                      "Login"
+                    )}
+                  </button>
+                </div>
+
+                <div className="text-center mt-4 text-sm">
+                  <span className="text-gray-600">Don't have an account? </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowLoginPopup(false)
+                      router.push("/signup")
+                    }}
+                    className="text-[#004AAD] font-medium hover:underline"
+                  >
+                    Sign up
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
         {/* Top Header - Mobile */}
         <div className="lg:hidden bg-white p-4 shadow-sm sticky top-0 z-20">
           <div className="flex items-center justify-between">
@@ -670,16 +847,23 @@ export default function ProductPage() {
 
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-3">
-                <a
-                  href={generateWhatsAppLink(product.user.phone, product.name)}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  onClick={handleMessageSeller}
                   className="flex-1 flex items-center justify-center gap-2 py-3 px-6 rounded-xl text-white font-semibold transition-all bg-[#25D366] hover:bg-[#1fb959] hover:shadow-md"
                 >
                   <IoLogoWhatsapp size={20} />
                   Message Seller
-                </a>
-                <button className="flex-1 py-3 px-6 rounded-xl border-2 border-[#004AAD] text-[#004AAD] font-semibold hover:bg-blue-50 transition-colors flex items-center justify-center gap-2">
+                </button>
+                <button 
+                  onClick={() => {
+                    if (!product.user.phone) {
+                      setShowLoginPopup(true)
+                    } else {
+                      window.open(`tel:${product.user.phone}`)
+                    }
+                  }}
+                  className="flex-1 py-3 px-6 rounded-xl border-2 border-[#004AAD] text-[#004AAD] font-semibold hover:bg-blue-50 transition-colors flex items-center justify-center gap-2"
+                >
                   <IoCallOutline size={20} />
                   Call Seller
                 </button>
@@ -846,21 +1030,25 @@ export default function ProductPage() {
 
         {/* Mobile Bottom Action Bar */}
         <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white py-3 px-4 flex items-center gap-3 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] z-20">
-          <a
-            href={`tel:${product.user.phone}`}
+          <button
+            onClick={() => {
+              if (!product.user.phone) {
+                setShowLoginPopup(true)
+              } else {
+                window.open(`tel:${product.user.phone}`)
+              }
+            }}
             className="w-12 h-12 rounded-full border-2 border-[#004AAD] flex items-center justify-center"
           >
             <IoCallOutline size={22} className="text-[#004AAD]" />
-          </a>
-          <a
-            href={generateWhatsAppLink(product.user.phone, product.name)}
-            target="_blank"
-            rel="noopener noreferrer"
+          </button>
+          <button
+            onClick={handleMessageSeller}
             className="flex-1 py-3 rounded-xl text-white font-semibold transition-all flex items-center justify-center bg-[#25D366]"
           >
             <IoLogoWhatsapp size={20} className="mr-2" />
             Message on WhatsApp
-          </a>
+          </button>
         </div>
       </div>
     )
