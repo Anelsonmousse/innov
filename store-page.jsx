@@ -22,6 +22,8 @@ import {
   IoChevronForwardOutline,
   IoChevronDownOutline,
   IoMailOutline,
+  IoShareOutline,    // ADD THIS LINE
+  IoCopyOutline,     // ADD THIS LINE
 } from "react-icons/io5"
 
 // This is a completely empty component to replace the original store switcher
@@ -46,6 +48,7 @@ const StorePage = () => {
   const [creating, setCreating] = useState(false)
   const [products, setProducts] = useState([])
   const [isOpen, setIsOpen] = useState(false)
+  const [showCopyMessage, setShowCopyMessage] = useState(false)  // ADD THIS LINE
 
   // Form data for store creation
   const [formData, setFormData] = useState({
@@ -84,6 +87,38 @@ const StorePage = () => {
     } catch (error) {
       console.error("Error getting image URL:", error)
       return fallbackUrl
+    }
+  }
+
+  // ADD THIS ENTIRE FUNCTION HERE
+  const handleShareStore = async (slug) => {
+    const storeUrl = `https://www.vplaza.com.ng/${slug}`
+    
+    try {
+      if (navigator.share) {
+        // Use native share API if available (mobile)
+        await navigator.share({
+          title: `${activeStore.name} - VPlaza Store`,
+          text: `Check out ${activeStore.name} on VPlaza!`,
+          url: storeUrl,
+        })
+      } else {
+        // Fallback to clipboard copy
+        await navigator.clipboard.writeText(storeUrl)
+        setShowCopyMessage(true)
+        setTimeout(() => setShowCopyMessage(false), 2000)
+      }
+    } catch (error) {
+      // If clipboard fails, create a temporary input to copy
+      const tempInput = document.createElement('input')
+      tempInput.value = storeUrl
+      document.body.appendChild(tempInput)
+      tempInput.select()
+      document.execCommand('copy')
+      document.body.removeChild(tempInput)
+      
+      setShowCopyMessage(true)
+      setTimeout(() => setShowCopyMessage(false), 2000)
     }
   }
 
@@ -422,6 +457,15 @@ const StorePage = () => {
         </div>
       )}
 
+      {/* ADD THIS ENTIRE BLOCK HERE */}
+      {/* Copy Message */}
+      {showCopyMessage && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-lg shadow-lg flex items-center animate-slideUp">
+          <IoCopyOutline className="text-blue-500 mr-2" size={20} />
+          <span>Store link copied to clipboard!</span>
+        </div>
+      )}
+
       {/* Desktop Header */}
       <div className="hidden lg:block bg-white shadow-sm sticky top-0 z-20">
         <div className="container mx-auto px-6">
@@ -562,11 +606,22 @@ const StorePage = () => {
                         <span>{activeStore.university}</span>
                       </div>
                     </div>
-                    <button
-                    onClick={() => router.push(`/store/edit/${activeStore.id}`)}
-                    className="absolute top-4 right-4 p-2 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-colors">
-                      <IoPencilOutline className="text-white" size={18} />
-                    </button>
+                    <div className="absolute top-4 right-4 flex gap-2">
+                      <button
+                        onClick={() => handleShareStore(activeStore.slug)}
+                        className="p-2 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-colors"
+                        title="Share Store"
+                      >
+                        <IoShareOutline className="text-white" size={18} />
+                      </button>
+                      <button
+                        onClick={() => router.push(`/store/edit/${activeStore.id}`)}
+                        className="p-2 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-colors"
+                        title="Edit Store"
+                      >
+                        <IoPencilOutline className="text-white" size={18} />
+                      </button>
+                    </div>
                   </div>
                   <div className="p-4">
                     <p className="text-gray-700">{activeStore.description}</p>
@@ -598,6 +653,13 @@ const StorePage = () => {
                   >
                     <IoStorefrontOutline size={20} className="mr-2 text-[#004AAD]" />
                     <span>View Products</span>
+                  </button>
+                  <button
+                    onClick={() => handleShareStore(activeStore.slug)}
+                    className="bg-white text-gray-800 p-4 rounded-xl flex items-center justify-center hover:bg-gray-50 transition-colors border border-gray-200"
+                  >
+                    <IoShareOutline size={20} className="mr-2 text-[#004AAD]" />
+                    <span>Share Store</span>
                   </button>
 
                   {canCreateNewStoreType() && (
