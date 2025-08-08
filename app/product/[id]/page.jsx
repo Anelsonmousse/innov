@@ -1,4 +1,4 @@
-// page.jsx (This handles metadata - NO "use client")
+// app/product/[id]/page.jsx
 import ProductDetailPage from './ProductDetailPage'
 
 export const viewport = {
@@ -8,11 +8,10 @@ export const viewport = {
 }
 
 export async function generateMetadata({ params }) {
-  const { id: productId } = await params // ✅ await params
+  const productId = params.id
 
   try {
     const response = await fetch(`https://app.vplaza.com.ng/api/v1/products/${productId}`, {
-      // optional: revalidate every X seconds
       next: { revalidate: 60 },
     })
     const data = await response.json()
@@ -39,6 +38,9 @@ export async function generateMetadata({ params }) {
         ? product.description.substring(0, 150) + '...'
         : product.description
 
+    const imageUrl =
+      product.images?.[0]?.url || 'https://www.vplaza.com.ng/vplaza-og-image.png'
+
     return {
       title: `${product.name} - ${formattedPrice} | ${product.store} | VPlaza`,
       description: `Buy ${product.name} for ${formattedPrice} from ${product.store}. ${shortDescription}`,
@@ -51,7 +53,7 @@ export async function generateMetadata({ params }) {
         url: `https://www.vplaza.com.ng/product/${productId}`,
         images: [
           {
-            url: product.images?.[0]?.url || 'https://www.vplaza.com.ng/vplaza-og-image.png',
+            url: imageUrl,
             width: 1200,
             height: 630,
             alt: `${product.name} - Product image`,
@@ -65,7 +67,12 @@ export async function generateMetadata({ params }) {
         site: '@VPlazaNG',
         title: `${product.name} - ${formattedPrice} | VPlaza`,
         description: `Buy ${product.name} from ${product.store} for ${formattedPrice}. ${shortDescription}`,
-        images: [product.images?.[0]?.url || 'https://www.vplaza.com.ng/vplaza-og-image.png'],
+        images: [imageUrl],
+      },
+
+      // ✅ Explicit og:image so warning never appears
+      other: {
+        'og:image': imageUrl,
       },
     }
   } catch (error) {
