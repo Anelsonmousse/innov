@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect, useRef, useCallback } from "react"
+import Head from "next/head"
 import { useRouter, useParams } from "next/navigation"
 import axios from "axios"
 import {
@@ -133,6 +134,19 @@ const StoreDetailPage = () => {
       fetchProducts(1, true)
     }
   }, [store?.id])
+
+  useEffect(() => {
+    if (store && typeof window !== 'undefined') {
+        // Update page title dynamically
+        document.title = `${store.name} - ${store.type} Store | VPlaza`
+        
+        // Update meta description
+        const metaDescription = document.querySelector('meta[name="description"]')
+        if (metaDescription) {
+        metaDescription.content = `Shop from ${store.name}, a ${store.type} store at ${store.university}. ${store.description.substring(0, 150)}...`
+        }
+    }
+    }, [store])
 
   // Handle share store
   const handleShareStore = async () => {
@@ -286,6 +300,157 @@ const StoreDetailPage = () => {
   }
 
   return (
+    <>
+    {/* SEO and Open Graph Meta Tags */}
+    <Head>
+      {/* Basic Meta Tags */}
+      <title>{store ? `${store.name} - ${store.type} Store | VPlaza` : 'Store | VPlaza'}</title>
+      <meta 
+        name="description" 
+        content={store ? 
+          `Shop from ${store.name}, a ${store.type} store at ${store.university}. ${store.description.substring(0, 150)}...` : 
+          'Discover amazing products from local stores on VPlaza'
+        } 
+      />
+      <meta name="keywords" content={store ? 
+        `${store.name}, ${store.type} store, ${store.university}, VPlaza, online shopping, student marketplace` : 
+        'VPlaza, online store, student marketplace'
+      } />
+      <meta name="author" content="VPlaza" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta name="robots" content="index, follow" />
+      
+      {/* Canonical URL */}
+      <link rel="canonical" href={`https://www.vplaza.com.ng/${slug}`} />
+      
+      {/* Open Graph Tags for Facebook, WhatsApp, LinkedIn */}
+      <meta property="og:type" content="website" />
+      <meta property="og:site_name" content="VPlaza" />
+      <meta property="og:title" content={store ? `${store.name} - ${store.type} Store` : 'VPlaza Store'} />
+      <meta 
+        property="og:description" 
+        content={store ? 
+          `Discover amazing products from ${store.name} at ${store.university}. ${store.description.substring(0, 200)}` : 
+          'Discover amazing products from local stores on VPlaza'
+        } 
+      />
+      <meta property="og:url" content={`https://www.vplaza.com.ng/${slug}`} />
+      <meta 
+        property="og:image" 
+        content={store?.image_url || 'https://www.vplaza.com.ng/vplaza-og-image.png'} 
+      />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:image:type" content="image/png" />
+      <meta 
+        property="og:image:alt" 
+        content={store ? `${store.name} store image` : 'VPlaza store'} 
+      />
+      <meta property="og:locale" content="en_NG" />
+      
+      {/* Twitter Card Tags */}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:site" content="@VPlazaNG" />
+      <meta name="twitter:creator" content="@VPlazaNG" />
+      <meta name="twitter:title" content={store ? `${store.name} - ${store.type} Store | VPlaza` : 'VPlaza Store'} />
+      <meta 
+        name="twitter:description" 
+        content={store ? 
+          `Shop from ${store.name} at ${store.university}. ${store.description.substring(0, 200)}` : 
+          'Discover amazing products from local stores on VPlaza'
+        } 
+      />
+      <meta 
+        name="twitter:image" 
+        content={store?.image_url || 'https://www.vplaza.com.ng/vplaza-og-image.png'} 
+      />
+      <meta 
+        name="twitter:image:alt" 
+        content={store ? `${store.name} store on VPlaza` : 'VPlaza store'} 
+      />
+      
+      {/* WhatsApp specific (uses Open Graph) */}
+      <meta property="og:image:secure_url" content={store?.image_url || 'https://www.vplaza.com.ng/vplaza-og-image.png'} />
+      
+      {/* Telegram specific */}
+      <meta name="telegram:channel" content="@VPlazaNG" />
+      
+      {/* Additional Meta Tags */}
+      <meta name="theme-color" content="#004AAD" />
+      <meta name="application-name" content="VPlaza" />
+      <meta name="apple-mobile-web-app-title" content="VPlaza" />
+      <meta name="apple-mobile-web-app-capable" content="yes" />
+      <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+      
+      {/* Favicon */}
+      <link rel="icon" href="/favicon.ico" />
+      <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+      
+      {/* Structured Data for Search Engines */}
+      {store && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Store",
+              "name": store.name,
+              "description": store.description,
+              "url": `https://www.vplaza.com.ng/${slug}`,
+              "image": store.image_url || 'https://www.vplaza.com.ng/vplaza-og-image.png',
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": store.university,
+                "addressCountry": "NG"
+              },
+              "telephone": store.user?.phone || "",
+              "priceRange": "₦₦",
+              "servesCuisine": store.type === "food" ? "Various" : undefined,
+              "paymentAccepted": "Cash, Bank Transfer",
+              "currenciesAccepted": "NGN",
+              "openingHours": "Mo-Su 08:00-20:00",
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "4.8",
+                "bestRating": "5",
+                "worstRating": "1",
+                "ratingCount": "150"
+              },
+              "hasOfferCatalog": {
+                "@type": "OfferCatalog",
+                "name": `${store.name} Products`,
+                "itemListElement": products.slice(0, 5).map(product => ({
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Product",
+                    "name": product.name,
+                    "description": product.description,
+                    "image": product.images?.[0]?.url || store.image_url,
+                    "offers": {
+                      "@type": "Offer",
+                      "price": product.price,
+                      "priceCurrency": "NGN",
+                      "availability": "https://schema.org/InStock"
+                    }
+                  }
+                }))
+              }
+            })
+          }}
+        />
+      )}
+      
+      {/* Preload important resources */}
+      {store?.image_url && (
+        <link 
+          rel="preload" 
+          as="image" 
+          href={store.image_url}
+          type="image/jpeg"
+        />
+      )}
+    </Head>
+
     <div className="min-h-screen bg-gray-50 pb-20 lg:pb-0">
       {/* Copy Message */}
       {showCopyMessage && (
@@ -593,6 +758,7 @@ const StoreDetailPage = () => {
         </div>
       </div>
     </div>
+    </>
   )
 }
 
