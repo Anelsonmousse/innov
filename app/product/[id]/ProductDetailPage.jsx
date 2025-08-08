@@ -58,7 +58,7 @@ export default function ProductDetailPage() {
 
   // Fix image URL by removing the first https:// if there are two
   const fixImageUrl = (url) => {
-    if (!url) return "/vplaza-og-image.png"
+    if (!url) return "/diverse-products-still-life.png"
 
     // Check if the URL contains a double https://
     const doubleHttpsIndex = url.indexOf("https://", url.indexOf("https://") + 1)
@@ -122,7 +122,6 @@ export default function ProductDetailPage() {
       }
     }
   }
-
 
   // Fetch product data
   useEffect(() => {
@@ -776,365 +775,365 @@ export default function ProductDetailPage() {
               <div className="flex items-center">
                 <button
                   onClick={() => router.back()}
-                  className="p-2 rounded-full hover:bg-gray-100 transition-colors flex items-center text-[#004AAD]"
-                >
-                  <IoArrowBack size={20} />
-                  <span className="ml-1">Back</span>
-                </button>
-                <h1 className="ml-4 text-xl font-semibold text-gray-800">Product Details</h1>
-              </div>
-              <div className="flex items-center gap-3">
-                <button 
-                  onClick={handleShare}
-                  className="p-2 rounded-full hover:bg-gray-100 transition-colors flex items-center text-gray-700"
-                >
-                  <IoShareOutline size={20} />
-                  <span className="ml-1">Share</span>
-                </button>
-                <button
-                  className="p-2 rounded-full hover:bg-gray-100 transition-colors flex items-center text-gray-700"
-                  onClick={toggleWishlist}
-                  disabled={wishlistLoading}
-                >
-                  {wishlistLoading ? (
-                    <div className="w-5 h-5 border-2 border-gray-500 border-t-transparent rounded-full animate-spin"></div>
-                  ) : isInWishlist ? (
-                    <IoHeartSharp size={20} className="text-red-500" />
-                  ) : (
-                    <IoHeartOutline size={20} className="text-gray-700" />
-                  )}
-                  <span className="ml-1">Save</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+                 className="p-2 rounded-full hover:bg-gray-100 transition-colors flex items-center text-[#004AAD]"
+               >
+                 <IoArrowBack size={20} />
+                 <span className="ml-1">Back</span>
+               </button>
+               <h1 className="ml-4 text-xl font-semibold text-gray-800">Product Details</h1>
+             </div>
+             <div className="flex items-center gap-3">
+               <button 
+                 onClick={handleShare}
+                 className="p-2 rounded-full hover:bg-gray-100 transition-colors flex items-center text-gray-700"
+               >
+                 <IoShareOutline size={20} />
+                 <span className="ml-1">Share</span>
+               </button>
+               <button
+                 className="p-2 rounded-full hover:bg-gray-100 transition-colors flex items-center text-gray-700"
+                 onClick={toggleWishlist}
+                 disabled={wishlistLoading}
+               >
+                 {wishlistLoading ? (
+                   <div className="w-5 h-5 border-2 border-gray-500 border-t-transparent rounded-full animate-spin"></div>
+                 ) : isInWishlist ? (
+                   <IoHeartSharp size={20} className="text-red-500" />
+                 ) : (
+                   <IoHeartOutline size={20} className="text-gray-700" />
+                 )}
+                 <span className="ml-1">Save</span>
+               </button>
+             </div>
+           </div>
+         </div>
+       </div>
 
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex flex-col lg:flex-row lg:gap-8">
-            {/* Image Section */}
-            <div className="lg:w-1/2 mb-6 lg:mb-0">
-              {/* Main Image with Navigation */}
-              <div className="relative rounded-2xl overflow-hidden bg-white shadow-sm">
-                <img
-                  src={
-                    product.images && product.images.length > 0
-                      ? fixImageUrl(product.images[currentImageIndex].url)
-                      : "/diverse-products-still-life.png"
-                  }
-                  alt={product.name}
-                  className="w-full h-80 lg:h-96 object-contain"
-                  onError={(e) => {
-                    e.target.onerror = null
-                    e.target.src = "/diverse-products-still-life.png"
-                  }}
-                />
+       <div className="container mx-auto px-4 py-6">
+         <div className="flex flex-col lg:flex-row lg:gap-8">
+           {/* Image Section */}
+           <div className="lg:w-1/2 mb-6 lg:mb-0">
+             {/* Main Image with Navigation */}
+             <div className="relative rounded-2xl overflow-hidden bg-white shadow-sm">
+               <img
+                 src={
+                   product.images && product.images.length > 0
+                     ? fixImageUrl(product.images[currentImageIndex].url)
+                     : "/diverse-products-still-life.png"
+                 }
+                 alt={product.name}
+                 className="w-full h-80 lg:h-96 object-contain"
+                 onError={(e) => {
+                   e.target.onerror = null
+                   e.target.src = "/diverse-products-still-life.png"
+                 }}
+               />
 
-                {/* Image Navigation Arrows */}
-                {product.images && product.images.length > 1 && (
-                  <>
-                    <button
-                      onClick={prevImage}
-                      className="absolute left-2 top-1/2 transform -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 flex items-center justify-center shadow-md hover:bg-white transition-colors"
-                    >
-                      <IoChevronBackOutline size={24} className="text-gray-700" />
-                    </button>
-                    <button
-                      onClick={nextImage}
-                      className="absolute right-2 top-1/2 transform -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 flex items-center justify-center shadow-md hover:bg-white transition-colors"
-                    >
-                      <IoChevronForwardOutline size={24} className="text-gray-700" />
-                    </button>
-                  </>
-                )}
-              </div>
+               {/* Image Navigation Arrows */}
+               {product.images && product.images.length > 1 && (
+                 <>
+                   <button
+                     onClick={prevImage}
+                     className="absolute left-2 top-1/2 transform -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 flex items-center justify-center shadow-md hover:bg-white transition-colors"
+                   >
+                     <IoChevronBackOutline size={24} className="text-gray-700" />
+                   </button>
+                   <button
+                     onClick={nextImage}
+                     className="absolute right-2 top-1/2 transform -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 flex items-center justify-center shadow-md hover:bg-white transition-colors"
+                   >
+                     <IoChevronForwardOutline size={24} className="text-gray-700" />
+                   </button>
+                 </>
+               )}
+             </div>
 
-              {/* Thumbnail Images */}
-              {product.images && product.images.length > 1 && (
-                <div className="flex justify-center mt-4 gap-2 overflow-x-auto pb-2">
-                  {product.images.map((image, index) => (
-                    <div
-                      key={image.id}
-                      className={`w-16 h-16 rounded-lg overflow-hidden cursor-pointer border-2 ${
-                        currentImageIndex === index ? "border-[#004AAD]" : "border-transparent"
-                      }`}
-                      onClick={() => setCurrentImageIndex(index)}
-                    >
-                      <img
-                        src={fixImageUrl(image.url) || "/placeholder.svg"}
-                        alt={`${product.name} - view ${index + 1}`}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.target.onerror = null
-                          e.target.src = "/diverse-products-still-life.png"
-                        }}
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+             {/* Thumbnail Images */}
+             {product.images && product.images.length > 1 && (
+               <div className="flex justify-center mt-4 gap-2 overflow-x-auto pb-2">
+                 {product.images.map((image, index) => (
+                   <div
+                     key={image.id}
+                     className={`w-16 h-16 rounded-lg overflow-hidden cursor-pointer border-2 ${
+                       currentImageIndex === index ? "border-[#004AAD]" : "border-transparent"
+                     }`}
+                     onClick={() => setCurrentImageIndex(index)}
+                   >
+                     <img
+                       src={fixImageUrl(image.url) || "/placeholder.svg"}
+                       alt={`${product.name} - view ${index + 1}`}
+                       className="w-full h-full object-cover"
+                       onError={(e) => {
+                         e.target.onerror = null
+                         e.target.src = "/diverse-products-still-life.png"
+                       }}
+                     />
+                   </div>
+                 ))}
+               </div>
+             )}
+           </div>
 
-            {/* Details Section */}
-            <div className="lg:w-1/2">
-              {/* Product Name and Price */}
-              <h1 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-2">{product.name}</h1>
-              <p className="text-2xl font-bold text-[#004AAD] mb-4">{formatPrice(product.price)}</p>
+           {/* Details Section */}
+           <div className="lg:w-1/2">
+             {/* Product Name and Price */}
+             <h1 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-2">{product.name}</h1>
+             <p className="text-2xl font-bold text-[#004AAD] mb-4">{formatPrice(product.price)}</p>
 
-              {/* Rating */}
-              <div className="mb-4">
-                <RatingStars rating={product.average_rating || 0} />
-              </div>
+             {/* Rating */}
+             <div className="mb-4">
+               <RatingStars rating={product.average_rating || 0} />
+             </div>
 
-              {/* Store and Category */}
-              <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-6">
-                <div className="flex items-center text-gray-700">
-                  <FaStore className="text-[#004AAD] mr-2" />
-                  <span className="text-sm font-medium">{product.store}</span>
-                </div>
-                <div className="w-1 h-1 bg-gray-300 rounded-full hidden sm:block"></div>
-                <div className="flex items-center text-gray-700">
-                  <FaTag className="text-[#004AAD] mr-2" />
-                  <span className="text-sm font-medium capitalize">{product.category}</span>
-                </div>
-              </div>
+             {/* Store and Category */}
+             <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-6">
+               <div className="flex items-center text-gray-700">
+                 <FaStore className="text-[#004AAD] mr-2" />
+                 <span className="text-sm font-medium">{product.store}</span>
+               </div>
+               <div className="w-1 h-1 bg-gray-300 rounded-full hidden sm:block"></div>
+               <div className="flex items-center text-gray-700">
+                 <FaTag className="text-[#004AAD] mr-2" />
+                 <span className="text-sm font-medium capitalize">{product.category}</span>
+               </div>
+             </div>
 
-              {/* Description */}
-              <div className="mb-6">
-                <h2 className="text-lg font-semibold text-gray-800 mb-2">Description</h2>
-                <div className="bg-white p-4 rounded-xl border border-gray-100">
-                  <p className="text-gray-700 whitespace-pre-line">{product.description}</p>
-                </div>
-              </div>
+             {/* Description */}
+             <div className="mb-6">
+               <h2 className="text-lg font-semibold text-gray-800 mb-2">Description</h2>
+               <div className="bg-white p-4 rounded-xl border border-gray-100">
+                 <p className="text-gray-700 whitespace-pre-line">{product.description}</p>
+               </div>
+             </div>
 
-              {/* Seller Information - Now Clickable */}
-              <div className="mb-6">
-                <h2 className="text-lg font-semibold text-gray-800 mb-2">Seller Information</h2>
-                <div
-                  className="bg-white p-4 rounded-xl border border-gray-100 hover:border-blue-200 hover:shadow-md transition-all cursor-pointer"
-                  onClick={() => window.open(generateWhatsAppLink(product.user.phone, product.name), "_blank")}
-                >
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden">
-                      <IoStorefrontOutline size={24} className="text-[#004AAD]" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-gray-800">{product.store}</p>
-                      <p className="text-xs text-gray-500">View all seller's products</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+             {/* Seller Information - Now Clickable */}
+             <div className="mb-6">
+               <h2 className="text-lg font-semibold text-gray-800 mb-2">Seller Information</h2>
+               <div
+                 className="bg-white p-4 rounded-xl border border-gray-100 hover:border-blue-200 hover:shadow-md transition-all cursor-pointer"
+                 onClick={() => window.open(generateWhatsAppLink(product.user.phone, product.name), "_blank")}
+               >
+                 <div className="flex items-center gap-3 mb-3">
+                   <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden">
+                     <IoStorefrontOutline size={24} className="text-[#004AAD]" />
+                   </div>
+                   <div>
+                     <p className="font-medium text-gray-800">{product.store}</p>
+                     <p className="text-xs text-gray-500">View all seller's products</p>
+                   </div>
+                 </div>
+               </div>
+             </div>
 
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3">
-                <button
-                  onClick={handleMessageSeller}
-                  className="flex-1 flex items-center justify-center gap-2 py-3 px-6 rounded-xl text-white font-semibold transition-all bg-[#25D366] hover:bg-[#1fb959] hover:shadow-md"
-                >
-                  <IoLogoWhatsapp size={20} />
-                  Message Seller
-                </button>
-                <button 
-                  onClick={() => {
-                    if (!product.user.phone) {
-                      setShowLoginPopup(true)
-                    } else {
-                      window.open(`tel:${product.user.phone}`)
-                    }
-                  }}
-                  className="flex-1 py-3 px-6 rounded-xl border-2 border-[#004AAD] text-[#004AAD] font-semibold hover:bg-blue-50 transition-colors flex items-center justify-center gap-2"
-                >
-                  <IoCallOutline size={20} />
-                  Call Seller
-                </button>
-              </div>
+             {/* Action Buttons */}
+             <div className="flex flex-col sm:flex-row gap-3">
+               <button
+                 onClick={handleMessageSeller}
+                 className="flex-1 flex items-center justify-center gap-2 py-3 px-6 rounded-xl text-white font-semibold transition-all bg-[#25D366] hover:bg-[#1fb959] hover:shadow-md"
+               >
+                 <IoLogoWhatsapp size={20} />
+                 Message Seller
+               </button>
+               <button 
+                 onClick={() => {
+                   if (!product.user.phone) {
+                     setShowLoginPopup(true)
+                   } else {
+                     window.open(`tel:${product.user.phone}`)
+                   }
+                 }}
+                 className="flex-1 py-3 px-6 rounded-xl border-2 border-[#004AAD] text-[#004AAD] font-semibold hover:bg-blue-50 transition-colors flex items-center justify-center gap-2"
+               >
+                 <IoCallOutline size={20} />
+                 Call Seller
+               </button>
+             </div>
 
-              {/* Delivery Information */}
-              <div className="mt-6 bg-blue-50 p-4 rounded-xl flex items-start gap-3">
-                <IoInformationCircleOutline size={20} className="text-[#004AAD] flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-sm text-gray-700">
-                    <span className="font-medium text-[#004AAD]">Safety Tip:</span> Please inspect the product
-                    physically before making any payment to ensure it meets your expectations.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+             {/* Delivery Information */}
+             <div className="mt-6 bg-blue-50 p-4 rounded-xl flex items-start gap-3">
+               <IoInformationCircleOutline size={20} className="text-[#004AAD] flex-shrink-0 mt-0.5" />
+               <div>
+                 <p className="text-sm text-gray-700">
+                   <span className="font-medium text-[#004AAD]">Safety Tip:</span> Please inspect the product
+                   physically before making any payment to ensure it meets your expectations.
+                 </p>
+               </div>
+             </div>
+           </div>
+         </div>
 
-          {/* Reviews Section */}
-          <div className="mt-10">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-gray-800">Reviews</h2>
-              <button
-                onClick={() => setShowReviewForm(!showReviewForm)}
-                className="px-4 py-2 bg-[#004AAD] text-white rounded-lg hover:bg-[#0056c7] transition-colors text-sm font-medium"
-              >
-                {showReviewForm ? "Cancel" : "Write a Review"}
-              </button>
-            </div>
+         {/* Reviews Section */}
+         <div className="mt-10">
+           <div className="flex items-center justify-between mb-4">
+             <h2 className="text-xl font-semibold text-gray-800">Reviews</h2>
+             <button
+               onClick={() => setShowReviewForm(!showReviewForm)}
+               className="px-4 py-2 bg-[#004AAD] text-white rounded-lg hover:bg-[#0056c7] transition-colors text-sm font-medium"
+             >
+               {showReviewForm ? "Cancel" : "Write a Review"}
+             </button>
+           </div>
 
-            {/* Review Form */}
-            {showReviewForm && (
-              <div className="bg-white p-4 rounded-xl border border-gray-200 mb-6 animate-fadeIn">
-                <h3 className="text-lg font-medium text-gray-800 mb-3">Your Review</h3>
-                <form onSubmit={handleSubmitReview}>
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Rating</label>
-                    <RatingSelector rating={userRating} setRating={setUserRating} />
-                  </div>
-                  <div className="mb-4">
-                    <label htmlFor="comment" className="block text-sm font-medium text-gray-700 mb-2">
-                      Comment
-                    </label>
-                    <textarea
-                      id="comment"
-                      rows="3"
-                      value={userComment}
-                      onChange={(e) => setUserComment(e.target.value)}
-                      placeholder="Share your experience with this product..."
-                      className="w-full px-4 py-3 border rounded-xl focus:outline-none transition-all duration-200 border-gray-200 bg-gray-50 focus:ring-2 focus:ring-blue-50 focus:border-blue-400"
-                      required
-                    ></textarea>
-                  </div>
-                  <div className="flex justify-end">
-                    <button
-                      type="submit"
-                      disabled={submittingReview}
-                      className={`flex items-center gap-2 px-6 py-2 rounded-lg text-white font-medium transition-colors ${
-                        submittingReview ? "bg-gray-400 cursor-not-allowed" : "bg-[#004AAD] hover:bg-[#0056c7]"
-                      }`}
-                    >
-                      {submittingReview ? (
-                        <>
-                          <svg
-                            className="animate-spin h-4 w-4 text-white"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                          >
-                            <circle
-                              className="opacity-25"
-                              cx="12"
-                              cy="12"
-                              r="10"
-                              stroke="currentColor"
-                              strokeWidth="4"
-                            ></circle>
-                            <path
-                              className="opacity-75"
-                              fill="currentColor"
-                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                            ></path>
-                          </svg>
-                          Submitting...
-                        </>
-                      ) : (
-                        <>
-                          <IoSendOutline />
-                          Submit Review
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </form>
-              </div>
-            )}
+           {/* Review Form */}
+           {showReviewForm && (
+             <div className="bg-white p-4 rounded-xl border border-gray-200 mb-6 animate-fadeIn">
+               <h3 className="text-lg font-medium text-gray-800 mb-3">Your Review</h3>
+               <form onSubmit={handleSubmitReview}>
+                 <div className="mb-4">
+                   <label className="block text-sm font-medium text-gray-700 mb-2">Rating</label>
+                   <RatingSelector rating={userRating} setRating={setUserRating} />
+                 </div>
+                 <div className="mb-4">
+                   <label htmlFor="comment" className="block text-sm font-medium text-gray-700 mb-2">
+                     Comment
+                   </label>
+                   <textarea
+                     id="comment"
+                     rows="3"
+                     value={userComment}
+                     onChange={(e) => setUserComment(e.target.value)}
+                     placeholder="Share your experience with this product..."
+                     className="w-full px-4 py-3 border rounded-xl focus:outline-none transition-all duration-200 border-gray-200 bg-gray-50 focus:ring-2 focus:ring-blue-50 focus:border-blue-400"
+                     required
+                   ></textarea>
+                 </div>
+                 <div className="flex justify-end">
+                   <button
+                     type="submit"
+                     disabled={submittingReview}
+                     className={`flex items-center gap-2 px-6 py-2 rounded-lg text-white font-medium transition-colors ${
+                       submittingReview ? "bg-gray-400 cursor-not-allowed" : "bg-[#004AAD] hover:bg-[#0056c7]"
+                     }`}
+                   >
+                     {submittingReview ? (
+                       <>
+                         <svg
+                           className="animate-spin h-4 w-4 text-white"
+                           xmlns="http://www.w3.org/2000/svg"
+                           fill="none"
+                           viewBox="0 0 24 24"
+                         >
+                           <circle
+                             className="opacity-25"
+                             cx="12"
+                             cy="12"
+                             r="10"
+                             stroke="currentColor"
+                             strokeWidth="4"
+                           ></circle>
+                           <path
+                             className="opacity-75"
+                             fill="currentColor"
+                             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                           ></path>
+                         </svg>
+                         Submitting...
+                       </>
+                     ) : (
+                       <>
+                         <IoSendOutline />
+                         Submit Review
+                       </>
+                     )}
+                   </button>
+                 </div>
+               </form>
+             </div>
+           )}
 
-            {/* Reviews List */}
-            {loadingReviews ? (
-              <div className="bg-white rounded-xl p-6 text-center">
-                <div className="animate-pulse flex justify-center items-center">
-                  <div className="h-4 w-4 bg-blue-400 rounded-full mr-2"></div>
-                  <div className="h-4 w-4 bg-blue-400 rounded-full mr-2 animate-pulse-delay-200"></div>
-                  <div className="h-4 w-4 bg-blue-400 rounded-full animate-pulse-delay-400"></div>
-                </div>
-                <p className="mt-2 text-gray-500">Loading reviews...</p>
-              </div>
-            ) : reviewError ? (
-              <div className="bg-red-50 text-red-600 p-4 rounded-xl border border-red-100 mb-6">
-                <p>{reviewError}</p>
-              </div>
-            ) : reviews.length === 0 ? (
-              <div className="bg-white rounded-xl p-6 text-center border border-gray-200">
-                <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-                  <IoStarOutline size={32} className="text-gray-400" />
-                </div>
-                <h3 className="text-lg font-medium text-gray-800 mb-2">No Reviews Yet</h3>
-                <p className="text-gray-500 mb-4">Be the first to review this product!</p>
-                {!showReviewForm && (
-                  <button
-                    onClick={() => setShowReviewForm(true)}
-                    className="px-4 py-2 bg-[#004AAD] text-white rounded-lg hover:bg-[#0056c7] transition-colors text-sm font-medium"
-                  >
-                    Write a Review
-                  </button>
-                )}
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {reviews.map((review) => (
-                  <div key={review.id} className="bg-white p-4 rounded-xl border border-gray-200">
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center">
-                        <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-                          <IoPersonCircleOutline size={20} className="text-[#004AAD]" />
-                        </div>
-                        <div>
-                          <p className="font-medium text-gray-800">{review.user.name}</p>
-                          <div className="flex items-center">
-                            {[...Array(5)].map((_, i) => (
-                              <span key={i} className="text-sm">
-                                {i < review.rating ? (
-                                  <IoStarSharp className="text-yellow-400" />
-                                ) : (
-                                  <IoStarOutline className="text-gray-300" />
-                                )}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center text-gray-500 text-sm">
-                        <IoTimeOutline className="mr-1" />
-                        <span>{review.created_at}</span>
-                      </div>
-                    </div>
-                    <p className="text-gray-700">{review.comment}</p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
+           {/* Reviews List */}
+           {loadingReviews ? (
+             <div className="bg-white rounded-xl p-6 text-center">
+               <div className="animate-pulse flex justify-center items-center">
+                 <div className="h-4 w-4 bg-blue-400 rounded-full mr-2"></div>
+                 <div className="h-4 w-4 bg-blue-400 rounded-full mr-2 animate-pulse-delay-200"></div>
+                 <div className="h-4 w-4 bg-blue-400 rounded-full animate-pulse-delay-400"></div>
+               </div>
+               <p className="mt-2 text-gray-500">Loading reviews...</p>
+             </div>
+           ) : reviewError ? (
+             <div className="bg-red-50 text-red-600 p-4 rounded-xl border border-red-100 mb-6">
+               <p>{reviewError}</p>
+             </div>
+           ) : reviews.length === 0 ? (
+             <div className="bg-white rounded-xl p-6 text-center border border-gray-200">
+               <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+                 <IoStarOutline size={32} className="text-gray-400" />
+               </div>
+               <h3 className="text-lg font-medium text-gray-800 mb-2">No Reviews Yet</h3>
+               <p className="text-gray-500 mb-4">Be the first to review this product!</p>
+               {!showReviewForm && (
+                 <button
+                   onClick={() => setShowReviewForm(true)}
+                   className="px-4 py-2 bg-[#004AAD] text-white rounded-lg hover:bg-[#0056c7] transition-colors text-sm font-medium"
+                 >
+                   Write a Review
+                 </button>
+               )}
+             </div>
+           ) : (
+             <div className="space-y-4">
+               {reviews.map((review) => (
+                 <div key={review.id} className="bg-white p-4 rounded-xl border border-gray-200">
+                   <div className="flex items-center justify-between mb-3">
+                     <div className="flex items-center">
+                       <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                         <IoPersonCircleOutline size={20} className="text-[#004AAD]" />
+                       </div>
+                       <div>
+                         <p className="font-medium text-gray-800">{review.user.name}</p>
+                         <div className="flex items-center">
+                           {[...Array(5)].map((_, i) => (
+                             <span key={i} className="text-sm">
+                               {i < review.rating ? (
+                                 <IoStarSharp className="text-yellow-400" />
+                               ) : (
+                                 <IoStarOutline className="text-gray-300" />
+                               )}
+                             </span>
+                           ))}
+                         </div>
+                       </div>
+                     </div>
+                     <div className="flex items-center text-gray-500 text-sm">
+                       <IoTimeOutline className="mr-1" />
+                       <span>{review.created_at}</span>
+                     </div>
+                   </div>
+                   <p className="text-gray-700">{review.comment}</p>
+                 </div>
+               ))}
+             </div>
+           )}
+         </div>
+       </div>
 
-        {/* Mobile Bottom Action Bar */}
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white py-3 px-4 flex items-center gap-3 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] z-20">
-          <button
-            onClick={() => {
-              if (!product.user.phone) {
-                setShowLoginPopup(true)
-              } else {
-                window.open(`tel:${product.user.phone}`)
-              }
-            }}
-            className="w-12 h-12 rounded-full border-2 border-[#004AAD] flex items-center justify-center"
-          >
-            <IoCallOutline size={22} className="text-[#004AAD]" />
-          </button>
-          <button
-            onClick={handleMessageSeller}
-            className="flex-1 py-3 rounded-xl text-white font-semibold transition-all flex items-center justify-center bg-[#25D366]"
-          >
-            <IoLogoWhatsapp size={20} className="mr-2" />
-            Message on WhatsApp
-          </button>
-        </div>
-      </div>
-    )
-  }
+       {/* Mobile Bottom Action Bar */}
+       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white py-3 px-4 flex items-center gap-3 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] z-20">
+         <button
+           onClick={() => {
+             if (!product.user.phone) {
+               setShowLoginPopup(true)
+             } else {
+               window.open(`tel:${product.user.phone}`)
+             }
+           }}
+           className="w-12 h-12 rounded-full border-2 border-[#004AAD] flex items-center justify-center"
+         >
+           <IoCallOutline size={22} className="text-[#004AAD]" />
+         </button>
+         <button
+           onClick={handleMessageSeller}
+           className="flex-1 py-3 rounded-xl text-white font-semibold transition-all flex items-center justify-center bg-[#25D366]"
+         >
+           <IoLogoWhatsapp size={20} className="mr-2" />
+           Message on WhatsApp
+         </button>
+       </div>
+     </div>
+   )
+ }
 
-  // Fallback
-  return null
+ // Fallback
+ return null
 }
