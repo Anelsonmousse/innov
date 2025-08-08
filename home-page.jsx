@@ -376,10 +376,8 @@ const HomePage = () => {
   }
 
   const handleProductClick = (e, productId) => {
-    if (checkLoginAndRedirect(e)) {
-      router.push(`/product/${productId}`)
-    }
-  }
+  router.push(`/product/${productId}`)
+}
 
   useEffect(() => {
     fetchProducts()
