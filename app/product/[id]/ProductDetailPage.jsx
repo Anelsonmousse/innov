@@ -911,7 +911,7 @@ export default function ProductDetailPage() {
                <h2 className="text-lg font-semibold text-gray-800 mb-2">Seller Information</h2>
                <div
                  className="bg-white p-4 rounded-xl border border-gray-100 hover:border-blue-200 hover:shadow-md transition-all cursor-pointer"
-                 onClick={() => window.open(generateWhatsAppLink(product.user.phone, product.name), "_blank")}
+                 onClick={() => router.push(`/${product.store_slug}`)}
                >
                  <div className="flex items-center gap-3 mb-3">
                    <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden">
